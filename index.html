@@ -2,23 +2,32 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Official website for The Potter's House Church in Henderson." />
-  <title>The Potter's House Henderson</title>
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <meta
+    name="description"
+    content="Official website for The Henderson Potter's House Church."
+  />
+
+  <title>The Henderson Potter's House</title>
 
   <style>
     :root {
-      --background: #f5f6f8;
+      --background: #f4f5f7;
       --surface: #ffffff;
-      --surface-soft: #eef1f5;
+      --surface-soft: #eceff3;
       --primary: #183153;
-      --primary-dark: #10233d;
-      --accent: #c59a4a;
+      --primary-dark: #0e223b;
+      --accent: #c79b4b;
       --text: #172033;
       --muted: #667085;
       --border: #dfe4ea;
       --success: #2f7d5a;
-      --shadow: 0 14px 35px rgba(16, 35, 61, 0.10);
+      --shadow: 0 14px 35px rgba(16, 35, 61, 0.1);
       --radius: 22px;
     }
 
@@ -60,17 +69,23 @@
       margin: 0 auto;
     }
 
+    section {
+      scroll-margin-top: 95px;
+    }
+
+    /* HEADER */
+
     .site-header {
       position: sticky;
       top: 0;
       z-index: 1000;
-      background: rgba(255, 255, 255, 0.94);
+      background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(14px);
       border-bottom: 1px solid var(--border);
     }
 
     .nav-wrap {
-      min-height: 76px;
+      min-height: 78px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -80,30 +95,35 @@
     .brand {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 13px;
       min-width: 0;
     }
 
     .brand-mark {
-      width: 46px;
-      height: 46px;
-      border-radius: 14px;
-      background: linear-gradient(145deg, var(--primary), var(--primary-dark));
-      color: white;
-      display: grid;
-      place-items: center;
-      font-weight: 800;
-      letter-spacing: 1px;
-      box-shadow: 0 8px 20px rgba(24, 49, 83, 0.22);
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      overflow: hidden;
+      background: #15181d;
+      box-shadow: 0 8px 20px rgba(7, 91, 207, 0.25);
+      border: 2px solid #ffffff;
       flex: 0 0 auto;
     }
 
+    .brand-mark img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
     .brand-text {
-      line-height: 1.1;
+      line-height: 1.15;
     }
 
     .brand-text strong {
       display: block;
+      color: var(--primary-dark);
       font-size: 1rem;
     }
 
@@ -115,9 +135,13 @@
     .nav-links {
       display: flex;
       align-items: center;
-      gap: 22px;
-      font-size: 0.95rem;
+      gap: 21px;
+      font-size: 0.92rem;
       font-weight: 700;
+    }
+
+    .nav-links a {
+      transition: color 0.2s ease;
     }
 
     .nav-links a:hover {
@@ -136,23 +160,33 @@
       font-size: 1.35rem;
     }
 
+    /* HERO */
+
     .hero {
-      padding: 72px 0 36px;
+      padding: 64px 0 34px;
     }
 
     .hero-card {
-      background:
-        radial-gradient(circle at 80% 20%, rgba(197, 154, 74, 0.24), transparent 28%),
-        linear-gradient(135deg, var(--primary-dark), var(--primary));
-      color: white;
-      border-radius: 30px;
-      padding: 64px;
-      min-height: 510px;
+      min-height: 500px;
+      padding: 60px;
       display: grid;
       grid-template-columns: 1.2fr 0.8fr;
       align-items: center;
       gap: 40px;
       overflow: hidden;
+      color: white;
+      border-radius: 30px;
+      background:
+        radial-gradient(
+          circle at 82% 18%,
+          rgba(197, 154, 74, 0.24),
+          transparent 28%
+        ),
+        linear-gradient(
+          135deg,
+          var(--primary-dark),
+          var(--primary)
+        );
       box-shadow: var(--shadow);
     }
 
@@ -172,10 +206,10 @@
     }
 
     .hero h1 {
-      font-size: clamp(2.6rem, 6vw, 5.2rem);
-      line-height: 0.98;
       max-width: 760px;
       margin-bottom: 22px;
+      font-size: clamp(2.6rem, 6vw, 5.1rem);
+      line-height: 0.98;
     }
 
     .hero p {
@@ -192,17 +226,19 @@
     }
 
     .button {
+      min-height: 48px;
+      padding: 0 20px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      min-height: 48px;
-      padding: 0 20px;
       border: 0;
       border-radius: 14px;
       font-weight: 800;
       cursor: pointer;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
     }
 
     .button:hover {
@@ -210,14 +246,14 @@
     }
 
     .button-primary {
+      color: #171717;
       background: var(--accent);
-      color: #1a1a1a;
       box-shadow: 0 10px 22px rgba(197, 154, 74, 0.25);
     }
 
     .button-secondary {
-      background: rgba(255, 255, 255, 0.10);
       color: white;
+      background: rgba(255, 255, 255, 0.1);
       border: 1px solid rgba(255, 255, 255, 0.26);
     }
 
@@ -231,11 +267,27 @@
     .service-card {
       width: 100%;
       max-width: 360px;
-      background: rgba(255, 255, 255, 0.10);
-      border: 1px solid rgba(255, 255, 255, 0.18);
+      padding: 27px;
       border-radius: 24px;
-      padding: 26px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.18);
       backdrop-filter: blur(10px);
+    }
+
+    .service-logo {
+      width: 86px;
+      height: 86px;
+      margin-bottom: 20px;
+      overflow: hidden;
+      border-radius: 50%;
+      border: 3px solid rgba(255, 255, 255, 0.9);
+      background: #14171c;
+    }
+
+    .service-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
     .service-card span {
@@ -256,6 +308,8 @@
       font-size: 0.96rem;
     }
 
+    /* QUICK LINKS */
+
     .quick-links {
       padding: 28px 0 36px;
     }
@@ -267,13 +321,15 @@
     }
 
     .quick-card {
+      min-height: 160px;
+      padding: 24px;
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 20px;
-      padding: 24px;
-      min-height: 160px;
       box-shadow: 0 8px 20px rgba(23, 32, 51, 0.05);
-      transition: transform 0.2s ease, border-color 0.2s ease;
+      transition:
+        transform 0.2s ease,
+        border-color 0.2s ease;
     }
 
     .quick-card:hover {
@@ -284,11 +340,11 @@
     .quick-icon {
       width: 44px;
       height: 44px;
-      border-radius: 13px;
-      background: var(--surface-soft);
+      margin-bottom: 18px;
       display: grid;
       place-items: center;
-      margin-bottom: 18px;
+      border-radius: 13px;
+      background: var(--surface-soft);
       font-size: 1.2rem;
     }
 
@@ -302,9 +358,7 @@
       font-size: 0.92rem;
     }
 
-    section {
-      scroll-margin-top: 95px;
-    }
+    /* SECTIONS */
 
     .section {
       padding: 54px 0;
@@ -324,10 +378,10 @@
     }
 
     .section-heading h2 {
+      margin: 8px 0 12px;
       color: var(--primary-dark);
       font-size: clamp(2rem, 4vw, 3.2rem);
       line-height: 1.05;
-      margin: 8px 0 12px;
     }
 
     .section-heading p {
@@ -341,10 +395,10 @@
     }
 
     .content-card {
+      padding: 26px;
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 26px;
       box-shadow: 0 8px 22px rgba(23, 32, 51, 0.05);
     }
 
@@ -352,9 +406,9 @@
       display: inline-block;
       margin-bottom: 14px;
       padding: 6px 10px;
-      border-radius: 999px;
-      background: var(--surface-soft);
       color: var(--primary);
+      background: var(--surface-soft);
+      border-radius: 999px;
       font-size: 0.78rem;
       font-weight: 800;
     }
@@ -376,6 +430,8 @@
       font-weight: 800;
     }
 
+    /* SPLIT SECTIONS */
+
     .split-section {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -384,52 +440,59 @@
     }
 
     .feature-panel {
-      background: var(--primary-dark);
-      color: white;
-      border-radius: 26px;
-      padding: 38px;
       min-height: 360px;
+      padding: 38px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      color: white;
+      background: var(--primary-dark);
+      border-radius: 26px;
+    }
+
+    .feature-panel h2 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      line-height: 1.08;
     }
 
     .feature-panel p {
-      color: #d9e2ec;
       margin-top: 12px;
+      color: #d9e2ec;
     }
 
     .feature-list {
-      list-style: none;
-      margin-top: 24px;
       display: grid;
       gap: 12px;
+      margin-top: 24px;
+      list-style: none;
     }
 
     .feature-list li {
       padding: 13px 15px;
       border-radius: 14px;
       background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.10);
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
+    /* FORMS */
+
     .form-panel {
+      padding: 34px;
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 26px;
-      padding: 34px;
       box-shadow: var(--shadow);
     }
 
     .form-panel h3 {
+      margin-bottom: 8px;
       color: var(--primary);
       font-size: 1.7rem;
-      margin-bottom: 8px;
     }
 
     .form-panel > p {
-      color: var(--muted);
       margin-bottom: 22px;
+      color: var(--muted);
     }
 
     .form-grid {
@@ -440,19 +503,19 @@
     label {
       display: grid;
       gap: 7px;
+      color: var(--primary-dark);
       font-size: 0.9rem;
       font-weight: 800;
-      color: var(--primary-dark);
     }
 
     input,
     textarea {
       width: 100%;
-      border: 1px solid var(--border);
-      background: #fbfcfd;
-      border-radius: 13px;
       padding: 13px 14px;
       outline: none;
+      background: #fbfcfd;
+      border: 1px solid var(--border);
+      border-radius: 13px;
     }
 
     input:focus,
@@ -472,34 +535,48 @@
       font-size: 0.82rem;
     }
 
+    .status-message {
+      display: none;
+      margin-top: 14px;
+      padding: 12px 14px;
+      color: var(--success);
+      background: #eaf7f0;
+      border-radius: 12px;
+      font-weight: 700;
+    }
+
+    /* CONTACT */
+
     .contact-card {
-      background: linear-gradient(135deg, #ffffff, #eef2f6);
-      border: 1px solid var(--border);
-      border-radius: 28px;
       padding: 40px;
       display: grid;
       grid-template-columns: 1fr auto;
       gap: 30px;
       align-items: center;
+      background: linear-gradient(135deg, #ffffff, #eef2f6);
+      border: 1px solid var(--border);
+      border-radius: 28px;
     }
 
     .contact-card h2 {
+      margin-bottom: 10px;
       color: var(--primary);
       font-size: clamp(2rem, 4vw, 3rem);
       line-height: 1.08;
-      margin-bottom: 10px;
     }
 
     .contact-card p {
-      color: var(--muted);
       max-width: 680px;
+      color: var(--muted);
     }
+
+    /* FOOTER */
 
     footer {
       margin-top: 44px;
-      background: var(--primary-dark);
-      color: white;
       padding: 38px 0;
+      color: white;
+      background: var(--primary-dark);
     }
 
     .footer-wrap {
@@ -507,6 +584,27 @@
       justify-content: space-between;
       align-items: center;
       gap: 24px;
+    }
+
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .footer-logo {
+      width: 48px;
+      height: 48px;
+      overflow: hidden;
+      border-radius: 50%;
+      background: #15181d;
+      border: 2px solid rgba(255, 255, 255, 0.75);
+    }
+
+    .footer-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
     .footer-wrap p {
@@ -521,20 +619,12 @@
       font-weight: 700;
     }
 
-    .status-message {
-      display: none;
-      margin-top: 14px;
-      padding: 12px 14px;
-      border-radius: 12px;
-      background: #eaf7f0;
-      color: var(--success);
-      font-weight: 700;
-    }
+    /* TABLET */
 
     @media (max-width: 900px) {
       .nav-links {
         position: absolute;
-        top: 76px;
+        top: 78px;
         left: 16px;
         right: 16px;
         display: none;
@@ -591,9 +681,20 @@
       }
     }
 
+    /* MOBILE */
+
     @media (max-width: 620px) {
       .container {
         width: min(100% - 22px, 1120px);
+      }
+
+      .brand-mark {
+        width: 50px;
+        height: 50px;
+      }
+
+      .brand-text strong {
+        font-size: 0.9rem;
       }
 
       .brand-text span {
@@ -652,10 +753,21 @@
 <body>
   <header class="site-header">
     <div class="container nav-wrap">
-      <a class="brand" href="#home" aria-label="The Potter's House Henderson home">
-        <div class="brand-mark">PH</div>
+
+      <a
+        class="brand"
+        href="#home"
+        aria-label="The Henderson Potter's House home"
+      >
+        <div class="brand-mark">
+          <img
+            src="assets/icon/app_icon.png"
+            alt="The Henderson Potter's House logo"
+          />
+        </div>
+
         <div class="brand-text">
-          <strong>The Potter's House</strong>
+          <strong>The Henderson Potter's House</strong>
           <span>Henderson, Nevada</span>
         </div>
       </a>
@@ -670,322 +782,629 @@
         <a href="#contact">Contact</a>
       </nav>
 
-      <button class="menu-button" id="menuButton" aria-label="Open menu">☰</button>
+      <button
+        class="menu-button"
+        id="menuButton"
+        aria-label="Open navigation menu"
+      >
+        ☰
+      </button>
+
     </div>
   </header>
 
   <main>
+
     <section class="hero" id="home">
       <div class="container">
         <div class="hero-card">
+
           <div>
-            <div class="eyebrow">Welcome Home</div>
-            <h1>A place to grow, worship, and belong.</h1>
+            <div class="eyebrow">
+              Welcome Home
+            </div>
+
+            <h1>
+              A place to grow, worship, and belong.
+            </h1>
+
             <p>
-              Welcome to The Potter's House Church in Henderson. Join us for worship,
-              fellowship, prayer, and a message centered on faith and everyday life.
+              Welcome to The Henderson Potter's House.
+              Join us for worship, fellowship, prayer,
+              and messages centered on faith and everyday life.
             </p>
 
             <div class="hero-actions">
-              <a class="button button-primary" href="#events">View Upcoming Events</a>
-              <a class="button button-secondary" href="#contact">Plan Your Visit</a>
+              <a
+                class="button button-primary"
+                href="#events"
+              >
+                View Upcoming Events
+              </a>
+
+              <a
+                class="button button-secondary"
+                href="#contact"
+              >
+                Plan Your Visit
+              </a>
             </div>
           </div>
 
           <div class="service-panel">
             <div class="service-card">
+
+              <div class="service-logo">
+                <img
+                  src="assets/icon/app_icon.png"
+                  alt="Church logo"
+                />
+              </div>
+
               <span>Next Service</span>
+
               <h2>Sunday Worship</h2>
+
               <p>
-                Add your official service time and church address here when they are ready.
+                Add the official Sunday service time
+                and church address here when they are ready.
               </p>
+
             </div>
           </div>
+
         </div>
       </div>
     </section>
 
-    <section class="quick-links" aria-label="Quick links">
+    <section
+      class="quick-links"
+      aria-label="Church quick links"
+    >
       <div class="container quick-grid">
-        <a class="quick-card" href="#announcements">
+
+        <a
+          class="quick-card"
+          href="#announcements"
+        >
           <div class="quick-icon">📢</div>
+
           <h3>Announcements</h3>
-          <p>See the latest church news and important updates.</p>
+
+          <p>
+            See the latest church news
+            and important updates.
+          </p>
         </a>
 
-        <a class="quick-card" href="#events">
+        <a
+          class="quick-card"
+          href="#events"
+        >
           <div class="quick-icon">📅</div>
+
           <h3>Events</h3>
-          <p>Find upcoming services, gatherings, and community events.</p>
+
+          <p>
+            Find upcoming services,
+            gatherings, and community events.
+          </p>
         </a>
 
-        <a class="quick-card" href="#sermons">
+        <a
+          class="quick-card"
+          href="#sermons"
+        >
           <div class="quick-icon">▶</div>
+
           <h3>Sermons</h3>
-          <p>Watch or listen to recent messages and teachings.</p>
+
+          <p>
+            Watch or listen to recent
+            messages and teachings.
+          </p>
         </a>
 
-        <a class="quick-card" href="#prayer">
+        <a
+          class="quick-card"
+          href="#prayer"
+        >
           <div class="quick-icon">♥</div>
+
           <h3>Prayer Request</h3>
-          <p>Share a private request with the church prayer team.</p>
+
+          <p>
+            Share a private request
+            with the church prayer team.
+          </p>
         </a>
+
       </div>
     </section>
 
-    <section class="section" id="announcements">
+    <section
+      class="section"
+      id="announcements"
+    >
       <div class="container">
+
         <div class="section-heading">
           <span>Stay Connected</span>
+
           <h2>Church announcements</h2>
+
           <p>
-            Replace these example cards with current announcements from the church.
+            Important church updates,
+            reminders, and announcements
+            will appear here.
           </p>
         </div>
 
         <div class="content-grid">
+
           <article class="content-card">
-            <div class="tag">This Week</div>
+            <div class="tag">
+              This Week
+            </div>
+
             <h3>Sunday Worship Service</h3>
+
             <p>
-              Join us for worship, fellowship, and an encouraging message.
+              Join us for worship,
+              fellowship, and an encouraging message.
             </p>
-            <a class="card-link" href="#contact">Plan your visit →</a>
+
+            <a
+              class="card-link"
+              href="#contact"
+            >
+              Plan your visit →
+            </a>
           </article>
 
           <article class="content-card">
-            <div class="tag">Community</div>
+            <div class="tag">
+              Community
+            </div>
+
             <h3>Church Fellowship</h3>
+
             <p>
-              Add information about an upcoming fellowship, meal, or community gathering.
+              Information about upcoming fellowship,
+              meals, and church gatherings can go here.
             </p>
-            <a class="card-link" href="#events">View events →</a>
+
+            <a
+              class="card-link"
+              href="#events"
+            >
+              View events →
+            </a>
           </article>
 
           <article class="content-card">
-            <div class="tag">Update</div>
-            <h3>New Website</h3>
+            <div class="tag">
+              Update
+            </div>
+
+            <h3>Welcome to Our Website</h3>
+
             <p>
-              This website will help members stay informed about church activities and updates.
+              Use this website to stay informed
+              about church activities,
+              messages, and upcoming events.
             </p>
-            <a class="card-link" href="#contact">Contact us →</a>
+
+            <a
+              class="card-link"
+              href="#contact"
+            >
+              Contact us →
+            </a>
           </article>
+
         </div>
       </div>
     </section>
 
-    <section class="section" id="events">
+    <section
+      class="section"
+      id="events"
+    >
       <div class="container">
+
         <div class="section-heading">
           <span>Upcoming</span>
+
           <h2>Events and gatherings</h2>
+
           <p>
-            Add the real dates and times once the church provides them.
+            Upcoming church services,
+            Bible studies, fellowships,
+            and community events.
           </p>
         </div>
 
         <div class="content-grid">
+
           <article class="content-card">
             <div class="tag">Sunday</div>
+
             <h3>Worship Service</h3>
-            <p>Weekly worship service. Add the official time and location here.</p>
+
+            <p>
+              Add the official Sunday service
+              time and location here.
+            </p>
           </article>
 
           <article class="content-card">
             <div class="tag">Midweek</div>
+
             <h3>Bible Study</h3>
-            <p>Add the Bible study day, time, topic, and meeting location here.</p>
+
+            <p>
+              Add the Bible study day,
+              time, topic, and location here.
+            </p>
           </article>
 
           <article class="content-card">
             <div class="tag">Monthly</div>
+
             <h3>Community Outreach</h3>
-            <p>Add details about local outreach and volunteer opportunities.</p>
+
+            <p>
+              Add information about outreach,
+              volunteer work, and community support.
+            </p>
           </article>
+
         </div>
       </div>
     </section>
 
-    <section class="section" id="ministries">
+    <section
+      class="section"
+      id="ministries"
+    >
       <div class="container">
+
         <div class="section-heading">
           <span>Get Involved</span>
+
           <h2>Ministries for every season</h2>
+
           <p>
-            These are starter ministry categories that can be changed at any time.
+            Learn about the church ministries
+            and find opportunities to get involved.
           </p>
         </div>
 
         <div class="content-grid">
+
           <article class="content-card">
             <div class="tag">Families</div>
+
             <h3>Children and Youth</h3>
-            <p>Programs that help young people learn, grow, and build lasting friendships.</p>
+
+            <p>
+              Programs that help young people
+              learn, grow, and build lasting friendships.
+            </p>
           </article>
 
           <article class="content-card">
             <div class="tag">Community</div>
+
             <h3>Outreach Ministry</h3>
-            <p>Opportunities to serve Henderson and support people in the local community.</p>
+
+            <p>
+              Opportunities to serve Henderson
+              and support people in the community.
+            </p>
           </article>
 
           <article class="content-card">
             <div class="tag">Connection</div>
+
             <h3>Men and Women</h3>
-            <p>Gatherings focused on encouragement, fellowship, and spiritual growth.</p>
+
+            <p>
+              Gatherings focused on fellowship,
+              encouragement, and spiritual growth.
+            </p>
           </article>
+
         </div>
       </div>
     </section>
 
-    <section class="section" id="sermons">
+    <section
+      class="section"
+      id="sermons"
+    >
       <div class="container">
+
         <div class="split-section">
+
           <div class="feature-panel">
             <div>
-              <span class="eyebrow">Latest Message</span>
-              <h2>Recent sermons and teachings</h2>
+
+              <span class="eyebrow">
+                Latest Message
+              </span>
+
+              <h2>
+                Recent sermons and teachings
+              </h2>
+
               <p>
-                Connect this section to YouTube, Facebook, or uploaded sermon recordings later.
+                This section can later connect
+                to YouTube, Facebook,
+                or uploaded sermon recordings.
               </p>
+
             </div>
 
             <ul class="feature-list">
               <li>Featured sermon title</li>
               <li>Speaker name and service date</li>
-              <li>Watch, listen, or read message notes</li>
+              <li>Watch, listen, or read notes</li>
             </ul>
           </div>
 
           <div class="form-panel">
             <h3>Sermon Library</h3>
+
             <p>
-              The church can later add sermon videos and organize them by date, speaker, or series.
+              Sermons can be organized by
+              date, speaker, or message series.
             </p>
 
             <div class="content-card">
-              <div class="tag">Coming Soon</div>
-              <h3>Messages will appear here</h3>
+              <div class="tag">
+                Coming Soon
+              </div>
+
+              <h3>
+                Messages will appear here
+              </h3>
+
               <p>
-                Add a YouTube or Facebook link when the church is ready to publish sermons.
+                Add YouTube or Facebook links
+                when the church is ready
+                to publish sermon videos.
               </p>
             </div>
           </div>
+
         </div>
       </div>
     </section>
 
-    <section class="section" id="prayer">
+    <section
+      class="section"
+      id="prayer"
+    >
       <div class="container">
+
         <div class="split-section">
+
           <div class="feature-panel">
             <div>
-              <span class="eyebrow">You Are Not Alone</span>
-              <h2>Share a prayer request</h2>
+
+              <span class="eyebrow">
+                You Are Not Alone
+              </span>
+
+              <h2>
+                Share a prayer request
+              </h2>
+
               <p>
-                Members and visitors can use this form to send a prayer request to the church.
+                Members and visitors can use
+                this form to submit a prayer request
+                to the church.
               </p>
+
             </div>
 
             <ul class="feature-list">
-              <li>Requests can be kept private</li>
+              <li>Requests can remain private</li>
               <li>No account is required</li>
-              <li>Backend connection can be added later</li>
+              <li>Firebase can be connected later</li>
             </ul>
           </div>
 
-          <form class="form-panel" id="prayerForm">
+          <form
+            class="form-panel"
+            id="prayerForm"
+          >
             <h3>Prayer Request</h3>
-            <p>Complete the form below. This demo currently does not send information anywhere.</p>
+
+            <p>
+              Complete the form below.
+              The form is currently a visual demo.
+            </p>
 
             <div class="form-grid">
+
               <label>
                 Name
-                <input type="text" name="name" placeholder="Your name" />
+
+                <input
+                  type="text"
+                  name="name"
+                  placeholder="Your name"
+                />
               </label>
 
               <label>
                 Email or phone
-                <input type="text" name="contact" placeholder="Optional contact information" />
+
+                <input
+                  type="text"
+                  name="contact"
+                  placeholder="Optional contact information"
+                />
               </label>
 
               <label>
                 Prayer request
-                <textarea name="request" placeholder="How can we pray for you?" required></textarea>
+
+                <textarea
+                  name="request"
+                  placeholder="How can we pray for you?"
+                  required
+                ></textarea>
               </label>
 
-              <button class="button button-primary" type="submit">Submit Request</button>
+              <button
+                class="button button-primary"
+                type="submit"
+              >
+                Submit Request
+              </button>
+
             </div>
 
             <p class="notice">
-              We will connect this form to email or Firebase when you are ready.
+              The form can be connected
+              to Firebase or email later.
             </p>
 
-            <div class="status-message" id="formStatus">
-              Demo submitted successfully. No information was sent.
+            <div
+              class="status-message"
+              id="formStatus"
+            >
+              Demo submitted successfully.
+              No information was sent.
             </div>
+
           </form>
+
         </div>
       </div>
     </section>
 
-    <section class="section" id="contact">
+    <section
+      class="section"
+      id="contact"
+    >
       <div class="container">
+
         <div class="contact-card">
+
           <div>
             <h2>Plan your visit</h2>
+
             <p>
-              Add the official church address, service times, phone number, email, and map link here.
+              Add the church address,
+              official service times,
+              phone number, email address,
+              and map link here.
             </p>
           </div>
 
-          <a class="button button-primary" href="#home">Back to Top</a>
+          <a
+            class="button button-primary"
+            href="#home"
+          >
+            Back to Top
+          </a>
+
         </div>
       </div>
     </section>
+
   </main>
 
   <footer>
     <div class="container footer-wrap">
-      <div>
-        <strong>The Potter's House Henderson</strong>
-        <p>Faith, fellowship, and community.</p>
+
+      <div class="footer-brand">
+
+        <div class="footer-logo">
+          <img
+            src="assets/icon/app_icon.png"
+            alt="The Henderson Potter's House logo"
+          />
+        </div>
+
+        <div>
+          <strong>
+            The Henderson Potter's House
+          </strong>
+
+          <p>
+            Faith, fellowship, and community.
+          </p>
+        </div>
+
       </div>
 
       <div class="footer-links">
-        <a href="#announcements">Announcements</a>
-        <a href="#events">Events</a>
-        <a href="#prayer">Prayer</a>
-        <a href="#contact">Contact</a>
+        <a href="#announcements">
+          Announcements
+        </a>
+
+        <a href="#events">
+          Events
+        </a>
+
+        <a href="#prayer">
+          Prayer
+        </a>
+
+        <a href="#contact">
+          Contact
+        </a>
       </div>
 
-      <p>© <span id="year"></span> The Potter's House Henderson.</p>
+      <p>
+        © <span id="year"></span>
+        The Henderson Potter's House.
+      </p>
+
     </div>
   </footer>
 
   <script>
-    const menuButton = document.getElementById("menuButton");
-    const navLinks = document.getElementById("navLinks");
-    const prayerForm = document.getElementById("prayerForm");
-    const formStatus = document.getElementById("formStatus");
+    const menuButton =
+      document.getElementById("menuButton");
 
-    menuButton.addEventListener("click", () => {
+    const navLinks =
+      document.getElementById("navLinks");
+
+    const prayerForm =
+      document.getElementById("prayerForm");
+
+    const formStatus =
+      document.getElementById("formStatus");
+
+    menuButton.addEventListener("click", function () {
       navLinks.classList.toggle("open");
     });
 
-    navLinks.querySelectorAll("a").forEach((link) => {
-      link.addEventListener("click", () => {
-        navLinks.classList.remove("open");
+    navLinks
+      .querySelectorAll("a")
+      .forEach(function (link) {
+        link.addEventListener("click", function () {
+          navLinks.classList.remove("open");
+        });
       });
-    });
 
-    prayerForm.addEventListener("submit", (event) => {
+    prayerForm.addEventListener("submit", function (event) {
       event.preventDefault();
+
       formStatus.style.display = "block";
+
       prayerForm.reset();
     });
 
-    document.getElementById("year").textContent = new Date().getFullYear();
+    document.getElementById("year").textContent =
+      new Date().getFullYear();
   </script>
 </body>
 </html>
