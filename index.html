@@ -10,26 +10,29 @@
 
   <meta
     name="description"
-    content="Official website for The Henderson Potter's House Church."
+    content="Official website for The Henderson Potter's House."
   >
 
   <title>The Henderson Potter's House</title>
 
   <style>
     :root {
-      --background: #f2f4f7;
+      --background: #f3f5f8;
       --surface: #ffffff;
-      --surface-soft: #e9edf3;
-      --primary: #102b4e;
-      --primary-light: #175b9d;
-      --accent: #e03a2f;
-      --accent-light: #f26a32;
-      --gold: #d7a64b;
+      --navy: #102b4e;
+      --navy-dark: #07182c;
+      --red: #e03a2f;
+      --orange: #f26a32;
       --text: #172033;
       --muted: #667085;
       --border: #dce2e9;
       --shadow: 0 15px 35px rgba(16, 43, 78, 0.12);
-      --radius: 22px;
+
+      /*
+        The logo is embedded inside this file.
+        No church_logo.png file is required.
+      */
+      --church-logo: url("data:image/webp;base64,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");
     }
 
     * {
@@ -60,21 +63,14 @@
       font: inherit;
     }
 
-    img {
-      display: block;
-      max-width: 100%;
-    }
-
-    section {
-      scroll-margin-top: 95px;
-    }
-
     .container {
       width: min(1120px, calc(100% - 32px));
       margin: 0 auto;
     }
 
-    /* HEADER */
+    section {
+      scroll-margin-top: 95px;
+    }
 
     .site-header {
       position: sticky;
@@ -82,7 +78,7 @@
       z-index: 1000;
       background: rgba(255, 255, 255, 0.96);
       border-bottom: 1px solid var(--border);
-      backdrop-filter: blur(14px);
+      backdrop-filter: blur(12px);
     }
 
     .nav-wrap {
@@ -94,28 +90,26 @@
     }
 
     .brand {
-      min-width: 0;
       display: flex;
       align-items: center;
       gap: 13px;
     }
 
-    .brand-mark {
-      width: 64px;
-      height: 64px;
+    .logo {
       flex-shrink: 0;
-      overflow: hidden;
-      border: 2px solid #ffffff;
-      border-radius: 50%;
-      background: #000000;
-      box-shadow: 0 7px 20px rgba(0, 0, 0, 0.24);
+      background-color: #000000;
+      background-image: var(--church-logo);
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: contain;
     }
 
-    .brand-mark img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center;
+    .header-logo {
+      width: 64px;
+      height: 64px;
+      border: 2px solid #ffffff;
+      border-radius: 50%;
+      box-shadow: 0 7px 20px rgba(0, 0, 0, 0.24);
     }
 
     .brand-text {
@@ -124,85 +118,68 @@
 
     .brand-text strong {
       display: block;
-      color: var(--primary);
-      font-size: 1rem;
+      color: var(--navy);
     }
 
     .brand-text span {
       color: var(--muted);
-      font-size: 0.82rem;
+      font-size: 0.84rem;
     }
 
     .nav-links {
       display: flex;
-      align-items: center;
-      gap: 21px;
+      gap: 20px;
       font-size: 0.92rem;
       font-weight: 700;
     }
 
-    .nav-links a {
-      transition: color 0.2s ease;
-    }
-
     .nav-links a:hover {
-      color: var(--accent);
+      color: var(--red);
     }
 
     .menu-button {
+      display: none;
       width: 44px;
       height: 44px;
-      display: none;
       border: 1px solid var(--border);
       border-radius: 12px;
       background: #ffffff;
-      color: var(--primary);
+      color: var(--navy);
       cursor: pointer;
       font-size: 1.35rem;
     }
 
-    /* HERO */
-
     .hero {
-      padding: 55px 0 34px;
+      padding: 56px 0 32px;
     }
 
     .hero-card {
       min-height: 510px;
       padding: 58px;
       display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
+      grid-template-columns: 1.12fr 0.88fr;
       align-items: center;
       gap: 42px;
-      overflow: hidden;
       color: #ffffff;
       border-radius: 30px;
       background:
         radial-gradient(
-          circle at 82% 15%,
-          rgba(224, 58, 47, 0.35),
+          circle at 82% 16%,
+          rgba(224, 58, 47, 0.34),
           transparent 30%
-        ),
-        radial-gradient(
-          circle at 75% 70%,
-          rgba(23, 91, 157, 0.4),
-          transparent 35%
         ),
         linear-gradient(
           135deg,
-          #07182c,
-          #102b4e
+          var(--navy-dark),
+          var(--navy)
         );
       box-shadow: var(--shadow);
     }
 
     .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
+      display: inline-block;
       margin-bottom: 18px;
       padding: 8px 12px;
-      border: 1px solid rgba(255, 255, 255, 0.18);
       border-radius: 999px;
       background: rgba(255, 255, 255, 0.1);
       color: #ffd7ba;
@@ -213,7 +190,6 @@
     }
 
     .hero h1 {
-      max-width: 720px;
       margin-bottom: 22px;
       font-size: clamp(2.6rem, 6vw, 5rem);
       line-height: 0.98;
@@ -242,23 +218,15 @@
       border-radius: 14px;
       font-weight: 800;
       cursor: pointer;
-      transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
-    }
-
-    .button:hover {
-      transform: translateY(-2px);
     }
 
     .button-primary {
       color: #ffffff;
       background: linear-gradient(
         135deg,
-        var(--accent),
-        var(--accent-light)
+        var(--red),
+        var(--orange)
       );
-      box-shadow: 0 10px 22px rgba(224, 58, 47, 0.3);
     }
 
     .button-secondary {
@@ -267,34 +235,19 @@
       border: 1px solid rgba(255, 255, 255, 0.28);
     }
 
-    .hero-logo-panel {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .hero-logo-card {
-      width: 100%;
-      max-width: 365px;
-      padding: 26px;
+    .hero-logo {
+      min-height: 360px;
       border: 1px solid rgba(255, 255, 255, 0.18);
       border-radius: 26px;
-      background: rgba(0, 0, 0, 0.26);
-      backdrop-filter: blur(10px);
-      box-shadow: 0 18px 38px rgba(0, 0, 0, 0.25);
+      background-color: rgba(0, 0, 0, 0.28);
+      background-image: var(--church-logo);
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: contain;
     }
-
-    .hero-logo-card img {
-      width: 100%;
-      max-height: 320px;
-      object-fit: contain;
-      border-radius: 18px;
-    }
-
-    /* QUICK LINKS */
 
     .quick-links {
-      padding: 26px 0 34px;
+      padding: 28px 0 44px;
     }
 
     .quick-grid {
@@ -303,21 +256,17 @@
       gap: 16px;
     }
 
-    .quick-card {
-      min-height: 165px;
+    .quick-card,
+    .content-card {
       padding: 24px;
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 20px;
       box-shadow: 0 8px 20px rgba(23, 32, 51, 0.05);
-      transition:
-        transform 0.2s ease,
-        border-color 0.2s ease;
     }
 
-    .quick-card:hover {
-      transform: translateY(-4px);
-      border-color: rgba(224, 58, 47, 0.55);
+    .quick-card {
+      min-height: 165px;
     }
 
     .quick-icon {
@@ -327,21 +276,21 @@
       display: grid;
       place-items: center;
       border-radius: 14px;
-      background: var(--surface-soft);
+      background: #e9edf3;
       font-size: 1.2rem;
     }
 
-    .quick-card h3 {
+    .quick-card h3,
+    .content-card h3 {
       margin-bottom: 6px;
-      color: var(--primary);
+      color: var(--navy);
     }
 
-    .quick-card p {
+    .quick-card p,
+    .content-card p {
       color: var(--muted);
       font-size: 0.92rem;
     }
-
-    /* GENERAL SECTIONS */
 
     .section {
       padding: 54px 0;
@@ -353,7 +302,7 @@
     }
 
     .section-heading span {
-      color: var(--accent);
+      color: var(--red);
       font-size: 0.82rem;
       font-weight: 800;
       letter-spacing: 0.08em;
@@ -362,7 +311,7 @@
 
     .section-heading h2 {
       margin: 8px 0 12px;
-      color: var(--primary);
+      color: var(--navy);
       font-size: clamp(2rem, 4vw, 3.1rem);
       line-height: 1.06;
     }
@@ -377,97 +326,56 @@
       gap: 20px;
     }
 
-    .content-card {
-      padding: 26px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: 0 8px 22px rgba(23, 32, 51, 0.05);
-    }
-
     .tag {
       display: inline-block;
       margin-bottom: 14px;
       padding: 6px 10px;
-      color: var(--primary);
-      background: var(--surface-soft);
+      color: var(--navy);
+      background: #e9edf3;
       border-radius: 999px;
       font-size: 0.78rem;
       font-weight: 800;
     }
 
-    .content-card h3 {
-      margin-bottom: 8px;
-      color: var(--primary);
-    }
-
-    .content-card p {
-      color: var(--muted);
-      font-size: 0.95rem;
-    }
-
-    .card-link {
-      display: inline-block;
-      margin-top: 18px;
-      color: var(--accent);
-      font-weight: 800;
-    }
-
-    /* SPLIT SECTIONS */
-
     .split-section {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 24px;
-      align-items: stretch;
     }
 
     .feature-panel {
-      min-height: 370px;
       padding: 38px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
       color: #ffffff;
       border-radius: 26px;
-      background:
-        radial-gradient(
-          circle at 85% 15%,
-          rgba(224, 58, 47, 0.25),
-          transparent 32%
-        ),
-        linear-gradient(
-          135deg,
-          #081a31,
-          var(--primary)
-        );
+      background: linear-gradient(
+        135deg,
+        var(--navy-dark),
+        var(--navy)
+      );
     }
 
     .feature-panel h2 {
+      margin-bottom: 12px;
       font-size: clamp(2rem, 4vw, 3rem);
       line-height: 1.08;
     }
 
     .feature-panel p {
-      margin-top: 12px;
       color: #d9e2ec;
     }
 
     .feature-list {
       display: grid;
       gap: 12px;
-      margin-top: 25px;
+      margin-top: 28px;
       list-style: none;
     }
 
     .feature-list li {
       padding: 13px 15px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 14px;
       background: rgba(255, 255, 255, 0.08);
     }
-
-    /* FORMS */
 
     .form-panel {
       padding: 34px;
@@ -479,7 +387,7 @@
 
     .form-panel h3 {
       margin-bottom: 8px;
-      color: var(--primary);
+      color: var(--navy);
       font-size: 1.7rem;
     }
 
@@ -496,7 +404,7 @@
     label {
       display: grid;
       gap: 7px;
-      color: var(--primary);
+      color: var(--navy);
       font-size: 0.9rem;
       font-weight: 800;
     }
@@ -511,21 +419,9 @@
       border-radius: 13px;
     }
 
-    input:focus,
-    textarea:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(224, 58, 47, 0.14);
-    }
-
     textarea {
       min-height: 125px;
       resize: vertical;
-    }
-
-    .notice {
-      margin-top: 12px;
-      color: var(--muted);
-      font-size: 0.82rem;
     }
 
     .status-message {
@@ -538,42 +434,32 @@
       font-weight: 700;
     }
 
-    /* CONTACT */
-
     .contact-card {
       padding: 40px;
       display: grid;
       grid-template-columns: 1fr auto;
       align-items: center;
       gap: 30px;
-      background: linear-gradient(
-        135deg,
-        #ffffff,
-        #eaf0f6
-      );
+      background: #ffffff;
       border: 1px solid var(--border);
       border-radius: 28px;
     }
 
     .contact-card h2 {
       margin-bottom: 10px;
-      color: var(--primary);
+      color: var(--navy);
       font-size: clamp(2rem, 4vw, 3rem);
-      line-height: 1.08;
     }
 
     .contact-card p {
-      max-width: 680px;
       color: var(--muted);
     }
-
-    /* FOOTER */
 
     footer {
       margin-top: 44px;
       padding: 38px 0;
       color: #ffffff;
-      background: #07182c;
+      background: var(--navy-dark);
     }
 
     .footer-wrap {
@@ -592,32 +478,14 @@
     .footer-logo {
       width: 54px;
       height: 54px;
-      flex-shrink: 0;
-      overflow: hidden;
       border: 2px solid rgba(255, 255, 255, 0.75);
       border-radius: 50%;
-      background: #000000;
     }
 
-    .footer-logo img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .footer-wrap p {
+    footer p {
       color: #cbd6e2;
       font-size: 0.88rem;
     }
-
-    .footer-links {
-      display: flex;
-      gap: 18px;
-      font-size: 0.9rem;
-      font-weight: 700;
-    }
-
-    /* TABLET */
 
     @media (max-width: 900px) {
       .nav-links {
@@ -627,8 +495,6 @@
         right: 16px;
         display: none;
         flex-direction: column;
-        align-items: stretch;
-        gap: 0;
         padding: 12px;
         background: #ffffff;
         border: 1px solid var(--border);
@@ -641,12 +507,7 @@
       }
 
       .nav-links a {
-        padding: 13px 12px;
-        border-radius: 10px;
-      }
-
-      .nav-links a:hover {
-        background: var(--surface-soft);
+        padding: 12px;
       }
 
       .menu-button {
@@ -658,41 +519,28 @@
         padding: 42px 30px;
       }
 
-      .hero-logo-panel {
-        justify-content: flex-start;
-      }
-
       .quick-grid {
         grid-template-columns: repeat(2, 1fr);
       }
 
       .content-grid {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .split-section {
         grid-template-columns: 1fr;
       }
 
+      .split-section,
       .contact-card {
         grid-template-columns: 1fr;
       }
     }
-
-    /* MOBILE */
 
     @media (max-width: 620px) {
       .container {
         width: min(100% - 22px, 1120px);
       }
 
-      .brand-mark {
+      .header-logo {
         width: 52px;
         height: 52px;
-      }
-
-      .brand-text strong {
-        font-size: 0.9rem;
       }
 
       .brand-text span {
@@ -721,32 +569,17 @@
         width: 100%;
       }
 
-      .hero-logo-card {
-        max-width: 100%;
+      .hero-logo {
+        min-height: 300px;
       }
 
-      .quick-grid,
-      .content-grid {
+      .quick-grid {
         grid-template-columns: 1fr;
-      }
-
-      .section {
-        padding: 40px 0;
-      }
-
-      .feature-panel,
-      .form-panel,
-      .contact-card {
-        padding: 26px 22px;
       }
 
       .footer-wrap {
         flex-direction: column;
         align-items: flex-start;
-      }
-
-      .footer-links {
-        flex-wrap: wrap;
       }
     }
   </style>
@@ -758,16 +591,14 @@
     <div class="container nav-wrap">
 
       <a
-        href="#home"
         class="brand"
-        aria-label="The Henderson Potter's House home"
+        href="#home"
       >
-        <div class="brand-mark">
-          <img
-            src="./church_logo.png"
-            alt="The Henderson Potter's House logo"
-          >
-        </div>
+        <div
+          class="logo header-logo"
+          role="img"
+          aria-label="The Henderson Potter's House logo"
+        ></div>
 
         <div class="brand-text">
           <strong>The Henderson Potter's House</strong>
@@ -792,7 +623,7 @@
         class="menu-button"
         id="menuButton"
         type="button"
-        aria-label="Open navigation menu"
+        aria-label="Open menu"
       >
         ☰
       </button>
@@ -841,23 +672,17 @@
             </div>
           </div>
 
-          <div class="hero-logo-panel">
-            <div class="hero-logo-card">
-              <img
-                src="./church_logo.png"
-                alt="The Henderson Potter's House church logo"
-              >
-            </div>
-          </div>
+          <div
+            class="hero-logo"
+            role="img"
+            aria-label="The Henderson Potter's House logo"
+          ></div>
 
         </div>
       </div>
     </section>
 
-    <section
-      class="quick-links"
-      aria-label="Quick links"
-    >
+    <section class="quick-links">
       <div class="container quick-grid">
 
         <a
@@ -865,13 +690,8 @@
           href="#announcements"
         >
           <div class="quick-icon">📢</div>
-
           <h3>Announcements</h3>
-
-          <p>
-            See the latest church news
-            and important updates.
-          </p>
+          <p>See the latest church news and updates.</p>
         </a>
 
         <a
@@ -879,13 +699,8 @@
           href="#events"
         >
           <div class="quick-icon">📅</div>
-
           <h3>Events</h3>
-
-          <p>
-            Find upcoming services,
-            gatherings, and community events.
-          </p>
+          <p>View upcoming services and gatherings.</p>
         </a>
 
         <a
@@ -893,13 +708,8 @@
           href="#sermons"
         >
           <div class="quick-icon">▶</div>
-
           <h3>Sermons</h3>
-
-          <p>
-            Watch or listen to recent
-            messages and teachings.
-          </p>
+          <p>Watch or listen to recent messages.</p>
         </a>
 
         <a
@@ -907,13 +717,8 @@
           href="#prayer"
         >
           <div class="quick-icon">♥</div>
-
           <h3>Prayer Request</h3>
-
-          <p>
-            Share a request with
-            the church prayer team.
-          </p>
+          <p>Share a request with the prayer team.</p>
         </a>
 
       </div>
@@ -927,12 +732,9 @@
 
         <div class="section-heading">
           <span>Stay Connected</span>
-
           <h2>Church announcements</h2>
-
           <p>
-            Important church updates,
-            reminders, and announcements
+            Important church updates and reminders
             will appear here.
           </p>
         </div>
@@ -941,56 +743,29 @@
 
           <article class="content-card">
             <div class="tag">This Week</div>
-
             <h3>Sunday Worship Service</h3>
-
             <p>
-              Join us for worship,
-              fellowship, and an encouraging message.
+              Join us for worship, fellowship,
+              and an encouraging message.
             </p>
-
-            <a
-              class="card-link"
-              href="#contact"
-            >
-              Plan your visit →
-            </a>
           </article>
 
           <article class="content-card">
             <div class="tag">Community</div>
-
             <h3>Church Fellowship</h3>
-
             <p>
-              Information about upcoming fellowship,
-              meals, and church gatherings can go here.
+              Add information about upcoming
+              fellowship and church gatherings.
             </p>
-
-            <a
-              class="card-link"
-              href="#events"
-            >
-              View events →
-            </a>
           </article>
 
           <article class="content-card">
             <div class="tag">Update</div>
-
             <h3>Welcome to Our Website</h3>
-
             <p>
               Stay informed about church activities,
               messages, and upcoming events.
             </p>
-
-            <a
-              class="card-link"
-              href="#contact"
-            >
-              Contact us →
-            </a>
           </article>
 
         </div>
@@ -1005,13 +780,10 @@
 
         <div class="section-heading">
           <span>Upcoming</span>
-
           <h2>Events and gatherings</h2>
-
           <p>
-            Upcoming church services,
-            Bible studies, fellowships,
-            and community events.
+            Services, Bible studies,
+            fellowship, and community events.
           </p>
         </div>
 
@@ -1019,35 +791,20 @@
 
           <article class="content-card">
             <div class="tag">Sunday</div>
-
             <h3>Worship Service</h3>
-
-            <p>
-              Add the official Sunday service
-              time and location here.
-            </p>
+            <p>Add the official service time here.</p>
           </article>
 
           <article class="content-card">
             <div class="tag">Midweek</div>
-
             <h3>Bible Study</h3>
-
-            <p>
-              Add the Bible study day,
-              time, topic, and location here.
-            </p>
+            <p>Add the Bible study day and time here.</p>
           </article>
 
           <article class="content-card">
             <div class="tag">Monthly</div>
-
             <h3>Community Outreach</h3>
-
-            <p>
-              Add information about outreach,
-              volunteer work, and community support.
-            </p>
+            <p>Add outreach and volunteer details here.</p>
           </article>
 
         </div>
@@ -1062,12 +819,10 @@
 
         <div class="section-heading">
           <span>Get Involved</span>
-
-          <h2>Ministries for every season</h2>
-
+          <h2>Church ministries</h2>
           <p>
-            Learn about church ministries
-            and opportunities to get involved.
+            Learn about the ministries
+            and ways to get involved.
           </p>
         </div>
 
@@ -1075,9 +830,7 @@
 
           <article class="content-card">
             <div class="tag">Families</div>
-
             <h3>Children and Youth</h3>
-
             <p>
               Programs that help young people
               learn, grow, and build friendships.
@@ -1086,9 +839,7 @@
 
           <article class="content-card">
             <div class="tag">Community</div>
-
             <h3>Outreach Ministry</h3>
-
             <p>
               Opportunities to serve Henderson
               and support the community.
@@ -1097,12 +848,10 @@
 
           <article class="content-card">
             <div class="tag">Connection</div>
-
             <h3>Men and Women</h3>
-
             <p>
-              Gatherings focused on fellowship,
-              encouragement, and spiritual growth.
+              Fellowship, encouragement,
+              and spiritual growth.
             </p>
           </article>
 
@@ -1114,55 +863,49 @@
       class="section"
       id="sermons"
     >
-      <div class="container">
-        <div class="split-section">
+      <div class="container split-section">
 
-          <div class="feature-panel">
-            <div>
-              <span class="eyebrow">
-                Latest Message
-              </span>
-
-              <h2>
-                Recent sermons and teachings
-              </h2>
-
-              <p>
-                This section can later connect
-                to YouTube, Facebook,
-                or uploaded sermon recordings.
-              </p>
+        <div class="feature-panel">
+          <div>
+            <div class="eyebrow">
+              Latest Message
             </div>
 
-            <ul class="feature-list">
-              <li>Featured sermon title</li>
-              <li>Speaker name and service date</li>
-              <li>Watch, listen, or read notes</li>
-            </ul>
-          </div>
-
-          <div class="form-panel">
-            <h3>Sermon Library</h3>
+            <h2>
+              Recent sermons and teachings
+            </h2>
 
             <p>
-              Sermons can be organized by
-              date, speaker, or message series.
+              This section can later connect
+              to YouTube or Facebook.
             </p>
-
-            <div class="content-card">
-              <div class="tag">Coming Soon</div>
-
-              <h3>Messages will appear here</h3>
-
-              <p>
-                Add YouTube or Facebook links
-                when the church is ready
-                to publish sermon videos.
-              </p>
-            </div>
           </div>
 
+          <ul class="feature-list">
+            <li>Featured sermon title</li>
+            <li>Speaker and service date</li>
+            <li>Watch or listen online</li>
+          </ul>
         </div>
+
+        <div class="form-panel">
+          <h3>Sermon Library</h3>
+
+          <p>
+            Sermons can be organized
+            by date, speaker, or series.
+          </p>
+
+          <div class="content-card">
+            <div class="tag">Coming Soon</div>
+            <h3>Messages will appear here</h3>
+            <p>
+              Add video links when the church
+              is ready to publish sermons.
+            </p>
+          </div>
+        </div>
+
       </div>
     </section>
 
@@ -1170,100 +913,92 @@
       class="section"
       id="prayer"
     >
-      <div class="container">
-        <div class="split-section">
+      <div class="container split-section">
 
-          <div class="feature-panel">
-            <div>
-              <span class="eyebrow">
-                You Are Not Alone
-              </span>
-
-              <h2>
-                Share a prayer request
-              </h2>
-
-              <p>
-                Members and visitors can submit
-                a prayer request to the church.
-              </p>
+        <div class="feature-panel">
+          <div>
+            <div class="eyebrow">
+              You Are Not Alone
             </div>
 
-            <ul class="feature-list">
-              <li>Requests can remain private</li>
-              <li>No account is required</li>
-              <li>Firebase can be connected later</li>
-            </ul>
-          </div>
-
-          <form
-            class="form-panel"
-            id="prayerForm"
-          >
-            <h3>Prayer Request</h3>
+            <h2>
+              Share a prayer request
+            </h2>
 
             <p>
-              Complete the form below.
-              This form is currently a visual demo.
+              Members and visitors can submit
+              a prayer request to the church.
             </p>
+          </div>
 
-            <div class="form-grid">
-
-              <label>
-                Name
-
-                <input
-                  type="text"
-                  name="name"
-                  placeholder="Your name"
-                >
-              </label>
-
-              <label>
-                Email or phone
-
-                <input
-                  type="text"
-                  name="contact"
-                  placeholder="Optional contact information"
-                >
-              </label>
-
-              <label>
-                Prayer request
-
-                <textarea
-                  name="request"
-                  placeholder="How can we pray for you?"
-                  required
-                ></textarea>
-              </label>
-
-              <button
-                class="button button-primary"
-                type="submit"
-              >
-                Submit Request
-              </button>
-
-            </div>
-
-            <p class="notice">
-              This form can be connected
-              to Firebase or email later.
-            </p>
-
-            <div
-              class="status-message"
-              id="formStatus"
-            >
-              Demo submitted successfully.
-              No information was sent.
-            </div>
-
-          </form>
-
+          <ul class="feature-list">
+            <li>Requests can remain private</li>
+            <li>No account is required</li>
+            <li>Firebase can be connected later</li>
+          </ul>
         </div>
+
+        <form
+          class="form-panel"
+          id="prayerForm"
+        >
+          <h3>Prayer Request</h3>
+
+          <p>
+            This form is currently a visual demo.
+          </p>
+
+          <div class="form-grid">
+
+            <label>
+              Name
+
+              <input
+                type="text"
+                name="name"
+                placeholder="Your name"
+              >
+            </label>
+
+            <label>
+              Email or phone
+
+              <input
+                type="text"
+                name="contact"
+                placeholder="Optional contact information"
+              >
+            </label>
+
+            <label>
+              Prayer request
+
+              <textarea
+                name="request"
+                placeholder="How can we pray for you?"
+                required
+              ></textarea>
+            </label>
+
+            <button
+              class="button button-primary"
+              type="submit"
+            >
+              Submit Request
+            </button>
+
+          </div>
+
+          <div
+            class="status-message"
+            id="formStatus"
+          >
+            Demo submitted successfully.
+            No information was sent.
+          </div>
+
+        </form>
+
       </div>
     </section>
 
@@ -1274,14 +1009,14 @@
       <div class="container">
 
         <div class="contact-card">
+
           <div>
             <h2>Plan your visit</h2>
 
             <p>
               Add the church address,
-              official service times,
-              phone number, email address,
-              and map link here.
+              service times, phone number,
+              email, and map link here.
             </p>
           </div>
 
@@ -1291,8 +1026,8 @@
           >
             Back to Top
           </a>
-        </div>
 
+        </div>
       </div>
     </section>
 
@@ -1303,12 +1038,11 @@
 
       <div class="footer-brand">
 
-        <div class="footer-logo">
-          <img
-            src="./church_logo.png"
-            alt="The Henderson Potter's House logo"
-          >
-        </div>
+        <div
+          class="logo footer-logo"
+          role="img"
+          aria-label="The Henderson Potter's House logo"
+        ></div>
 
         <div>
           <strong>
@@ -1320,13 +1054,6 @@
           </p>
         </div>
 
-      </div>
-
-      <div class="footer-links">
-        <a href="#announcements">Announcements</a>
-        <a href="#events">Events</a>
-        <a href="#prayer">Prayer</a>
-        <a href="#contact">Contact</a>
       </div>
 
       <p>
@@ -1354,11 +1081,13 @@
       navLinks.classList.toggle("open");
     });
 
-    navLinks.querySelectorAll("a").forEach(function (link) {
-      link.addEventListener("click", function () {
-        navLinks.classList.remove("open");
+    navLinks
+      .querySelectorAll("a")
+      .forEach(function (link) {
+        link.addEventListener("click", function () {
+          navLinks.classList.remove("open");
+        });
       });
-    });
 
     prayerForm.addEventListener("submit", function (event) {
       event.preventDefault();
