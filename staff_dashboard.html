@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Church staff dashboard">
+  <title>Staff Dashboard | The Henderson Potter's House</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container nav-wrap">
+    <a class="brand" href="index.html" aria-label="The Henderson Potter's House home">
+      <div class="logo header-logo" role="img" aria-label="The Henderson Potter's House logo"></div>
+      <div class="brand-text">
+        <strong>The Henderson Potter's House</strong>
+        <span>Henderson, Nevada</span>
+      </div>
+    </a>
+
+    <nav class="nav-links" id="navLinks">
+      <a href="index.html">Home</a>
+<a href="announcements.html">Announcements</a>
+<a href="events.html">Events</a>
+<a href="ministries.html">Ministries</a>
+<a href="sermons.html">Sermons</a>
+<a href="prayer.html">Prayer</a>
+<a href="contact.html">Contact</a>
+<a class="staff-link" href="staff-login.html">Staff</a>
+    </nav>
+
+    <button
+      class="menu-button"
+      id="menuButton"
+      type="button"
+      aria-label="Open menu"
+      aria-controls="navLinks"
+      aria-expanded="false"
+    >☰</button>
+  </div>
+</header>
+<main>
+  <div class="container loading-cover" id="dashboardLoading">
+    Checking staff access...
+  </div>
+
+  <section class="dashboard-shell" id="dashboardContent" hidden>
+    <div class="container">
+      <div class="dashboard-topbar">
+        <div>
+          <p>Signed in as</p>
+          <h1 id="staffName">Staff Member</h1>
+          <span class="role-badge" id="staffRole">Staff</span>
+        </div>
+
+        <button
+          class="button button-light"
+          id="logoutButton"
+          type="button"
+        >
+          Sign Out
+        </button>
+      </div>
+
+      <div class="dashboard-tabs">
+        <button class="dashboard-tab active" type="button" data-tab="announcements">Announcements</button>
+        <button class="dashboard-tab" type="button" data-tab="events">Events</button>
+        <button class="dashboard-tab" type="button" data-tab="sermons">Sermons</button>
+        <button class="dashboard-tab" type="button" data-tab="ministries">Ministries</button>
+        <button class="dashboard-tab" type="button" data-tab="accounts">Ministry Accounts</button>
+      </div>
+
+      <section class="dashboard-panel active" data-panel="announcements">
+    <div class="dashboard-grid">
+      <form class="form-panel" data-content-form="announcements">
+        <h2>Publish Announcement</h2>
+        <p>Add a new item or edit an existing one.</p>
+
+        <input type="hidden" name="documentId">
+
+        <div class="form-grid">
+          <label>
+            Title
+            <input
+              type="text"
+              name="title"
+              placeholder="Announcement title"
+              required
+            >
+          </label><label>
+            Category
+            <input
+              type="text"
+              name="category"
+              placeholder="This Week, Community, Update"
+              required
+            >
+          </label><label>
+            Details
+            <textarea name="details" placeholder="Announcement details" required></textarea>
+          </label>
+
+          <div class="form-row">
+            <button
+              class="button button-primary"
+              type="submit"
+              data-default-text="Publish"
+            >
+              Publish
+            </button>
+
+            <button
+              class="button button-light"
+              type="button"
+              data-cancel-edit
+              hidden
+            >
+              Cancel Edit
+            </button>
+          </div>
+        </div>
+
+        <div class="status-message"></div>
+      </form>
+
+      <div>
+        <div class="section-heading">
+          <span>Current Website Content</span>
+          <h2>Published Announcements</h2>
+        </div>
+
+        <div class="manage-list" data-manage-list="announcements">
+          <div class="empty-state">Loading...</div>
+        </div>
+      </div>
+    </div>
+  </section>
+      <section class="dashboard-panel" data-panel="events">
+    <div class="dashboard-grid">
+      <form class="form-panel" data-content-form="events">
+        <h2>Publish Event</h2>
+        <p>Add a new item or edit an existing one.</p>
+
+        <input type="hidden" name="documentId">
+
+        <div class="form-grid">
+          <label>
+            Event title
+            <input
+              type="text"
+              name="title"
+              placeholder="Event title"
+              required
+            >
+          </label><label>
+            Date
+            <input
+              type="date"
+              name="date"
+              placeholder=""
+              required
+            >
+          </label><label>
+            Time
+            <input
+              type="text"
+              name="time"
+              placeholder="Example: 10:30 AM"
+              required
+            >
+          </label><label>
+            Location
+            <input
+              type="text"
+              name="location"
+              placeholder="Church or event location"
+              required
+            >
+          </label><label>
+            Details
+            <textarea name="details" placeholder="Event details" required></textarea>
+          </label>
+
+          <div class="form-row">
+            <button
+              class="button button-primary"
+              type="submit"
+              data-default-text="Publish"
+            >
+              Publish
+            </button>
+
+            <button
+              class="button button-light"
+              type="button"
+              data-cancel-edit
+              hidden
+            >
+              Cancel Edit
+            </button>
+          </div>
+        </div>
+
+        <div class="status-message"></div>
+      </form>
+
+      <div>
+        <div class="section-heading">
+          <span>Current Website Content</span>
+          <h2>Published Events</h2>
+        </div>
+
+        <div class="manage-list" data-manage-list="events">
+          <div class="empty-state">Loading...</div>
+        </div>
+      </div>
+    </div>
+  </section>
+      <section class="dashboard-panel" data-panel="sermons">
+    <div class="dashboard-grid">
+      <form class="form-panel" data-content-form="sermons">
+        <h2>Publish Sermon</h2>
+        <p>Add a new item or edit an existing one.</p>
+
+        <input type="hidden" name="documentId">
+
+        <div class="form-grid">
+          <label>
+            Sermon title
+            <input
+              type="text"
+              name="title"
+              placeholder="Sermon title"
+              required
+            >
+          </label><label>
+            Speaker
+            <input
+              type="text"
+              name="speaker"
+              placeholder="Speaker name"
+              required
+            >
+          </label><label>
+            Date
+            <input
+              type="date"
+              name="date"
+              placeholder=""
+              required
+            >
+          </label><label>
+            Video link
+            <input
+              type="url"
+              name="videoUrl"
+              placeholder="YouTube or Facebook link"
+              
+            >
+          </label><label>
+            Details
+            <textarea name="details" placeholder="Message description or notes" required></textarea>
+          </label>
+
+          <div class="form-row">
+            <button
+              class="button button-primary"
+              type="submit"
+              data-default-text="Publish"
+            >
+              Publish
+            </button>
+
+            <button
+              class="button button-light"
+              type="button"
+              data-cancel-edit
+              hidden
+            >
+              Cancel Edit
+            </button>
+          </div>
+        </div>
+
+        <div class="status-message"></div>
+      </form>
+
+      <div>
+        <div class="section-heading">
+          <span>Current Website Content</span>
+          <h2>Published Sermons</h2>
+        </div>
+
+        <div class="manage-list" data-manage-list="sermons">
+          <div class="empty-state">Loading...</div>
+        </div>
+      </div>
+    </div>
+  </section>
+      <section class="dashboard-panel" data-panel="ministries">
+    <div class="dashboard-grid">
+      <form class="form-panel" data-content-form="ministries">
+        <h2>Publish Ministry</h2>
+        <p>Add a new item or edit an existing one.</p>
+
+        <input type="hidden" name="documentId">
+
+        <div class="form-grid">
+          <label>
+            Ministry name
+            <input
+              type="text"
+              name="title"
+              placeholder="Ministry name"
+              required
+            >
+          </label><label>
+            Leader
+            <input
+              type="text"
+              name="leader"
+              placeholder="Ministry leader"
+              
+            >
+          </label><label>
+            Schedule
+            <input
+              type="text"
+              name="schedule"
+              placeholder="Meeting day and time"
+              
+            >
+          </label><label>
+            Details
+            <textarea name="details" placeholder="Ministry information" required></textarea>
+          </label>
+
+          <div class="form-row">
+            <button
+              class="button button-primary"
+              type="submit"
+              data-default-text="Publish"
+            >
+              Publish
+            </button>
+
+            <button
+              class="button button-light"
+              type="button"
+              data-cancel-edit
+              hidden
+            >
+              Cancel Edit
+            </button>
+          </div>
+        </div>
+
+        <div class="status-message"></div>
+      </form>
+
+      <div>
+        <div class="section-heading">
+          <span>Current Website Content</span>
+          <h2>Published Ministries</h2>
+        </div>
+
+        <div class="manage-list" data-manage-list="ministries">
+          <div class="empty-state">Loading...</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+      <section
+        class="dashboard-panel"
+        data-panel="accounts"
+        id="ministryAccountsPanel"
+        hidden
+      >
+        <div class="dashboard-grid">
+          <form class="form-panel" id="ministryAccountForm">
+            <h2>Create Ministry Account</h2>
+
+            <p>
+              Only the pastor can create or remove access for ministry accounts.
+            </p>
+
+            <div class="form-grid">
+              <label>
+                Full name
+                <input
+                  id="ministryName"
+                  type="text"
+                  placeholder="Ministry member's name"
+                  required
+                >
+              </label>
+
+              <label>
+                Email
+                <input
+                  id="ministryEmail"
+                  type="email"
+                  placeholder="member@email.com"
+                  required
+                >
+              </label>
+
+              <label>
+                Temporary password
+                <input
+                  id="ministryPassword"
+                  type="password"
+                  minlength="6"
+                  placeholder="At least 6 characters"
+                  required
+                >
+              </label>
+
+              <button class="button button-primary" type="submit">
+                Create Ministry Account
+              </button>
+            </div>
+
+            <div class="status-message" id="accountMessage"></div>
+          </form>
+
+          <div>
+            <div class="section-heading">
+              <span>Pastor Only</span>
+              <h2>Ministry Accounts</h2>
+              <p>
+                Removing access blocks the person from editing the website.
+                Their account can be restored later.
+              </p>
+            </div>
+
+            <div class="manage-list" id="ministryAccountList">
+              <div class="empty-state">Loading ministry accounts...</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </section>
+</main>
+<footer>
+  <div class="container footer-wrap">
+    <div class="footer-brand">
+      <div class="logo footer-logo" role="img" aria-label="The Henderson Potter's House logo"></div>
+      <div>
+        <strong>The Henderson Potter's House</strong>
+        <p>Faith, fellowship, and community.</p>
+      </div>
+    </div>
+
+    <p>© <span id="year"></span> The Henderson Potter's House.</p>
+  </div>
+</footer>
+<script src="script.js"></script>
+<script type="module" src="staff-dashboard.js"></script>
+</body>
+</html>
