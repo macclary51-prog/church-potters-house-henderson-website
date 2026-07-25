@@ -12,12 +12,13 @@ import {
 
 
 const firebaseConfig = {
-  apiKey: "PASTE_API_KEY_HERE",
-  authDomain: "PASTE_AUTH_DOMAIN_HERE",
+  apiKey: "AIzaSyDxGilYZCgUMGb81nThex0kOgynXPFGKoc",
+  authDomain: "hendersonpottershouse-aa92d.firebaseapp.com",
   projectId: "hendersonpottershouse-aa92d",
-  storageBucket: "PASTE_STORAGE_BUCKET_HERE",
-  messagingSenderId: "PASTE_MESSAGING_SENDER_ID_HERE",
-  appId: "PASTE_APP_ID_HERE"
+  storageBucket: "hendersonpottershouse-aa92d.firebasestorage.app",
+  messagingSenderId: "291820005147",
+  appId: "1:291820005147:web:2266349a13ef6bf3f355be",
+  measurementId: "G-TNJJXQ8GCK"
 };
 
 
