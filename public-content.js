@@ -510,7 +510,7 @@ function createContentCard(item) {
         console.error(error);
 
         showToast(
-          "The item could not be removed. Check the Firestore rules.",
+          "The item could not be removed. Please refresh and try again.",
           true
         );
       }
@@ -683,7 +683,7 @@ if (editorForm) {
 
       showStatus(
         formStatus,
-        "The item could not be saved. Check the Firestore rules and internet connection.",
+        "The item could not be saved. Check your connection and try again.",
         true
       );
 
@@ -920,7 +920,7 @@ function renderAccounts(snapshot) {
             error.code === "auth/user-not-found"
           ) {
             message =
-              "That Firebase Authentication user no longer exists.";
+              "That ministry account no longer exists.";
           } else if (
             error.code === "auth/invalid-email"
           ) {
@@ -1156,17 +1156,17 @@ if (accountForm) {
         error.code === "firestore/permission-denied"
       ) {
         message =
-          "Firestore denied the new account. Check that the staff rules were published.";
+          "The ministry account could not be created. Please review staff access and try again.";
       } else if (
         error.code === "auth/operation-not-allowed"
       ) {
         message =
-          "Email and password accounts are not enabled in Firebase Authentication.";
+          "Account creation is currently unavailable. Please contact the site administrator.";
       } else if (
         error.code === "auth/network-request-failed"
       ) {
         message =
-          "The browser could not reach Firebase. Check the internet connection and try again.";
+          "The account service could not be reached. Check your connection and try again.";
       }
 
       showStatus(
