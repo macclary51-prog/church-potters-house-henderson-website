@@ -11,7 +11,7 @@
   --border: #dce2e9;
   --success: #17643d;
   --shadow: 0 15px 35px rgba(16, 43, 78, 0.12);
-  --church-logo: url("church_logo.png?v=2");
+  --church-logo: url("church_logo.png?v=3");
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -26,7 +26,7 @@ button, input, textarea { font: inherit; }
 .nav-wrap { position: relative; min-height: 82px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
 .brand { display: flex; align-items: center; gap: 13px; }
 .logo { flex-shrink: 0; background-color: #000; background-image: var(--church-logo); background-position: center; background-repeat: no-repeat; background-size: contain; }
-.header-logo { width: 64px; height: 64px; border: 2px solid #fff; border-radius: 50%; box-shadow: 0 7px 20px rgba(0,0,0,.24); }
+.header-logo { width: 190px; height: 68px; border: 0; border-radius: 14px; box-shadow: 0 7px 20px rgba(0,0,0,.18); }
 .brand-text { line-height: 1.15; }
 .brand-text strong { display: block; color: var(--navy); }
 .brand-text span { color: var(--muted); font-size: .84rem; }
@@ -110,7 +110,7 @@ textarea { min-height: 135px; resize: vertical; }
 footer { margin-top: 44px; padding: 38px 0; color: #fff; background: var(--navy-dark); }
 .footer-wrap { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
 .footer-brand { display: flex; align-items: center; gap: 12px; }
-.footer-logo { width: 54px; height: 54px; border: 2px solid rgba(255,255,255,.75); border-radius: 50%; }
+.footer-logo { width: 150px; height: 72px; border: 1px solid rgba(255,255,255,.35); border-radius: 12px; }
 footer p { color: #cbd6e2; font-size: .88rem; }
 
 @media (max-width: 1280px) {
@@ -229,7 +229,7 @@ footer p { color: #cbd6e2; font-size: .88rem; }
   }
 
   .container { width: min(100% - 22px, 1120px); }
-  .header-logo { width: 52px; height: 52px; }
+  .header-logo { width: 118px; height: 62px; border-radius: 11px; }
   .brand-text span { display: none; }
   .hero { padding-top: 27px; }
   .hero-card, .page-hero-card { padding: 32px 22px; border-radius: 24px; }
@@ -239,4 +239,16 @@ footer p { color: #cbd6e2; font-size: .88rem; }
   .hero-logo { min-height: 290px; }
   .quick-grid, .content-grid { grid-template-columns: 1fr; }
   .footer-wrap { flex-direction: column; align-items: flex-start; }
+}
+
+
+/* The full church name is already part of church_logo.png. */
+.site-header .brand-text {
+  display: none;
+}
+
+@media (max-width: 620px) {
+  .site-header .brand {
+    max-width: 118px;
+  }
 }
