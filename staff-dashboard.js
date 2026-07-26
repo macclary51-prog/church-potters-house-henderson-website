@@ -40,27 +40,27 @@ const COLLECTIONS = [
 const PANEL_COPY = {
   overview: {
     title: "Staff Dashboard",
-    description: "Add, edit, or remove website content from one place."
+    description: "Manage church website content from one simple place."
   },
   announcements: {
     title: "Announcements",
-    description: "Manage announcements that appear on the church website."
+    description: "Create, edit, and remove church announcements."
   },
   events: {
     title: "Events",
-    description: "Manage services, gatherings, dates, and locations."
+    description: "Manage upcoming services, gatherings, and special events."
   },
   sermons: {
     title: "Sermons",
-    description: "Manage sermon information and video links."
+    description: "Publish messages, speakers, dates, and video links."
   },
   ministries: {
     title: "Ministries",
-    description: "Manage church ministry information."
+    description: "Keep church ministry information current."
   },
   accounts: {
     title: "Ministry Accounts",
-    description: "Create, remove, or restore ministry website access."
+    description: "Create and manage ministry website access."
   }
 };
 
@@ -73,8 +73,10 @@ const welcomeName = document.getElementById("welcomeName");
 const logoutButton = document.getElementById("logoutButton");
 const pageTitle = document.getElementById("dashboardPageTitle");
 const pageDescription = document.getElementById("dashboardPageDescription");
-const accountsNavButton = document.getElementById("accountsNavButton");
+const dashboardMenuButton = document.getElementById("dashboardMenuButton");
+const staffSidebarBackdrop = document.getElementById("staffSidebarBackdrop");
 const ministryAccountsPanel = document.getElementById("ministryAccountsPanel");
+const accountsNavButton = document.getElementById("accountsNavButton");
 const accountForm = document.getElementById("ministryAccountForm");
 const accountMessage = document.getElementById("accountMessage");
 const ministryAccountList = document.getElementById("ministryAccountList");
@@ -94,8 +96,8 @@ const navAccountCount = document.getElementById("navAccountCount");
 
 let currentUser = null;
 let currentStaff = null;
-let accountUnsubscribe = null;
 let toastTimer = null;
+let accountUnsubscribe = null;
 
 const contentState = new Map(
   COLLECTIONS.map(function (collectionName) {
@@ -167,23 +169,43 @@ function hideStatus(element) {
 }
 
 
+function closeMobileSidebar() {
+  document.body.classList.remove("staff-sidebar-open");
+
+  if (dashboardMenuButton) {
+    dashboardMenuButton.setAttribute("aria-expanded", "false");
+  }
+}
+
+
 function openTab(tabName, options = {}) {
   const copy = PANEL_COPY[tabName] || PANEL_COPY.overview;
 
   document.querySelectorAll("[data-tab]").forEach(function (button) {
-    button.classList.toggle(
-      "active",
-      button.dataset.tab === tabName
-    );
+    const isActive = button.dataset.tab === tabName;
+
+    button.classList.toggle("active", isActive);
+
+    if (isActive) {
+      button.setAttribute("aria-current", "page");
+    } else {
+      button.removeAttribute("aria-current");
+    }
   });
 
   document.querySelectorAll("[data-panel]").forEach(function (panel) {
-    panel.hidden =
-      panel.dataset.panel !== tabName;
+    panel.hidden = panel.dataset.panel !== tabName;
   });
 
-  pageTitle.textContent = copy.title;
-  pageDescription.textContent = copy.description;
+  if (pageTitle) {
+    pageTitle.textContent = copy.title;
+  }
+
+  if (pageDescription) {
+    pageDescription.textContent = copy.description;
+  }
+
+  closeMobileSidebar();
 
   if (options.scroll !== false) {
     window.scrollTo({
@@ -205,6 +227,26 @@ document.querySelectorAll("[data-open-tab]").forEach(function (button) {
   button.addEventListener("click", function () {
     openTab(button.dataset.openTab);
   });
+});
+
+
+if (dashboardMenuButton) {
+  dashboardMenuButton.addEventListener("click", function () {
+    const isOpen = document.body.classList.toggle("staff-sidebar-open");
+    dashboardMenuButton.setAttribute("aria-expanded", String(isOpen));
+  });
+}
+
+
+if (staffSidebarBackdrop) {
+  staffSidebarBackdrop.addEventListener("click", closeMobileSidebar);
+}
+
+
+document.addEventListener("keydown", function (event) {
+  if (event.key === "Escape") {
+    closeMobileSidebar();
+  }
 });
 
 
@@ -250,18 +292,6 @@ async function loadStaffProfile(user) {
 }
 
 
-function getCollectionLabel(collectionName) {
-  const labels = {
-    announcements: "Announcement",
-    events: "Event",
-    sermons: "Sermon",
-    ministries: "Ministry"
-  };
-
-  return labels[collectionName] || collectionName;
-}
-
-
 function getItemTitle(collectionName, data) {
   if (collectionName === "ministries") {
     return data.name || "Untitled Ministry";
@@ -302,6 +332,18 @@ function getItemMeta(collectionName, data) {
 }
 
 
+function getCollectionLabel(collectionName) {
+  const labels = {
+    announcements: "Announcement",
+    events: "Event",
+    sermons: "Sermon",
+    ministries: "Ministry"
+  };
+
+  return labels[collectionName] || collectionName;
+}
+
+
 function timestampSeconds(value) {
   if (!value) {
     return 0;
@@ -312,9 +354,7 @@ function timestampSeconds(value) {
   }
 
   if (typeof value.toDate === "function") {
-    return Math.floor(
-      value.toDate().getTime() / 1000
-    );
+    return Math.floor(value.toDate().getTime() / 1000);
   }
 
   return 0;
@@ -356,16 +396,12 @@ function clearEditingState(form) {
     form.elements.documentId.value = "";
   }
 
-  const submitButton =
-    form.querySelector('[type="submit"]');
-
-  const cancelButton =
-    form.querySelector("[data-cancel-edit]");
+  const submitButton = form.querySelector('[type="submit"]');
+  const cancelButton = form.querySelector("[data-cancel-edit]");
 
   if (submitButton) {
     submitButton.textContent =
-      submitButton.dataset.defaultText ||
-      "Publish";
+      submitButton.dataset.defaultText || "Publish";
   }
 
   if (cancelButton) {
@@ -383,9 +419,7 @@ document.querySelectorAll("[data-cancel-edit]").forEach(function (button) {
     }
 
     clearEditingState(form);
-    hideStatus(
-      form.querySelector(".church-admin-status")
-    );
+    hideStatus(form.querySelector(".staff-form-status"));
   });
 });
 
@@ -395,30 +429,17 @@ document.querySelectorAll("[data-content-form]").forEach(function (form) {
     event.preventDefault();
 
     if (!currentUser) {
-      showToast(
-        "Your session ended. Please sign in again.",
-        true
-      );
-
+      showToast("Your session is no longer active. Please sign in again.", true);
       return;
     }
 
-    const collectionName =
-      form.dataset.contentForm;
-
-    const status =
-      form.querySelector(".church-admin-status");
-
-    const submitButton =
-      form.querySelector('[type="submit"]');
-
-    const formData =
-      new FormData(form);
-
-    const documentId =
-      String(
-        formData.get("documentId") || ""
-      ).trim();
+    const collectionName = form.dataset.contentForm;
+    const status = form.querySelector(".staff-form-status");
+    const submitButton = form.querySelector('[type="submit"]');
+    const formData = new FormData(form);
+    const documentId = String(
+      formData.get("documentId") || ""
+    ).trim();
 
     const data = {};
 
@@ -427,15 +448,15 @@ document.querySelectorAll("[data-content-form]").forEach(function (form) {
         continue;
       }
 
-      data[key] =
-        String(value).trim();
+      data[key] = String(value).trim();
     }
 
-    submitButton.disabled = true;
-    submitButton.textContent =
-      documentId
+    if (submitButton) {
+      submitButton.disabled = true;
+      submitButton.textContent = documentId
         ? "Saving Changes…"
         : "Publishing…";
+    }
 
     hideStatus(status);
 
@@ -451,12 +472,7 @@ document.querySelectorAll("[data-content-form]").forEach(function (form) {
         );
 
         clearEditingState(form);
-
-        showStatus(
-          status,
-          "Changes saved successfully."
-        );
-
+        showStatus(status, "Changes saved successfully.");
         showToast("Changes saved.");
       } else {
         await addDoc(
@@ -471,36 +487,27 @@ document.querySelectorAll("[data-content-form]").forEach(function (form) {
         );
 
         clearEditingState(form);
-
-        showStatus(
-          status,
-          "Published successfully."
-        );
-
-        showToast(
-          `${getCollectionLabel(collectionName)} published.`
-        );
+        showStatus(status, "Published successfully.");
+        showToast(`${getCollectionLabel(collectionName)} published.`);
       }
     } catch (error) {
       console.error(error);
 
       showStatus(
         status,
-        "Could not save this item. Check your Firestore rules and internet connection.",
+        "This item could not be saved. Check your connection and try again.",
         true
       );
 
-      showToast(
-        "The item could not be saved.",
-        true
-      );
+      showToast("The item could not be saved.", true);
     } finally {
-      submitButton.disabled = false;
+      if (submitButton) {
+        submitButton.disabled = false;
 
-      if (!form.elements.documentId?.value) {
-        submitButton.textContent =
-          submitButton.dataset.defaultText ||
-          "Publish";
+        if (!form.elements.documentId?.value) {
+          submitButton.textContent =
+            submitButton.dataset.defaultText || "Publish";
+        }
       }
     }
   });
@@ -508,8 +515,7 @@ document.querySelectorAll("[data-content-form]").forEach(function (form) {
 
 
 function startEditing(collectionName, documentId, data) {
-  const form =
-    getFormForCollection(collectionName);
+  const form = getFormForCollection(collectionName);
 
   if (!form) {
     return;
@@ -519,41 +525,37 @@ function startEditing(collectionName, documentId, data) {
     scroll: false
   });
 
-  form.elements.documentId.value =
-    documentId;
+  form.elements.documentId.value = documentId;
 
   Object.entries(data).forEach(function ([key, value]) {
     if (form.elements[key]) {
-      form.elements[key].value =
-        formatValue(value);
+      form.elements[key].value = formatValue(value);
     }
   });
 
-  const submitButton =
-    form.querySelector('[type="submit"]');
+  const submitButton = form.querySelector('[type="submit"]');
+  const cancelButton = form.querySelector("[data-cancel-edit]");
 
-  const cancelButton =
-    form.querySelector("[data-cancel-edit]");
+  if (submitButton) {
+    submitButton.textContent = "Save Changes";
+  }
 
-  submitButton.textContent =
-    "Save Changes";
+  if (cancelButton) {
+    cancelButton.hidden = false;
+  }
 
-  cancelButton.hidden = false;
-
-  hideStatus(
-    form.querySelector(".church-admin-status")
-  );
+  hideStatus(form.querySelector(".staff-form-status"));
 
   form.scrollIntoView({
     behavior: "smooth",
     block: "start"
   });
 
-  window.setTimeout(function () {
-    const firstInput = form.querySelector(
-      'input:not([type="hidden"]), textarea'
-    );
+  const firstInput = form.querySelector(
+    'input:not([type="hidden"]), textarea'
+  );
 
+  window.setTimeout(function () {
     firstInput?.focus({
       preventScroll: true
     });
@@ -563,7 +565,7 @@ function startEditing(collectionName, documentId, data) {
 
 async function removeContent(collectionName, documentId, title) {
   const confirmed = window.confirm(
-    `Remove "${title || "this item"}" from the public website?\n\nThis will delete it from the website.`
+    `Remove "${title || "this item"}" from the website?`
   );
 
   if (!confirmed) {
@@ -575,100 +577,60 @@ async function removeContent(collectionName, documentId, title) {
       doc(db, collectionName, documentId)
     );
 
-    showToast(
-      `${getCollectionLabel(collectionName)} removed from the website.`
-    );
+    showToast(`${getCollectionLabel(collectionName)} removed.`);
   } catch (error) {
     console.error(error);
 
     window.alert(
-      "The item could not be removed. Check your Firestore rules."
+      "The item could not be removed. Please refresh and try again."
     );
   }
 }
 
 
 function createManageItem(collectionName, item) {
-  const card =
-    document.createElement("article");
+  const card = document.createElement("article");
+  card.className = "staff-manage-item";
 
-  card.className =
-    "church-admin-manage-item";
+  const head = document.createElement("div");
+  head.className = "staff-manage-head";
 
-  const head =
-    document.createElement("div");
+  const copy = document.createElement("div");
+  copy.className = "staff-manage-copy";
 
-  head.className =
-    "church-admin-manage-head";
+  const title = document.createElement("h3");
+  title.textContent = getItemTitle(
+    collectionName,
+    item.data
+  );
 
-  const copy =
-    document.createElement("div");
-
-  copy.className =
-    "church-admin-manage-copy";
-
-  const title =
-    document.createElement("h3");
-
-  title.textContent =
-    getItemTitle(collectionName, item.data);
-
-  const meta =
-    document.createElement("span");
-
-  meta.className =
-    "church-admin-manage-meta";
-
+  const meta = document.createElement("span");
+  meta.className = "staff-manage-meta";
   meta.textContent =
     getItemMeta(collectionName, item.data) ||
     getCollectionLabel(collectionName);
 
-  const details =
-    document.createElement("p");
-
+  const details = document.createElement("p");
   details.textContent =
     item.data.details ||
     item.data.description ||
     "No details provided.";
 
-  copy.append(
-    title,
-    meta,
-    details
-  );
+  copy.append(title, meta, details);
 
-  const liveBadge =
-    document.createElement("span");
+  const badge = document.createElement("span");
+  badge.className = "staff-content-type";
+  badge.textContent = getCollectionLabel(collectionName);
 
-  liveBadge.className =
-    "church-admin-live-badge";
+  head.append(copy, badge);
 
-  liveBadge.textContent =
-    "LIVE ON WEBSITE";
+  const actions = document.createElement("div");
+  actions.className = "staff-manage-actions";
 
-  head.append(
-    copy,
-    liveBadge
-  );
-
-  const actions =
-    document.createElement("div");
-
-  actions.className =
-    "church-admin-manage-actions";
-
-  const editButton =
-    document.createElement("button");
-
-  editButton.className =
-    "church-admin-edit-button";
-
-  editButton.type =
-    "button";
-
-  editButton.textContent =
-    "✏ Edit";
-
+  const editButton = document.createElement("button");
+  editButton.className = "staff-small-button edit";
+  editButton.type = "button";
+  editButton.textContent = "Edit";
   editButton.addEventListener("click", function () {
     startEditing(
       collectionName,
@@ -677,18 +639,10 @@ function createManageItem(collectionName, item) {
     );
   });
 
-  const removeButton =
-    document.createElement("button");
-
-  removeButton.className =
-    "church-admin-remove-button";
-
-  removeButton.type =
-    "button";
-
-  removeButton.textContent =
-    "🗑 Remove From Website";
-
+  const removeButton = document.createElement("button");
+  removeButton.className = "staff-small-button remove";
+  removeButton.type = "button";
+  removeButton.textContent = "Remove";
   removeButton.addEventListener("click", function () {
     removeContent(
       collectionName,
@@ -697,25 +651,17 @@ function createManageItem(collectionName, item) {
     );
   });
 
-  actions.append(
-    editButton,
-    removeButton
-  );
-
-  card.append(
-    head,
-    actions
-  );
+  actions.append(editButton, removeButton);
+  card.append(head, actions);
 
   return card;
 }
 
 
 function renderManageList(collectionName, items) {
-  const container =
-    document.querySelector(
-      `[data-manage-list="${collectionName}"]`
-    );
+  const container = document.querySelector(
+    `[data-manage-list="${collectionName}"]`
+  );
 
   if (!container) {
     return;
@@ -724,25 +670,16 @@ function renderManageList(collectionName, items) {
   container.replaceChildren();
 
   if (items.length === 0) {
-    const empty =
-      document.createElement("div");
-
-    empty.className =
-      "church-admin-empty";
-
-    empty.textContent =
-      `No ${collectionName} are currently on the website.`;
-
+    const empty = document.createElement("div");
+    empty.className = "staff-empty-state";
+    empty.textContent = `No ${collectionName} have been published yet.`;
     container.appendChild(empty);
     return;
   }
 
   items.forEach(function (item) {
     container.appendChild(
-      createManageItem(
-        collectionName,
-        item
-      )
+      createManageItem(collectionName, item)
     );
   });
 }
@@ -750,19 +687,16 @@ function renderManageList(collectionName, items) {
 
 function countUpcomingEvents(items) {
   const today = new Date();
-
   today.setHours(0, 0, 0, 0);
 
   return items.filter(function (item) {
-    const dateValue =
-      item.data.date;
+    const dateValue = item.data.date;
 
     if (!dateValue) {
       return false;
     }
 
-    const eventDate =
-      new Date(`${dateValue}T00:00:00`);
+    const eventDate = new Date(`${dateValue}T00:00:00`);
 
     return (
       !Number.isNaN(eventDate.getTime()) &&
@@ -772,47 +706,32 @@ function countUpcomingEvents(items) {
 }
 
 
-function updateCounts() {
+function updateOverviewCounts() {
   const announcements =
     contentState.get("announcements") || [];
-
   const events =
     contentState.get("events") || [];
-
   const sermons =
     contentState.get("sermons") || [];
-
   const ministries =
     contentState.get("ministries") || [];
 
-  statAnnouncements.textContent =
-    announcements.length;
+  statAnnouncements.textContent = announcements.length;
+  statEvents.textContent = countUpcomingEvents(events);
+  statSermons.textContent = sermons.length;
+  statMinistries.textContent = ministries.length;
 
-  statEvents.textContent =
-    countUpcomingEvents(events);
-
-  statSermons.textContent =
-    sermons.length;
-
-  statMinistries.textContent =
-    ministries.length;
-
-  navAnnouncementCount.textContent =
-    announcements.length;
-
-  navEventCount.textContent =
-    events.length;
-
-  navSermonCount.textContent =
-    sermons.length;
-
-  navMinistryCount.textContent =
-    ministries.length;
+  navAnnouncementCount.textContent = announcements.length;
+  navEventCount.textContent = events.length;
+  navSermonCount.textContent = sermons.length;
+  navMinistryCount.textContent = ministries.length;
 }
 
 
 function renderRecentContent() {
-  recentContentList.replaceChildren();
+  if (!recentContentList) {
+    return;
+  }
 
   const recentItems = [];
 
@@ -832,74 +751,43 @@ function renderRecentContent() {
     );
   });
 
+  recentContentList.replaceChildren();
+
   if (recentItems.length === 0) {
-    const empty =
-      document.createElement("div");
-
-    empty.className =
-      "church-admin-empty";
-
-    empty.textContent =
-      "Published content will appear here.";
-
+    const empty = document.createElement("div");
+    empty.className = "staff-empty-state";
+    empty.textContent = "Published content will appear here.";
     recentContentList.appendChild(empty);
     return;
   }
 
   recentItems.slice(0, 6).forEach(function (item) {
-    const button =
-      document.createElement("button");
+    const button = document.createElement("button");
+    button.className = "staff-recent-item";
+    button.type = "button";
 
-    button.className =
-      "church-admin-recent-item";
+    const copy = document.createElement("span");
+    copy.className = "staff-recent-item-copy";
 
-    button.type =
-      "button";
+    const title = document.createElement("strong");
+    title.textContent = getItemTitle(
+      item.collectionName,
+      item.data
+    );
 
-    const copy =
-      document.createElement("span");
-
-    const title =
-      document.createElement("strong");
-
-    title.textContent =
-      getItemTitle(
-        item.collectionName,
-        item.data
-      );
-
-    const meta =
-      document.createElement("small");
-
+    const meta = document.createElement("small");
     meta.textContent =
-      getItemMeta(
-        item.collectionName,
-        item.data
-      ) ||
-      getCollectionLabel(
-        item.collectionName
-      );
+      getItemMeta(item.collectionName, item.data) ||
+      getCollectionLabel(item.collectionName);
 
-    const badge =
-      document.createElement("span");
-
-    badge.className =
-      "church-admin-type-badge";
-
-    badge.textContent =
-      getCollectionLabel(
-        item.collectionName
-      );
-
-    copy.append(
-      title,
-      meta
+    const badge = document.createElement("span");
+    badge.className = "staff-content-type";
+    badge.textContent = getCollectionLabel(
+      item.collectionName
     );
 
-    button.append(
-      copy,
-      badge
-    );
+    copy.append(title, meta);
+    button.append(copy, badge);
 
     button.addEventListener("click", function () {
       openTab(item.collectionName);
@@ -915,45 +803,40 @@ function subscribeToContent() {
     onSnapshot(
       collection(db, collectionName),
       function (snapshot) {
-        const items =
-          snapshot.docs
-            .map(function (documentSnapshot) {
-              return {
-                id: documentSnapshot.id,
-                data: documentSnapshot.data()
-              };
-            })
-            .sort(function (a, b) {
-              return (
-                documentSortTime(b.data) -
-                documentSortTime(a.data)
-              );
-            });
+        const items = snapshot.docs
+          .map(function (documentSnapshot) {
+            return {
+              id: documentSnapshot.id,
+              data: documentSnapshot.data()
+            };
+          })
+          .sort(function (a, b) {
+            return (
+              documentSortTime(b.data) -
+              documentSortTime(a.data)
+            );
+          });
 
-        contentState.set(
-          collectionName,
-          items
-        );
+        contentState.set(collectionName, items);
 
         renderManageList(
           collectionName,
           items
         );
 
-        updateCounts();
+        updateOverviewCounts();
         renderRecentContent();
       },
       function (error) {
         console.error(error);
 
-        const container =
-          document.querySelector(
-            `[data-manage-list="${collectionName}"]`
-          );
+        const container = document.querySelector(
+          `[data-manage-list="${collectionName}"]`
+        );
 
         if (container) {
           container.innerHTML =
-            '<div class="church-admin-empty">This content could not be loaded.</div>';
+            '<div class="staff-empty-state">This content could not be loaded.</div>';
         }
       }
     );
@@ -962,148 +845,109 @@ function subscribeToContent() {
 
 
 function renderMinistryAccounts(snapshot) {
+  if (!ministryAccountList) {
+    return;
+  }
+
   ministryAccountList.replaceChildren();
 
-  const accounts =
-    snapshot.docs
-      .filter(function (documentSnapshot) {
-        return (
-          normalizeRole(
-            documentSnapshot.data().role
-          ) === "ministry"
-        );
-      })
-      .map(function (documentSnapshot) {
-        return {
-          id: documentSnapshot.id,
-          data: documentSnapshot.data()
-        };
-      })
-      .sort(function (a, b) {
-        return String(
-          a.data.name || ""
-        ).localeCompare(
-          String(b.data.name || "")
-        );
-      });
+  const accounts = snapshot.docs
+    .filter(function (documentSnapshot) {
+      return normalizeRole(
+        documentSnapshot.data().role
+      ) === "ministry";
+    })
+    .map(function (documentSnapshot) {
+      return {
+        id: documentSnapshot.id,
+        data: documentSnapshot.data()
+      };
+    })
+    .sort(function (a, b) {
+      return String(a.data.name || "").localeCompare(
+        String(b.data.name || "")
+      );
+    });
 
-  const activeAccounts =
-    accounts.filter(function (account) {
-      return account.data.active === true;
-    }).length;
+  const activeAccounts = accounts.filter(function (account) {
+    return account.data.active === true;
+  }).length;
 
-  navAccountCount.textContent =
-    activeAccounts;
+  navAccountCount.textContent = activeAccounts;
 
   if (accounts.length === 0) {
-    const empty =
-      document.createElement("div");
-
-    empty.className =
-      "church-admin-empty";
-
-    empty.textContent =
-      "No ministry accounts have been added yet.";
-
+    const empty = document.createElement("div");
+    empty.className = "staff-empty-state";
+    empty.textContent = "No ministry accounts have been added yet.";
     ministryAccountList.appendChild(empty);
     return;
   }
 
   accounts.forEach(function (account) {
-    const card =
-      document.createElement("article");
+    const card = document.createElement("article");
+    card.className = "staff-manage-item";
 
-    card.className =
-      "church-admin-manage-item";
+    const head = document.createElement("div");
+    head.className = "staff-manage-head";
 
-    const head =
-      document.createElement("div");
+    const copy = document.createElement("div");
+    copy.className = "staff-manage-copy";
 
-    head.className =
-      "church-admin-manage-head";
-
-    const copy =
-      document.createElement("div");
-
-    copy.className =
-      "church-admin-manage-copy";
-
-    const title =
-      document.createElement("h3");
-
+    const title = document.createElement("h3");
     title.textContent =
       account.data.name ||
       "Ministry Member";
 
-    const email =
-      document.createElement("span");
-
-    email.className =
-      "church-admin-manage-meta";
-
+    const email = document.createElement("span");
+    email.className = "staff-manage-meta";
     email.textContent =
       account.data.email ||
       "No email listed";
 
-    copy.append(
-      title,
-      email
-    );
+    copy.append(title, email);
 
-    const badge =
-      document.createElement("span");
-
+    const badge = document.createElement("span");
     badge.className =
       account.data.active === true
-        ? "church-admin-account-badge active"
-        : "church-admin-account-badge inactive";
+        ? "staff-account-status active"
+        : "staff-account-status inactive";
 
     badge.textContent =
       account.data.active === true
-        ? "ACTIVE"
-        : "ACCESS REMOVED";
+        ? "Active"
+        : "Access Removed";
 
-    head.append(
-      copy,
-      badge
-    );
+    head.append(copy, badge);
 
-    const actions =
-      document.createElement("div");
+    const actions = document.createElement("div");
+    actions.className = "staff-manage-actions";
 
-    actions.className =
-      "church-admin-manage-actions";
-
-    const toggleButton =
-      document.createElement("button");
-
-    toggleButton.type =
-      "button";
-
+    const toggleButton = document.createElement("button");
+    toggleButton.type = "button";
     toggleButton.className =
       account.data.active === true
-        ? "church-admin-access-button remove"
-        : "church-admin-access-button restore";
+        ? "staff-small-button remove"
+        : "staff-small-button edit";
 
     toggleButton.textContent =
       account.data.active === true
-        ? "Remove Website Access"
-        : "Restore Website Access";
+        ? "Remove Access"
+        : "Restore Access";
 
     toggleButton.addEventListener("click", async function () {
       const nextActive =
         account.data.active !== true;
 
-      const confirmed =
-        window.confirm(
-          `${
-            nextActive ? "Restore" : "Remove"
-          } access for ${
-            account.data.name ||
-            account.data.email ||
-            "this account"
-          }?`
-        );
+      const actionWord =
+        nextActive ? "Restore" : "Remove";
+
+      const confirmed = window.confirm(
+        `${actionWord} access for ${
+          account.data.name ||
+          account.data.email ||
+          "this account"
+        }?`
+      );
 
       if (!confirmed) {
         return;
@@ -1128,22 +972,14 @@ function renderMinistryAccounts(snapshot) {
         );
       } catch (error) {
         console.error(error);
-
-        window.alert(
-          "The account could not be updated."
-        );
+        window.alert("The account could not be updated.");
       } finally {
         toggleButton.disabled = false;
       }
     });
 
     actions.appendChild(toggleButton);
-
-    card.append(
-      head,
-      actions
-    );
-
+    card.append(head, actions);
     ministryAccountList.appendChild(card);
   });
 }
@@ -1154,20 +990,19 @@ function subscribeToMinistryAccounts() {
     accountUnsubscribe();
   }
 
-  accountUnsubscribe =
-    onSnapshot(
-      collection(db, "staff"),
-      renderMinistryAccounts,
-      function (error) {
-        console.error(error);
+  accountUnsubscribe = onSnapshot(
+    collection(db, "staff"),
+    renderMinistryAccounts,
+    function (error) {
+      console.error(error);
 
-        showStatus(
-          accountMessage,
-          "Could not load ministry accounts.",
-          true
-        );
-      }
-    );
+      showStatus(
+        accountMessage,
+        "Could not load ministry accounts.",
+        true
+      );
+    }
+  );
 }
 
 
@@ -1185,22 +1020,19 @@ if (accountForm) {
       return;
     }
 
-    const name =
-      document
-        .getElementById("ministryName")
-        .value
-        .trim();
+    const name = document
+      .getElementById("ministryName")
+      .value
+      .trim();
 
-    const email =
-      document
-        .getElementById("ministryEmail")
-        .value
-        .trim();
+    const email = document
+      .getElementById("ministryEmail")
+      .value
+      .trim();
 
-    const password =
-      document
-        .getElementById("ministryPassword")
-        .value;
+    const password = document
+      .getElementById("ministryPassword")
+      .value;
 
     const submitButton =
       accountForm.querySelector('[type="submit"]');
@@ -1209,17 +1041,14 @@ if (accountForm) {
     let createdUser = null;
 
     submitButton.disabled = true;
-    submitButton.textContent =
-      "Creating Account…";
-
+    submitButton.textContent = "Creating Account…";
     hideStatus(accountMessage);
 
     try {
-      secondaryApp =
-        initializeApp(
-          firebaseConfig,
-          `ministry-account-${Date.now()}`
-        );
+      secondaryApp = initializeApp(
+        firebaseConfig,
+        `ministry-account-${Date.now()}`
+      );
 
       const secondaryAuth =
         getAuth(secondaryApp);
@@ -1231,8 +1060,7 @@ if (accountForm) {
           password
         );
 
-      createdUser =
-        credential.user;
+      createdUser = credential.user;
 
       await setDoc(
         doc(db, "staff", createdUser.uid),
@@ -1254,12 +1082,10 @@ if (accountForm) {
 
       showStatus(
         accountMessage,
-        "Ministry account created successfully."
+        "Ministry account created. Give the member their email and temporary password."
       );
 
-      showToast(
-        "Ministry account created."
-      );
+      showToast("Ministry account created.");
     } catch (error) {
       console.error(error);
 
@@ -1274,22 +1100,13 @@ if (accountForm) {
       let message =
         "The ministry account could not be created.";
 
-      if (
-        error.code ===
-        "auth/email-already-in-use"
-      ) {
+      if (error.code === "auth/email-already-in-use") {
         message =
           "An account already exists with that email address.";
-      } else if (
-        error.code ===
-        "auth/weak-password"
-      ) {
+      } else if (error.code === "auth/weak-password") {
         message =
           "The temporary password must contain at least 6 characters.";
-      } else if (
-        error.code ===
-        "auth/invalid-email"
-      ) {
+      } else if (error.code === "auth/invalid-email") {
         message =
           "Enter a valid email address.";
       } else if (
@@ -1297,7 +1114,7 @@ if (accountForm) {
         error.code === "firestore/permission-denied"
       ) {
         message =
-          "Firestore denied the new account. Check that the staff rules were published.";
+          "The ministry account could not be created. Please review staff access and try again.";
       }
 
       showStatus(
@@ -1306,10 +1123,7 @@ if (accountForm) {
         true
       );
 
-      showToast(
-        message,
-        true
-      );
+      showToast(message, true);
     } finally {
       if (secondaryApp) {
         try {
@@ -1334,9 +1148,23 @@ function configureRoleAccess(profile) {
   if (isPastor) {
     accountsNavButton.hidden = false;
     ministryAccountsPanel.hidden = true;
+
+    document
+      .querySelectorAll(".pastor-only-action")
+      .forEach(function (element) {
+        element.hidden = false;
+      });
+
     subscribeToMinistryAccounts();
   } else {
     accountsNavButton.remove();
+
+    document
+      .querySelectorAll(".pastor-only-action")
+      .forEach(function (element) {
+        element.remove();
+      });
+
     ministryAccountsPanel.remove();
   }
 }
@@ -1344,9 +1172,7 @@ function configureRoleAccess(profile) {
 
 onAuthStateChanged(auth, async function (user) {
   if (!user) {
-    window.location.href =
-      "staff-login.html";
-
+    window.location.href = "staff-login.html";
     return;
   }
 
@@ -1356,10 +1182,8 @@ onAuthStateChanged(auth, async function (user) {
 
     if (!profile) {
       await signOut(auth);
-
       window.location.href =
         "staff-login.html?error=access";
-
       return;
     }
 
@@ -1371,9 +1195,7 @@ onAuthStateChanged(auth, async function (user) {
       user.email ||
       "Staff Member";
 
-    staffName.textContent =
-      displayName;
-
+    staffName.textContent = displayName;
     staffRole.textContent =
       profile.role === "pastor"
         ? "Pastor"
