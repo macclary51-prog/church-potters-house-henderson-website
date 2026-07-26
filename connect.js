@@ -13,10 +13,9 @@ import {
   deleteDoc,
   doc,
   getDoc,
-  getDocs,
   onSnapshot,
   serverTimestamp,
-  updateDoc
+  setDoc
 } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
 
@@ -31,9 +30,6 @@ const pastorName =
 
 const addButton =
   document.getElementById("connectAddButton");
-
-const foundLinksButton =
-  document.getElementById("connectFoundLinksButton");
 
 const headingAdd =
   document.getElementById("connectHeadingAdd");
@@ -67,6 +63,7 @@ const toast =
 
 let currentUser = null;
 let currentLinks = [];
+let firestoreLinks = new Map();
 let toastTimer = null;
 
 
@@ -98,39 +95,44 @@ const TYPE_ICONS = {
 
 
 /*
-  Links found for The Henderson Potter's House in Henderson, Nevada.
-  The pastor can import these once, then edit or remove them normally.
+  These links are built directly into the page.
+  They appear immediately, even before anything is stored in Firestore.
+
+  Firestore documents with the same IDs act as editable overrides.
+  A pastor can change or hide any starter link.
 */
-const FOUND_CHURCH_LINKS = [
+const STARTER_LINKS = [
   {
+    id: "church-location",
     type: "location",
     title: "Church Location",
     url: "https://www.google.com/maps/search/?api=1&query=746+S+Boulder+Hwy%2C+Henderson%2C+NV+89015",
-    description: "746 S Boulder Hwy, Henderson, NV 89015"
+    description: "746 S Boulder Hwy, Henderson, NV 89015",
+    isStarter: true
   },
   {
-    type: "facebook",
-    title: "Facebook",
-    url: "https://www.facebook.com/p/Henderson-Potters-House-61552769870767/",
-    description: "Follow Henderson Potter's House on Facebook."
-  },
-  {
+    id: "church-instagram",
     type: "instagram",
     title: "Instagram",
     url: "https://www.instagram.com/hendersonphcf/",
-    description: "Follow @hendersonphcf on Instagram."
+    description: "Follow @hendersonphcf on Instagram.",
+    isStarter: true
   },
   {
+    id: "church-youtube",
     type: "youtube",
     title: "YouTube",
     url: "https://www.youtube.com/@thepottershouseofhenderson5075",
-    description: "Watch sermons and messages from The Potter's House of Henderson Nevada."
+    description: "Watch sermons and messages from The Potter's House of Henderson Nevada.",
+    isStarter: true
   },
   {
+    id: "church-phone",
     type: "phone",
     title: "Church Phone",
     url: "702-600-7632",
-    description: "Call the church for service information."
+    description: "Call the church for service and location information.",
+    isStarter: true
   }
 ];
 
@@ -209,22 +211,51 @@ function normalizeLink(type, value) {
 }
 
 
-function timestampSeconds(value) {
-  if (!value) {
-    return 0;
-  }
-
-  if (typeof value.seconds === "number") {
-    return value.seconds;
-  }
-
-  if (typeof value.toDate === "function") {
-    return Math.floor(
-      value.toDate().getTime() / 1000
+function rebuildCurrentLinks() {
+  const starterIds =
+    new Set(
+      STARTER_LINKS.map(function (item) {
+        return item.id;
+      })
     );
-  }
 
-  return 0;
+  const merged = [];
+
+  STARTER_LINKS.forEach(function (starter) {
+    const override =
+      firestoreLinks.get(starter.id);
+
+    if (override?.hidden === true) {
+      return;
+    }
+
+    merged.push({
+      id: starter.id,
+      data: {
+        ...starter,
+        ...(override || {})
+      },
+      isStarter: true
+    });
+  });
+
+  firestoreLinks.forEach(function (data, id) {
+    if (
+      starterIds.has(id) ||
+      data.hidden === true
+    ) {
+      return;
+    }
+
+    merged.push({
+      id,
+      data,
+      isStarter: false
+    });
+  });
+
+  currentLinks = merged;
+  renderLinks();
 }
 
 
@@ -431,7 +462,7 @@ function createCard(item) {
       async function () {
         const confirmed =
           window.confirm(
-            `Remove "${data.title || "this link"}" from the website?\n\nThis cannot be undone.`
+            `Remove "${data.title || "this link"}" from the website?`
           );
 
         if (!confirmed) {
@@ -439,9 +470,27 @@ function createCard(item) {
         }
 
         try {
-          await deleteDoc(
-            doc(db, "siteLinks", item.id)
-          );
+          if (item.isStarter) {
+            /*
+              Mark a built-in starter link as hidden so it does not
+              return after being removed.
+            */
+            await setDoc(
+              doc(db, "siteLinks", item.id),
+              {
+                hidden: true,
+                updatedAt: serverTimestamp(),
+                updatedBy: currentUser.uid
+              },
+              {
+                merge: true
+              }
+            );
+          } else {
+            await deleteDoc(
+              doc(db, "siteLinks", item.id)
+            );
+          }
 
           showToast(
             "Link removed from the website."
@@ -450,7 +499,7 @@ function createCard(item) {
           console.error(error);
 
           showToast(
-            "The link could not be removed.",
+            "The link could not be removed. Publish the updated Firestore rules.",
             true
           );
         }
@@ -483,7 +532,7 @@ function renderLinks() {
 
     empty.textContent =
       currentUser
-        ? "No links have been added yet. Select Add Link to add the church location or social media."
+        ? "No links are visible. Select Add Link to create one."
         : "The church has not published location or social media links yet.";
 
     grid.appendChild(
@@ -528,95 +577,6 @@ async function loadPastorProfile(user) {
     ...profile,
     role
   };
-}
-
-
-async function importFoundChurchLinks() {
-  if (!currentUser) {
-    showToast(
-      "Only the approved pastor can import church links.",
-      true
-    );
-
-    return;
-  }
-
-  const confirmed =
-    window.confirm(
-      "Add the found church location, Facebook, Instagram, YouTube, and phone number?\n\nYou can edit or remove each one afterward."
-    );
-
-  if (!confirmed) {
-    return;
-  }
-
-  foundLinksButton.disabled = true;
-  foundLinksButton.textContent = "Checking Links...";
-
-  try {
-    const existingSnapshot =
-      await getDocs(
-        collection(db, "siteLinks")
-      );
-
-    const existingUrls =
-      new Set(
-        existingSnapshot.docs.map(function (documentSnapshot) {
-          return String(
-            documentSnapshot.data().url || ""
-          ).trim();
-        })
-      );
-
-    let addedCount = 0;
-
-    for (const item of FOUND_CHURCH_LINKS) {
-      if (existingUrls.has(item.url)) {
-        continue;
-      }
-
-      await addDoc(
-        collection(db, "siteLinks"),
-        {
-          ...item,
-          createdAt: serverTimestamp(),
-          updatedAt: serverTimestamp(),
-          createdBy: currentUser.uid,
-          updatedBy: currentUser.uid
-        }
-      );
-
-      addedCount += 1;
-    }
-
-    if (addedCount === 0) {
-      showToast(
-        "Those church links are already listed."
-      );
-    } else {
-      showToast(
-        `${addedCount} church link${addedCount === 1 ? "" : "s"} added.`
-      );
-    }
-  } catch (error) {
-    console.error(error);
-
-    showToast(
-      "The found links could not be imported. Check the Firestore rules.",
-      true
-    );
-  } finally {
-    foundLinksButton.disabled = false;
-    foundLinksButton.textContent = "Load Found Church Links";
-  }
-}
-
-
-if (foundLinksButton) {
-  foundLinksButton.addEventListener(
-    "click",
-    importFoundChurchLinks
-  );
 }
 
 
@@ -705,6 +665,7 @@ editor.addEventListener(
         String(
           formData.get("description") || ""
         ).trim(),
+      hidden: false,
       updatedAt:
         serverTimestamp(),
       updatedBy:
@@ -723,9 +684,15 @@ editor.addEventListener(
 
     try {
       if (documentId) {
-        await updateDoc(
+        /*
+          setDoc works for both built-in starter links and normal links.
+        */
+        await setDoc(
           doc(db, "siteLinks", documentId),
-          data
+          data,
+          {
+            merge: true
+          }
         );
 
         showToast(
@@ -772,28 +739,29 @@ editor.addEventListener(
 onSnapshot(
   collection(db, "siteLinks"),
   function (snapshot) {
-    currentLinks =
-      snapshot.docs
-        .map(function (documentSnapshot) {
-          return {
-            id: documentSnapshot.id,
-            data: documentSnapshot.data()
-          };
+    firestoreLinks =
+      new Map(
+        snapshot.docs.map(function (documentSnapshot) {
+          return [
+            documentSnapshot.id,
+            documentSnapshot.data()
+          ];
         })
-        .sort(function (a, b) {
-          return (
-            timestampSeconds(a.data.createdAt) -
-            timestampSeconds(b.data.createdAt)
-          );
-        });
+      );
 
-    renderLinks();
+    rebuildCurrentLinks();
   },
   function (error) {
     console.error(error);
 
-    grid.innerHTML =
-      '<div class="connect-empty">Church links could not be loaded.</div>';
+    /*
+      The built-in starter links still display even if Firestore
+      temporarily fails to load.
+    */
+    firestoreLinks =
+      new Map();
+
+    rebuildCurrentLinks();
   }
 );
 
