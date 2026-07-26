@@ -407,3 +407,21 @@
     grid-template-columns: 1fr;
   }
 }
+
+
+/* Royal blue Connect buttons. */
+.connect-heading-add,
+.connect-card-open {
+  color: #fff;
+  background: linear-gradient(
+    135deg,
+    #4169e1,
+    #27408b
+  );
+  border-color: transparent;
+}
+
+.connect-heading-add:hover,
+.connect-card-open:hover {
+  filter: brightness(1.08);
+}
