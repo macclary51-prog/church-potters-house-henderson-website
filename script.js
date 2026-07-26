@@ -26,72 +26,108 @@ if (menuButton && navLinks) {
   });
 }
 
-function ensureGivingNavigation() {
+function insertNavigationLink({
+  href,
+  label,
+  beforeSelectors
+}) {
   const navigation =
     document.getElementById("navLinks");
 
   if (!navigation) {
-    return;
+    return null;
   }
 
-  let givingLink =
+  let link =
     navigation.querySelector(
-      'a[href="giving.html"]'
+      `a[href="${href}"]`
     );
 
-  if (!givingLink) {
-    givingLink =
+  if (!link) {
+    link =
       document.createElement("a");
 
-    givingLink.href =
-      "giving.html";
+    link.href =
+      href;
 
-    givingLink.textContent =
-      "Giving";
+    link.textContent =
+      label;
 
-    const prayerLink =
-      navigation.querySelector(
-        'a[href="prayer.html"]'
-      );
+    let beforeElement = null;
 
-    const contactLink =
-      navigation.querySelector(
-        'a[href="contact.html"]'
-      );
+    for (const selector of beforeSelectors) {
+      beforeElement =
+        navigation.querySelector(selector);
 
-    const staffLink =
-      navigation.querySelector(
-        'a[href="staff-login.html"], a[data-staff-navigation]'
-      );
+      if (beforeElement) {
+        break;
+      }
+    }
 
     navigation.insertBefore(
-      givingLink,
-      prayerLink ||
-      contactLink ||
-      staffLink ||
-      null
+      link,
+      beforeElement || null
     );
   }
 
-  const path =
-    window.location.pathname
-      .split("/")
-      .pop();
-
-  if (path === "giving.html") {
-    navigation
-      .querySelectorAll("a")
-      .forEach(function (link) {
-        link.classList.toggle(
-          "active",
-          link.getAttribute("href") ===
-            "giving.html"
-        );
-      });
-  }
+  return link;
 }
 
-ensureGivingNavigation();
+function ensureChurchNavigation() {
+  const servicesLink =
+    insertNavigationLink({
+      href: "services.html",
+      label: "Services",
+      beforeSelectors: [
+        'a[href="ministries.html"]',
+        'a[href="sermons.html"]',
+        'a[href="giving.html"]',
+        'a[href="prayer.html"]',
+        'a[href="contact.html"]'
+      ]
+    });
+
+  const givingLink =
+    insertNavigationLink({
+      href: "giving.html",
+      label: "Giving",
+      beforeSelectors: [
+        'a[href="prayer.html"]',
+        'a[href="contact.html"]',
+        'a[href="staff-login.html"]',
+        'a[data-staff-navigation]'
+      ]
+    });
+
+  const currentFile =
+    window.location.pathname
+      .split("/")
+      .pop() || "index.html";
+
+  document
+    .querySelectorAll("#navLinks a")
+    .forEach(function (link) {
+      const linkFile =
+        link.getAttribute("href");
+
+      if (
+        linkFile === "services.html" ||
+        linkFile === "giving.html"
+      ) {
+        link.classList.toggle(
+          "active",
+          linkFile === currentFile
+        );
+      }
+    });
+
+  return {
+    servicesLink,
+    givingLink
+  };
+}
+
+ensureChurchNavigation();
 
 document.querySelectorAll("[data-demo-form]").forEach(function (form) {
   form.addEventListener("submit", function (event) {
@@ -123,7 +159,7 @@ staffSiteModule.type =
   "module";
 
 staffSiteModule.src =
-  "staff-site.js?v=2";
+  "staff-site.js?v=3";
 
 document.body.appendChild(
   staffSiteModule
