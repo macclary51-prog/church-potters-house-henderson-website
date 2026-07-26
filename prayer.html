@@ -2,50 +2,303 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Prayer Requests - The Henderson Potter's House">
-  <title>Prayer Requests | The Henderson Potter's House</title>
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="description"
+    content="Submit a prayer request to The Henderson Potter's House prayer team"
+  >
+
+  <title>
+    Prayer Requests | The Henderson Potter's House
+  </title>
+
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="prayer.css?v=1">
 </head>
+
 <body>
-<header class="site-header">
-  <div class="container nav-wrap">
-    <a class="brand" href="index.html">
-      <div class="logo header-logo" role="img" aria-label="The Henderson Potter's House logo"></div>
-      <div class="brand-text">
-        <strong>The Henderson Potter's House</strong>
-        <span>Henderson, Nevada</span>
-      </div>
-    </a>
-    <nav class="nav-links" id="navLinks"><a href="index.html">Home</a>
-<a href="announcements.html">Announcements</a>
-<a href="events.html">Events</a>
-<a href="ministries.html">Ministries</a>
-<a href="sermons.html">Sermons</a>
-<a href="prayer.html" class="active">Prayer</a>
-<a href="contact.html">Contact</a></nav>
-    <button class="menu-button" id="menuButton" type="button" aria-label="Open menu">☰</button>
-  </div>
-</header>
-<main><section class="page-hero"><div class="container"><div class="page-hero-card"><div class="eyebrow">You Are Not Alone</div><h1>Prayer Requests</h1><p>Share a prayer request with the church prayer team.</p></div></div></section>
-<section class="section"><div class="container split-section">
-  <div class="feature-panel"><div><h2>How can we pray for you?</h2><p>Members and visitors can submit a prayer request without creating an account.</p></div><ul class="feature-list"><li>Requests can remain private</li><li>No account is required</li><li>Firebase or email can be connected later</li></ul></div>
-  <form class="form-panel" data-demo-form><h2>Submit a Prayer Request</h2><p>This form is currently a visual demo and does not send information yet.</p><div class="form-grid">
-    <label>Name<input type="text" name="name" placeholder="Your name"></label>
-    <label>Email or phone<input type="text" name="contact" placeholder="Optional contact information"></label>
-    <label>Prayer request<textarea name="request" placeholder="How can we pray for you?" required></textarea></label>
-    <button class="button button-primary" type="submit">Submit Request</button>
-  </div><div class="status-message">Demo submitted successfully. No information was sent.</div></form>
-</div></section></main>
-<footer>
-  <div class="container footer-wrap">
-    <div class="footer-brand">
-      <div class="logo footer-logo" role="img" aria-label="The Henderson Potter's House logo"></div>
-      <div><strong>The Henderson Potter's House</strong><p>Faith, fellowship, and community.</p></div>
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a
+        class="brand"
+        href="index.html"
+        aria-label="The Henderson Potter's House home"
+      >
+        <div
+          class="logo header-logo"
+          role="img"
+          aria-label="The Henderson Potter's House logo"
+        ></div>
+
+        <div class="brand-text">
+          <strong>The Henderson Potter's House</strong>
+          <span>Henderson, Nevada</span>
+        </div>
+      </a>
+
+      <nav class="nav-links" id="navLinks">
+        <a href="index.html">Home</a>
+        <a href="announcements.html">Announcements</a>
+        <a href="events.html">Events</a>
+        <a href="services.html">Services</a>
+        <a href="ministries.html">Ministries</a>
+        <a href="sermons.html">Sermons</a>
+        <a href="giving.html">Giving</a>
+        <a href="connect.html">Connect</a>
+        <a href="prayer.html" class="active">Prayer</a>
+        <a href="contact.html">Contact</a>
+        <a
+          class="staff-link"
+          href="staff-login.html"
+        >
+          Staff
+        </a>
+      </nav>
+
+      <button
+        class="menu-button"
+        id="menuButton"
+        type="button"
+        aria-label="Open menu"
+        aria-controls="navLinks"
+        aria-expanded="false"
+      >
+        ☰
+      </button>
     </div>
-    <p>© <span id="year"></span> The Henderson Potter's House.</p>
-  </div>
-</footer>
-<script src="script.js"></script>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <div class="page-hero-card">
+          <div class="eyebrow">You Are Not Alone</div>
+
+          <h1>Prayer Requests</h1>
+
+          <p>
+            Share your request with the church prayer team. No account is required.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section prayer-public-section">
+      <div class="container split-section">
+        <article class="feature-panel">
+          <div>
+            <h2>How can we pray for you?</h2>
+
+            <p>
+              Submit a request for yourself, your family, or someone who needs prayer.
+            </p>
+          </div>
+
+          <ul class="feature-list">
+            <li>No account is required</li>
+            <li>Your request is not displayed publicly</li>
+            <li>Name and contact information are optional</li>
+            <li>Confidential requests are clearly marked for staff</li>
+          </ul>
+        </article>
+
+        <form
+          class="form-panel prayer-form"
+          id="prayerRequestForm"
+          novalidate
+        >
+          <h2>Submit a Prayer Request</h2>
+
+          <p>
+            The pastor and approved ministry prayer team will be able to read it.
+          </p>
+
+          <div class="form-grid">
+            <label>
+              Name
+              <input
+                id="prayerName"
+                name="name"
+                type="text"
+                autocomplete="name"
+                maxlength="100"
+                placeholder="Your name or Anonymous"
+              >
+            </label>
+
+            <label>
+              Email or phone
+              <input
+                id="prayerContact"
+                name="contact"
+                type="text"
+                autocomplete="email"
+                maxlength="150"
+                placeholder="Optional contact information"
+              >
+            </label>
+
+            <label>
+              Prayer request
+              <textarea
+                id="prayerText"
+                name="prayerText"
+                minlength="5"
+                maxlength="3000"
+                placeholder="How can we pray for you?"
+                required
+              ></textarea>
+            </label>
+
+            <label class="prayer-checkbox">
+              <input
+                id="prayerConfidential"
+                name="confidential"
+                type="checkbox"
+              >
+
+              <span>
+                Mark this request as confidential
+              </span>
+            </label>
+
+            <!-- Hidden spam field. Real visitors should leave it empty. -->
+            <label
+              class="prayer-honeypot"
+              aria-hidden="true"
+            >
+              Website
+              <input
+                id="prayerWebsite"
+                name="website"
+                type="text"
+                tabindex="-1"
+                autocomplete="off"
+              >
+            </label>
+
+            <button
+              class="button button-primary"
+              id="prayerSubmitButton"
+              type="submit"
+            >
+              Submit Prayer Request
+            </button>
+          </div>
+
+          <div
+            class="prayer-form-status"
+            id="prayerFormStatus"
+            role="status"
+            aria-live="polite"
+          ></div>
+        </form>
+      </div>
+    </section>
+
+    <!--
+      Approved pastor and ministry accounts see this inbox.
+      Regular visitors never see submitted requests.
+    -->
+    <section
+      class="prayer-staff-shell"
+      id="prayerStaffShell"
+      hidden
+    >
+      <div class="container">
+        <div class="prayer-staff-toolbar">
+          <div class="prayer-staff-identity">
+            <span
+              class="prayer-staff-avatar"
+              id="prayerStaffInitials"
+            >
+              SM
+            </span>
+
+            <div>
+              <small>Private prayer-team inbox</small>
+              <strong id="prayerStaffName">Staff Member</strong>
+              <span id="prayerStaffRole">Staff</span>
+            </div>
+          </div>
+
+          <button
+            class="prayer-signout-button"
+            id="prayerSignOutButton"
+            type="button"
+          >
+            Sign Out
+          </button>
+        </div>
+
+        <div class="prayer-inbox-panel">
+          <div class="prayer-inbox-heading">
+            <div>
+              <span>Staff Only</span>
+              <h2>Prayer Request Inbox</h2>
+
+              <p>
+                Approved pastor and ministry accounts may privately view submitted requests.
+              </p>
+            </div>
+
+            <div class="prayer-count" id="prayerCount">
+              0 requests
+            </div>
+          </div>
+
+          <div
+            class="prayer-request-list"
+            id="prayerRequestList"
+          >
+            <div class="prayer-empty">
+              Loading prayer requests...
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-wrap">
+      <div class="footer-brand">
+        <div
+          class="logo footer-logo"
+          role="img"
+          aria-label="The Henderson Potter's House logo"
+        ></div>
+
+        <div>
+          <strong>The Henderson Potter's House</strong>
+          <p>Faith, fellowship, and community.</p>
+        </div>
+      </div>
+
+      <p>
+        © <span id="year"></span>
+        The Henderson Potter's House.
+      </p>
+    </div>
+  </footer>
+
+  <div
+    class="prayer-toast"
+    id="prayerToast"
+    role="status"
+    aria-live="polite"
+  ></div>
+
+  <script src="script.js"></script>
+
+  <script
+    type="module"
+    src="prayer.js?v=1"
+  ></script>
 </body>
 </html>
