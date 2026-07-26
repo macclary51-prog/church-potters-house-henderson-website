@@ -653,3 +653,58 @@
 }
 
 /* Remove buttons intentionally remain red. */
+
+
+/* =========================================================
+   ANNOUNCEMENTS, EVENTS, AND SERMONS — ROYAL BLUE
+   ========================================================= */
+
+/* Main Add buttons */
+.staff-inline-shell .staff-inline-add,
+.staff-inline-page-heading .staff-inline-heading-add {
+  color: #fff !important;
+  background: linear-gradient(
+    135deg,
+    #4169e1,
+    #27408b
+  ) !important;
+  border-color: transparent !important;
+  box-shadow: 0 9px 20px rgba(65, 105, 225, 0.24);
+}
+
+/* Publish/Create Account buttons inside staff forms */
+.staff-inline-shell .button-primary,
+.staff-inline-modal .button-primary {
+  color: #fff !important;
+  background: linear-gradient(
+    135deg,
+    #4169e1,
+    #27408b
+  ) !important;
+  border-color: transparent !important;
+  box-shadow: 0 9px 20px rgba(65, 105, 225, 0.24);
+}
+
+/* Video links displayed on content cards */
+.staff-inline-card-video {
+  color: #4169e1 !important;
+}
+
+/* Blue editor accent instead of orange/red */
+.staff-inline-editor {
+  border-top-color: #4169e1 !important;
+}
+
+.staff-inline-editor-heading > div > span,
+.staff-inline-modal-heading > div > span {
+  color: #4169e1 !important;
+}
+
+.staff-inline-add:hover,
+.staff-inline-heading-add:hover,
+.staff-inline-shell .button-primary:hover,
+.staff-inline-modal .button-primary:hover {
+  filter: brightness(1.08);
+}
+
+/* Remove/Delete buttons intentionally stay red. */
