@@ -293,7 +293,8 @@ function createStaffBar(user, profile) {
   if (
     document.getElementById("staffInlineShell") ||
     document.getElementById("givingPastorShell") ||
-    document.getElementById("connectPastorShell")
+    document.getElementById("connectPastorShell") ||
+    document.getElementById("homePastorShell")
   ) {
     removeStaffBar();
     return;
@@ -377,9 +378,13 @@ function createStaffBar(user, profile) {
 
   const links = [
     {
-      href: "announcements.html",
-      text: "Edit Announcements",
+      href: "index.html",
+      text: "Edit Home",
       primary: true
+    },
+    {
+      href: "announcements.html",
+      text: "Edit Announcements"
     },
     {
       href: "events.html",
