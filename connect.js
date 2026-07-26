@@ -13,6 +13,7 @@ import {
   deleteDoc,
   doc,
   getDoc,
+  getDocs,
   onSnapshot,
   serverTimestamp,
   updateDoc
@@ -30,6 +31,9 @@ const pastorName =
 
 const addButton =
   document.getElementById("connectAddButton");
+
+const foundLinksButton =
+  document.getElementById("connectFoundLinksButton");
 
 const headingAdd =
   document.getElementById("connectHeadingAdd");
@@ -91,6 +95,44 @@ const TYPE_ICONS = {
   phone: "☎",
   other: "🔗"
 };
+
+
+/*
+  Links found for The Henderson Potter's House in Henderson, Nevada.
+  The pastor can import these once, then edit or remove them normally.
+*/
+const FOUND_CHURCH_LINKS = [
+  {
+    type: "location",
+    title: "Church Location",
+    url: "https://www.google.com/maps/search/?api=1&query=746+S+Boulder+Hwy%2C+Henderson%2C+NV+89015",
+    description: "746 S Boulder Hwy, Henderson, NV 89015"
+  },
+  {
+    type: "facebook",
+    title: "Facebook",
+    url: "https://www.facebook.com/p/Henderson-Potters-House-61552769870767/",
+    description: "Follow Henderson Potter's House on Facebook."
+  },
+  {
+    type: "instagram",
+    title: "Instagram",
+    url: "https://www.instagram.com/hendersonphcf/",
+    description: "Follow @hendersonphcf on Instagram."
+  },
+  {
+    type: "youtube",
+    title: "YouTube",
+    url: "https://www.youtube.com/@thepottershouseofhenderson5075",
+    description: "Watch sermons and messages from The Potter's House of Henderson Nevada."
+  },
+  {
+    type: "phone",
+    title: "Church Phone",
+    url: "702-600-7632",
+    description: "Call the church for service information."
+  }
+];
 
 
 function normalizeRole(role) {
@@ -486,6 +528,95 @@ async function loadPastorProfile(user) {
     ...profile,
     role
   };
+}
+
+
+async function importFoundChurchLinks() {
+  if (!currentUser) {
+    showToast(
+      "Only the approved pastor can import church links.",
+      true
+    );
+
+    return;
+  }
+
+  const confirmed =
+    window.confirm(
+      "Add the found church location, Facebook, Instagram, YouTube, and phone number?\n\nYou can edit or remove each one afterward."
+    );
+
+  if (!confirmed) {
+    return;
+  }
+
+  foundLinksButton.disabled = true;
+  foundLinksButton.textContent = "Checking Links...";
+
+  try {
+    const existingSnapshot =
+      await getDocs(
+        collection(db, "siteLinks")
+      );
+
+    const existingUrls =
+      new Set(
+        existingSnapshot.docs.map(function (documentSnapshot) {
+          return String(
+            documentSnapshot.data().url || ""
+          ).trim();
+        })
+      );
+
+    let addedCount = 0;
+
+    for (const item of FOUND_CHURCH_LINKS) {
+      if (existingUrls.has(item.url)) {
+        continue;
+      }
+
+      await addDoc(
+        collection(db, "siteLinks"),
+        {
+          ...item,
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp(),
+          createdBy: currentUser.uid,
+          updatedBy: currentUser.uid
+        }
+      );
+
+      addedCount += 1;
+    }
+
+    if (addedCount === 0) {
+      showToast(
+        "Those church links are already listed."
+      );
+    } else {
+      showToast(
+        `${addedCount} church link${addedCount === 1 ? "" : "s"} added.`
+      );
+    }
+  } catch (error) {
+    console.error(error);
+
+    showToast(
+      "The found links could not be imported. Check the Firestore rules.",
+      true
+    );
+  } finally {
+    foundLinksButton.disabled = false;
+    foundLinksButton.textContent = "Load Found Church Links";
+  }
+}
+
+
+if (foundLinksButton) {
+  foundLinksButton.addEventListener(
+    "click",
+    importFoundChurchLinks
+  );
 }
 
 
