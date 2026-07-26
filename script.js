@@ -70,10 +70,31 @@ function insertNavigationLink({
 }
 
 
+function removeContactNavigationLinks() {
+  if (!navLinks) {
+    return;
+  }
+
+  navLinks
+    .querySelectorAll(
+      'a[href="contact.html"], a[href="./contact.html"], a[href$="/contact.html"]'
+    )
+    .forEach(function (link) {
+      link.remove();
+    });
+}
+
+
 function ensureAllNavigationLinks() {
   if (!navLinks) {
     return;
   }
+
+  /*
+    Connect already contains the church location, phone, and social links.
+    Remove the separate Contact link from every page before building the menu.
+  */
+  removeContactNavigationLinks();
 
   insertNavigationLink({
     href: "services.html",
@@ -97,8 +118,7 @@ function ensureAllNavigationLinks() {
     href: "connect.html",
     label: "Connect",
     beforeSelectors: [
-      'a[href="prayer.html"]',
-      'a[href="contact.html"]'
+      'a[href="prayer.html"]'
     ]
   });
 
@@ -768,6 +788,7 @@ if (navLinks) {
   const observer =
     new MutationObserver(
       function () {
+        removeContactNavigationLinks();
         syncStaffShortcut();
 
         if (
@@ -837,7 +858,7 @@ staffSiteModule.type =
   "module";
 
 staffSiteModule.src =
-  "staff-site.js?v=7";
+  "staff-site.js?v=8";
 
 document.body.appendChild(
   staffSiteModule
