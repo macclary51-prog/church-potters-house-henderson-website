@@ -314,3 +314,21 @@
     grid-template-columns: 1fr;
   }
 }
+
+
+/* Royal blue homepage buttons. */
+.home-heading-add,
+.home-card-link {
+  color: #fff;
+  background: linear-gradient(
+    135deg,
+    #4169e1,
+    #27408b
+  );
+  border-color: transparent;
+}
+
+.home-heading-add:hover,
+.home-card-link:hover {
+  filter: brightness(1.08);
+}
