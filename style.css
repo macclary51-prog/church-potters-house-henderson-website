@@ -252,3 +252,26 @@ footer p { color: #cbd6e2; font-size: .88rem; }
     max-width: 118px;
   }
 }
+
+
+/* =========================================================
+   ROYAL BLUE PRIMARY BUTTONS
+   ========================================================= */
+
+:root {
+  --royal-blue: #4169e1;
+  --royal-blue-dark: #27408b;
+}
+
+.button-primary {
+  color: #fff;
+  background: linear-gradient(
+    135deg,
+    var(--royal-blue),
+    var(--royal-blue-dark)
+  );
+}
+
+.button-primary:hover {
+  filter: brightness(1.08);
+}
