@@ -292,7 +292,8 @@ function createStaffBar(user, profile) {
   */
   if (
     document.getElementById("staffInlineShell") ||
-    document.getElementById("givingPastorShell")
+    document.getElementById("givingPastorShell") ||
+    document.getElementById("connectPastorShell")
   ) {
     removeStaffBar();
     return;
@@ -403,6 +404,11 @@ function createStaffBar(user, profile) {
     links.push({
       href: "giving.html",
       text: "Edit Giving"
+    });
+
+    links.push({
+      href: "connect.html",
+      text: "Edit Links"
     });
   }
 
