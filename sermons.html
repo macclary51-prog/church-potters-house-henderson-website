@@ -3,17 +3,31 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Events - The Henderson Potter&#x27;s House">
-  <title>Events | The Henderson Potter's House</title>
+
+  <meta
+    name="description"
+    content="Sermons - The Henderson Potter's House"
+  >
+
+  <title>Sermons | The Henderson Potter's House</title>
+
   <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="staff-inline.css?v=12">
+  <link rel="stylesheet" href="staff-inline.css?v=13">
 </head>
 
 <body>
   <header class="site-header">
     <div class="container nav-wrap">
-      <a class="brand" href="index.html" aria-label="The Henderson Potter's House home">
-        <div class="logo header-logo" role="img" aria-label="The Henderson Potter's House logo"></div>
+      <a
+        class="brand"
+        href="index.html"
+        aria-label="The Henderson Potter's House home"
+      >
+        <div
+          class="logo header-logo"
+          role="img"
+          aria-label="The Henderson Potter's House logo"
+        ></div>
 
         <div class="brand-text">
           <strong>The Henderson Potter's House</strong>
@@ -24,14 +38,27 @@
       <nav class="nav-links" id="navLinks">
         <a href="index.html">Home</a>
         <a href="announcements.html">Announcements</a>
-        <a href="events.html" class="active">Events</a>
+        <a href="events.html">Events</a>
         <a href="services.html">Services</a>
         <a href="ministries.html">Ministries</a>
-        <a href="sermons.html">Sermons</a>
+
+        <a
+          href="sermons.html"
+          class="active"
+        >
+          Sermons
+        </a>
+
         <a href="giving.html">Giving</a>
         <a href="connect.html">Connect</a>
         <a href="prayer.html">Prayer</a>
-        <a class="staff-link" href="staff-login.html">Staff</a>
+
+        <a
+          class="staff-link"
+          href="staff-login.html"
+        >
+          Staff
+        </a>
       </nav>
 
       <button
@@ -51,24 +78,43 @@
     <section class="page-hero">
       <div class="container">
         <div class="page-hero-card">
-          <div class="eyebrow">Upcoming</div>
-          <h1>Events and Gatherings</h1>
-          <p>View upcoming services, Bible studies, fellowship, and community events.</p>
+          <div class="eyebrow">Messages</div>
+
+          <h1>Sermons and Messages</h1>
+
+          <p>
+            Watch and revisit sermons, messages,
+            and teaching from the church.
+          </p>
         </div>
       </div>
     </section>
 
-    <!-- Hidden for regular visitors. Shown automatically after an approved staff member signs in. -->
-    <section class="staff-inline-shell" id="staffInlineShell" hidden>
+    <section
+      class="staff-inline-shell"
+      id="staffInlineShell"
+      hidden
+    >
       <div class="container">
         <div class="staff-inline-toolbar">
           <div class="staff-inline-identity">
-            <span class="staff-inline-avatar" id="staffInlineInitials">SM</span>
+            <span
+              class="staff-inline-avatar"
+              id="staffInlineInitials"
+            >
+              SM
+            </span>
 
             <div>
               <small>Staff editing is on</small>
-              <strong id="staffInlineName">Staff Member</strong>
-              <span id="staffInlineRole">Staff</span>
+
+              <strong id="staffInlineName">
+                Staff Member
+              </strong>
+
+              <span id="staffInlineRole">
+                Staff
+              </span>
             </div>
           </div>
 
@@ -78,7 +124,7 @@
               id="staffInlineAddButton"
               type="button"
             >
-              + Add Event
+              + Add Sermon
             </button>
 
             <button
@@ -100,14 +146,27 @@
           </div>
         </div>
 
-        <div class="staff-inline-editor" id="staffInlineEditor" hidden>
+        <div
+          class="staff-inline-editor"
+          id="staffInlineEditor"
+          hidden
+        >
           <form id="staffInlineForm">
-            <input type="hidden" name="documentId">
+            <input
+              type="hidden"
+              name="documentId"
+            >
 
             <div class="staff-inline-editor-heading">
               <div>
-                <span id="staffInlineFormMode">Add New</span>
-                <h2 id="staffInlineFormTitle">Event</h2>
+                <span id="staffInlineFormMode">
+                  Add New
+                </span>
+
+                <h2 id="staffInlineFormTitle">
+                  Sermon
+                </h2>
+
                 <p>
                   Save it here and the public page updates immediately.
                 </p>
@@ -124,32 +183,78 @@
             </div>
 
             <div class="staff-inline-form-grid">
-              
-          <label class="staff-inline-full">
-            Event title
-            <input type="text" name="title" placeholder="Event title" required>
-          </label>
+              <label class="staff-inline-full">
+                Sermon title
 
-          <label>
-            Date
-            <input type="date" name="date" required>
-          </label>
+                <input
+                  type="text"
+                  name="title"
+                  placeholder="Sermon title"
+                  required
+                >
+              </label>
 
-          <label>
-            Time
-            <input type="text" name="time" placeholder="Example: 10:30 AM" required>
-          </label>
+              <label>
+                Speaker
 
-          <label class="staff-inline-full">
-            Location
-            <input type="text" name="location" placeholder="Church or event location" required>
-          </label>
+                <input
+                  type="text"
+                  name="speaker"
+                  placeholder="Speaker name"
+                  required
+                >
+              </label>
 
-          <label class="staff-inline-full">
-            Details
-            <textarea name="details" rows="7" placeholder="Event details" required></textarea>
-          </label>
-        
+              <label>
+                Date
+
+                <input
+                  type="date"
+                  name="date"
+                  required
+                >
+              </label>
+
+              <label class="staff-inline-full">
+                Details
+
+                <textarea
+                  name="details"
+                  rows="7"
+                  placeholder="Message description or notes"
+                  required
+                ></textarea>
+              </label>
+
+              <label class="staff-inline-full">
+                Photo link
+
+                <input
+                  type="text"
+                  name="imageUrl"
+                  placeholder="https://... or photos/example.jpg"
+                >
+
+                <small class="staff-inline-media-help">
+                  Optional. Paste a direct photo link or a photo
+                  path from this website.
+                </small>
+              </label>
+
+              <label class="staff-inline-full">
+                Video link
+
+                <input
+                  type="text"
+                  name="videoUrl"
+                  placeholder="YouTube, Facebook, or direct video link"
+                >
+
+                <small class="staff-inline-media-help">
+                  Optional. YouTube videos play on the page.
+                  Other video links open in a new tab.
+                </small>
+              </label>
             </div>
 
             <div class="staff-inline-form-actions">
@@ -170,7 +275,11 @@
               </button>
             </div>
 
-            <div class="staff-inline-status" id="staffInlineStatus" role="status"></div>
+            <div
+              class="staff-inline-status"
+              id="staffInlineStatus"
+              role="status"
+            ></div>
           </form>
         </div>
       </div>
@@ -181,9 +290,12 @@
         <div class="section-heading staff-inline-page-heading">
           <div>
             <span>Current Website Content</span>
-            <h2>Events</h2>
+
+            <h2>Sermons</h2>
+
             <p id="staffInlineHint">
-              Everything listed below is currently visible on the public website.
+              Everything listed below is currently visible
+              on the public website.
             </p>
           </div>
 
@@ -193,16 +305,18 @@
             type="button"
             hidden
           >
-            + Add Event
+            + Add Sermon
           </button>
         </div>
 
         <div
           class="content-grid"
           id="publicContentGrid"
-          data-collection="events"
+          data-collection="sermons"
         >
-          <div class="empty-state">Loading church information...</div>
+          <div class="empty-state">
+            Loading church information...
+          </div>
         </div>
       </div>
     </section>
@@ -211,7 +325,11 @@
   <footer>
     <div class="container footer-wrap">
       <div class="footer-brand">
-        <div class="logo footer-logo" role="img" aria-label="The Henderson Potter's House logo"></div>
+        <div
+          class="logo footer-logo"
+          role="img"
+          aria-label="The Henderson Potter's House logo"
+        ></div>
 
         <div>
           <strong>The Henderson Potter's House</strong>
@@ -219,7 +337,10 @@
         </div>
       </div>
 
-      <p>© <span id="year"></span> The Henderson Potter's House.</p>
+      <p>
+        © <span id="year"></span>
+        The Henderson Potter's House.
+      </p>
     </div>
   </footer>
 
@@ -237,8 +358,14 @@
       <div class="staff-inline-modal-heading">
         <div>
           <span>Pastor Only</span>
-          <h2 id="staffInlineAccountsTitle">Ministry Accounts</h2>
-          <p>Create accounts or remove and restore website access.</p>
+
+          <h2 id="staffInlineAccountsTitle">
+            Ministry Accounts
+          </h2>
+
+          <p>
+            Create accounts or remove and restore website access.
+          </p>
         </div>
 
         <button
@@ -257,6 +384,7 @@
 
           <label>
             Full name
+
             <input
               id="staffInlineAccountName"
               type="text"
@@ -267,6 +395,7 @@
 
           <label>
             Email
+
             <input
               id="staffInlineAccountEmail"
               type="email"
@@ -277,6 +406,7 @@
 
           <label>
             Temporary password
+
             <input
               id="staffInlineAccountPassword"
               type="password"
@@ -286,7 +416,10 @@
             >
           </label>
 
-          <button class="button button-primary" type="submit">
+          <button
+            class="button button-primary"
+            type="submit"
+          >
             Create Account
           </button>
 
@@ -294,32 +427,7 @@
             class="staff-inline-status"
             id="staffInlineAccountStatus"
             role="status"
-          >
-              <label class="staff-inline-full">
-                Photo link
-                <input
-                  type="text"
-                  name="imageUrl"
-                  placeholder="https://... or photos/example.jpg"
-                >
-                <small class="staff-inline-media-help">
-                  Optional. Paste a direct photo link or a photo path from this website.
-                </small>
-              </label>
-
-              <label class="staff-inline-full">
-                Video link
-                <input
-                  type="text"
-                  name="videoUrl"
-                  placeholder="YouTube, Facebook, or direct video link"
-                >
-                <small class="staff-inline-media-help">
-                  Optional. YouTube videos play on the page; other supported links open in a new tab.
-                </small>
-              </label>
-
-            </div>
+          ></div>
         </form>
 
         <div>
@@ -329,7 +437,9 @@
             class="staff-inline-account-list"
             id="staffInlineAccountList"
           >
-            <div class="staff-inline-empty">Loading accounts...</div>
+            <div class="staff-inline-empty">
+              Loading accounts...
+            </div>
           </div>
         </div>
       </div>
@@ -344,6 +454,10 @@
   ></div>
 
   <script src="script.js"></script>
-  <script type="module" src="public-content.js?v=12"></script>
+
+  <script
+    type="module"
+    src="public-content.js?v=13"
+  ></script>
 </body>
 </html>
