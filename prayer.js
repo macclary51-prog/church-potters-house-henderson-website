@@ -11,6 +11,7 @@ import {
 import {
   addDoc,
   collection,
+  deleteDoc,
   doc,
   getDoc,
   onSnapshot,
@@ -201,6 +202,39 @@ function createActionButton({
 }
 
 
+async function deletePrayerRequest(item) {
+  const requester =
+    cleanText(item.data.name) ||
+    "Anonymous";
+
+  const confirmed =
+    window.confirm(
+      `Permanently remove the prayer request from ${requester}?\n\nThis cannot be undone.`
+    );
+
+  if (!confirmed) {
+    return;
+  }
+
+  try {
+    await deleteDoc(
+      doc(db, "prayerRequests", item.id)
+    );
+
+    showToast(
+      "Prayer request removed."
+    );
+  } catch (error) {
+    console.error(error);
+
+    showToast(
+      "The prayer request could not be removed.",
+      true
+    );
+  }
+}
+
+
 function createRequestCard(item) {
   const data =
     item.data;
@@ -306,6 +340,45 @@ function createRequestCard(item) {
       contactBox
     );
   }
+
+  const actions =
+    document.createElement("div");
+
+  actions.className =
+    "prayer-card-actions";
+
+  const deleteButton =
+    document.createElement("button");
+
+  deleteButton.type =
+    "button";
+
+  deleteButton.className =
+    "prayer-action-delete";
+
+  deleteButton.textContent =
+    "Remove Prayer Request";
+
+  deleteButton.addEventListener(
+    "click",
+    async function () {
+      deleteButton.disabled = true;
+
+      try {
+        await deletePrayerRequest(item);
+      } finally {
+        deleteButton.disabled = false;
+      }
+    }
+  );
+
+  actions.appendChild(
+    deleteButton
+  );
+
+  card.appendChild(
+    actions
+  );
 
   return card;
 }
