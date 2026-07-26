@@ -16,7 +16,7 @@ import {
   onSnapshot,
   orderBy,
   query,
-  serverTimestamp,
+  serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
 
@@ -568,8 +568,28 @@ requestForm.addEventListener(
     } catch (error) {
       console.error(error);
 
+      let message =
+        "The prayer request could not be submitted.";
+
+      if (
+        error.code === "permission-denied" ||
+        error.code === "firestore/permission-denied"
+      ) {
+        message =
+          "Firebase blocked the prayer request. Publish the updated Firestore rules.";
+      } else if (
+        error.code === "unavailable" ||
+        error.code === "firestore/unavailable"
+      ) {
+        message =
+          "Firebase is temporarily unavailable. Check the connection and try again.";
+      } else if (error.code) {
+        message =
+          `The prayer request could not be submitted (${error.code}).`;
+      }
+
       showFormStatus(
-        "The prayer request could not be submitted. Publish the updated Firestore rules and try again.",
+        message,
         true
       );
     } finally {
