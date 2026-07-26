@@ -465,3 +465,24 @@
 .prayer-action-primary:hover {
   filter: brightness(1.08);
 }
+
+
+/* Complete royal blue Prayer buttons. */
+.prayer-filters button.active,
+.prayer-action-primary {
+  color: #fff;
+  background: linear-gradient(
+    135deg,
+    #4169e1,
+    #27408b
+  );
+  border-color: transparent;
+  box-shadow: 0 9px 20px rgba(65, 105, 225, 0.2);
+}
+
+.prayer-filters button.active:hover,
+.prayer-action-primary:hover {
+  filter: brightness(1.08);
+}
+
+/* Remove Prayer Request intentionally remains red. */
