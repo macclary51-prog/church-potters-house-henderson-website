@@ -275,3 +275,33 @@ footer p { color: #cbd6e2; font-size: .88rem; }
 .button-primary:hover {
   filter: brightness(1.08);
 }
+
+
+/* =========================================================
+   COMPLETE ROYAL BLUE BUTTON UPDATE
+   ========================================================= */
+
+:root {
+  --royal-blue: #4169e1;
+  --royal-blue-dark: #27408b;
+}
+
+.button-primary {
+  color: #fff;
+  background: linear-gradient(
+    135deg,
+    var(--royal-blue),
+    var(--royal-blue-dark)
+  );
+  border-color: transparent;
+}
+
+.button-primary:hover {
+  filter: brightness(1.08);
+}
+
+.mobile-staff-shortcut,
+.nav-links a.staff-link,
+.nav-links a[data-staff-navigation="true"] {
+  border-color: var(--royal-blue);
+}
