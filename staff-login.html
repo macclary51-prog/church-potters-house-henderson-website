@@ -2,18 +2,176 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  >
+
   <meta
     name="description"
-    content="Church location and social media links for The Henderson Potter's House"
+    content="Church staff login"
   >
-  <title>Connect | The Henderson Potter's House</title>
+
+  <title>
+    Staff Login | The Henderson Potter's House
+  </title>
 
   <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="connect.css?v=1">
+
+  <style>
+    /*
+      Mobile scrolling fix:
+      the login page must remain taller than the phone screen so the user
+      can scroll when the keyboard opens.
+    */
+
+    html {
+      height: auto !important;
+      min-height: 100%;
+      overflow-x: hidden !important;
+      overflow-y: auto !important;
+      scroll-behavior: auto;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body.staff-login-page {
+      position: static !important;
+      width: 100%;
+      height: auto !important;
+      min-height: 100svh !important;
+      overflow-x: hidden !important;
+      overflow-y: auto !important;
+      overscroll-behavior-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    body.staff-login-page main {
+      display: block;
+      min-height: auto !important;
+      overflow: visible !important;
+    }
+
+    .staff-login-shell {
+      display: block !important;
+      width: 100%;
+      min-height: auto !important;
+      padding: 38px 0 calc(90px + env(safe-area-inset-bottom));
+      overflow: visible !important;
+    }
+
+    .login-card {
+      width: min(100%, 560px);
+      margin: 0 auto;
+      overflow: visible !important;
+    }
+
+    .password-field-wrap {
+      position: relative;
+    }
+
+    .password-field-wrap input {
+      padding-right: 76px;
+    }
+
+    .show-password-button {
+      position: absolute;
+      top: 50%;
+      right: 8px;
+      min-height: 34px;
+      padding: 0 10px;
+      color: var(--navy);
+      background: var(--surface-soft);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.72rem;
+      font-weight: 900;
+      transform: translateY(-50%);
+    }
+
+    .login-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .text-button {
+      min-height: 48px;
+      padding: 0 18px;
+      color: var(--navy);
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 850;
+    }
+
+    .login-help {
+      margin-top: 18px;
+      padding-top: 16px;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+      font-size: 0.79rem;
+      line-height: 1.5;
+    }
+
+    .login-help strong {
+      color: var(--navy);
+    }
+
+    @media (max-width: 960px) {
+      /*
+        A sticky header can trap the visible area when a mobile keyboard opens.
+        Keep it normal on the login page.
+      */
+      body.staff-login-page .site-header {
+        position: relative !important;
+        top: auto !important;
+      }
+
+      body.staff-login-page .nav-links {
+        max-height: calc(100dvh - 105px);
+        overflow-x: hidden;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .staff-login-shell {
+        padding-top: 20px;
+        padding-bottom: calc(120px + env(safe-area-inset-bottom));
+      }
+
+      .login-card {
+        padding: 23px 16px;
+        border-radius: 20px;
+      }
+
+      .login-actions {
+        display: grid;
+      }
+
+      .login-actions .button,
+      .login-actions .text-button {
+        width: 100%;
+      }
+
+      /*
+        16px prevents iPhone Safari from zooming into the input and
+        making the bottom of the form difficult to reach.
+      */
+      .login-card input {
+        min-height: 50px;
+        font-size: 16px !important;
+      }
+    }
+  </style>
 </head>
 
-<body>
+<body class="staff-login-page">
   <header class="site-header">
     <div class="container nav-wrap">
       <a
@@ -41,10 +199,15 @@
         <a href="ministries.html">Ministries</a>
         <a href="sermons.html">Sermons</a>
         <a href="giving.html">Giving</a>
-        <a href="connect.html" class="active">Connect</a>
+        <a href="connect.html">Connect</a>
         <a href="prayer.html">Prayer</a>
         <a href="contact.html">Contact</a>
-        <a class="staff-link" href="staff-login.html">Staff</a>
+        <a
+          class="staff-link active"
+          href="staff-login.html"
+        >
+          Staff
+        </a>
       </nav>
 
       <button
@@ -61,169 +224,109 @@
   </header>
 
   <main>
-    <section class="page-hero">
+    <section class="staff-login-shell">
       <div class="container">
-        <div class="page-hero-card">
-          <div class="eyebrow">Find and Follow Us</div>
-          <h1>Connect With the Church</h1>
-          <p>
-            Find our location and visit the church's official social media pages.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Only an approved pastor sees these controls. -->
-    <section class="connect-pastor-shell" id="connectPastorShell" hidden>
-      <div class="container">
-        <div class="connect-pastor-toolbar">
-          <div>
-            <span>Pastor Link Controls</span>
-            <strong id="connectPastorName">Pastor</strong>
-            <small>
-              Add, edit, remove, or change the church location and social links.
-            </small>
-          </div>
-
-          <button
-            class="button button-primary"
-            id="connectAddButton"
-            type="button"
+        <form
+          class="form-panel login-card"
+          id="staffLoginForm"
+          novalidate
+        >
+          <div
+            class="eyebrow"
+            style="background: var(--surface-soft); color: var(--red);"
           >
-            + Add Link
-          </button>
-        </div>
+            Private Staff Access
+          </div>
 
-        <form class="connect-editor" id="connectEditor" hidden>
-          <input type="hidden" name="documentId">
+          <h1
+            style="color: var(--navy); margin-bottom: 8px;"
+          >
+            Staff Sign In
+          </h1>
 
-          <div class="connect-editor-heading">
-            <div>
-              <span id="connectEditorMode">Add New</span>
-              <h2 id="connectEditorTitle">Church Link</h2>
-              <p>
-                Paste the church's official link. It will appear on this page and
-                in the website footer.
-              </p>
+          <p>
+            This area is only for the pastor and approved ministry members.
+            There is no public signup.
+          </p>
+
+          <div class="form-grid">
+            <label>
+              Email address
+
+              <input
+                id="staffEmail"
+                name="email"
+                type="email"
+                inputmode="email"
+                autocomplete="username"
+                autocapitalize="none"
+                autocorrect="off"
+                spellcheck="false"
+                placeholder="staff@email.com"
+                required
+              >
+            </label>
+
+            <label>
+              Password
+
+              <div class="password-field-wrap">
+                <input
+                  id="staffPassword"
+                  name="password"
+                  type="password"
+                  autocomplete="current-password"
+                  autocapitalize="none"
+                  autocorrect="off"
+                  spellcheck="false"
+                  placeholder="Your password"
+                  required
+                >
+
+                <button
+                  class="show-password-button"
+                  id="showPasswordButton"
+                  type="button"
+                  aria-controls="staffPassword"
+                  aria-pressed="false"
+                >
+                  Show
+                </button>
+              </div>
+            </label>
+
+            <div class="login-actions">
+              <button
+                class="button button-primary"
+                id="staffLoginButton"
+                type="submit"
+              >
+                Staff Sign In
+              </button>
+
+              <button
+                class="text-button"
+                id="resetPasswordButton"
+                type="button"
+              >
+                Reset Password
+              </button>
             </div>
-
-            <button
-              class="connect-close-button"
-              id="connectCloseButton"
-              type="button"
-              aria-label="Close link editor"
-            >
-              ×
-            </button>
-          </div>
-
-          <div class="connect-form-grid">
-            <label>
-              Link type
-              <select name="type" required>
-                <option value="location">Location / Directions</option>
-                <option value="facebook">Facebook</option>
-                <option value="instagram">Instagram</option>
-                <option value="youtube">YouTube</option>
-                <option value="tiktok">TikTok</option>
-                <option value="x">X / Twitter</option>
-                <option value="website">Website</option>
-                <option value="email">Email</option>
-                <option value="phone">Phone</option>
-                <option value="other">Other</option>
-              </select>
-            </label>
-
-            <label>
-              Button name
-              <input
-                type="text"
-                name="title"
-                placeholder="Get Directions"
-                maxlength="80"
-                required
-              >
-            </label>
-
-            <label class="connect-full-field">
-              Link, email, or phone number
-              <input
-                type="text"
-                name="url"
-                placeholder="Paste a Google Maps or social media link"
-                maxlength="500"
-                required
-              >
-            </label>
-
-            <label class="connect-full-field">
-              Description
-              <textarea
-                name="description"
-                rows="4"
-                placeholder="Optional short description"
-                maxlength="500"
-              ></textarea>
-            </label>
-          </div>
-
-          <div class="connect-form-actions">
-            <button
-              class="button button-primary"
-              id="connectSaveButton"
-              type="submit"
-            >
-              Publish Link
-            </button>
-
-            <button
-              class="connect-cancel-button"
-              id="connectCancelButton"
-              type="button"
-            >
-              Cancel
-            </button>
           </div>
 
           <div
-            class="connect-status"
-            id="connectStatus"
-            role="status"
+            class="status-message"
+            id="authMessage"
+            role="alert"
+            aria-live="polite"
           ></div>
-        </form>
-      </div>
-    </section>
 
-    <section class="section connect-section">
-      <div class="container">
-        <div class="section-heading connect-heading">
-          <div>
-            <span>Official Church Links</span>
-            <h2>Location and Social Media</h2>
-            <p id="connectPageHint">
-              Use the verified links below to find and follow the church.
-            </p>
+          <div class="login-help">
+            <strong>On a phone:</strong>
+            tap the email or password field and scroll normally. The page now
+            leaves extra space below the form when the keyboard is open.
           </div>
-
-          <button
-            class="connect-heading-add"
-            id="connectHeadingAdd"
-            type="button"
-            hidden
-          >
-            + Add Link
-          </button>
-        </div>
-
-        <div class="connect-grid" id="connectGrid">
-          <div class="connect-empty">Loading church links...</div>
-        </div>
-
-        <div class="connect-safety-note">
-          <strong>Official links only.</strong>
-          The pastor controls the links displayed on this page. Avoid sending
-          personal or payment information through unofficial accounts.
-        </div>
+        </form>
       </div>
     </section>
   </main>
@@ -243,18 +346,151 @@
         </div>
       </div>
 
-      <p>© <span id="year"></span> The Henderson Potter's House.</p>
+      <p>
+        © <span id="year"></span>
+        The Henderson Potter's House.
+      </p>
     </div>
   </footer>
 
-  <div
-    class="connect-toast"
-    id="connectToast"
-    role="status"
-    aria-live="polite"
-  ></div>
+  <script src="script.js?v=6"></script>
 
-  <script src="script.js"></script>
-  <script type="module" src="connect.js?v=3"></script>
+  <script>
+    /*
+      Remove any accidental page-locking left behind by a mobile menu,
+      modal, or previously cached page.
+    */
+    function unlockLoginPageScroll() {
+      document.documentElement.style.overflowY = "auto";
+      document.documentElement.style.height = "auto";
+
+      document.body.style.position = "static";
+      document.body.style.height = "auto";
+      document.body.style.overflowY = "auto";
+      document.body.style.touchAction = "pan-y";
+
+      document.body.classList.remove(
+        "menu-open",
+        "modal-open",
+        "no-scroll"
+      );
+    }
+
+    unlockLoginPageScroll();
+
+    window.addEventListener(
+      "pageshow",
+      unlockLoginPageScroll
+    );
+
+    window.addEventListener(
+      "orientationchange",
+      function () {
+        window.setTimeout(
+          unlockLoginPageScroll,
+          200
+        );
+      }
+    );
+
+    const loginInputs =
+      document.querySelectorAll(
+        "#staffLoginForm input"
+      );
+
+    loginInputs.forEach(function (input) {
+      input.addEventListener(
+        "focus",
+        function () {
+          /*
+            Give the mobile keyboard time to open, then center the field
+            inside the remaining visible area.
+          */
+          window.setTimeout(
+            function () {
+              input.scrollIntoView({
+                behavior: "smooth",
+                block: "center"
+              });
+            },
+            350
+          );
+        }
+      );
+    });
+
+    const showPasswordButton =
+      document.getElementById(
+        "showPasswordButton"
+      );
+
+    const passwordInput =
+      document.getElementById(
+        "staffPassword"
+      );
+
+    if (
+      showPasswordButton &&
+      passwordInput
+    ) {
+      showPasswordButton.addEventListener(
+        "click",
+        function () {
+          const isVisible =
+            passwordInput.type === "text";
+
+          passwordInput.type =
+            isVisible
+              ? "password"
+              : "text";
+
+          showPasswordButton.textContent =
+            isVisible
+              ? "Show"
+              : "Hide";
+
+          showPasswordButton.setAttribute(
+            "aria-pressed",
+            String(!isVisible)
+          );
+
+          passwordInput.focus();
+        }
+      );
+    }
+
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener(
+        "resize",
+        function () {
+          unlockLoginPageScroll();
+
+          const active =
+            document.activeElement;
+
+          if (
+            active &&
+            active.matches(
+              "#staffLoginForm input"
+            )
+          ) {
+            window.setTimeout(
+              function () {
+                active.scrollIntoView({
+                  block: "center"
+                });
+              },
+              100
+            );
+          }
+        }
+      );
+    }
+  </script>
+
+  <script
+    type="module"
+    src="staff-auth.js?v=4"
+  ></script>
 </body>
 </html>
