@@ -516,8 +516,9 @@
 }
 
 
+
 /* =========================================================
-   FULL MINISTRY ACCOUNT MANAGEMENT
+   SIMPLE MINISTRY ACCOUNT MANAGEMENT
    ========================================================= */
 
 .staff-inline-account-actions {
@@ -541,7 +542,7 @@
   opacity: 0.62;
 }
 
-.staff-inline-account-action.password {
+.staff-inline-account-action.password-reset {
   color: var(--navy);
   background: var(--surface-soft);
   border: 1px solid #cfd7e0;
@@ -559,19 +560,8 @@
   border: 1px solid #bce1ca;
 }
 
-.staff-inline-account-action.permanent-delete {
-  grid-column: 1 / -1;
-  color: #fff;
-  background: linear-gradient(135deg, #941b24, #d92d3a);
-  border: 1px solid #941b24;
-}
-
 @media (max-width: 620px) {
   .staff-inline-account-actions {
     grid-template-columns: 1fr;
-  }
-
-  .staff-inline-account-action.permanent-delete {
-    grid-column: auto;
   }
 }
