@@ -632,3 +632,21 @@
     border-radius: 11px;
   }
 }
+
+
+/* Royal blue staff action buttons. */
+.staff-inline-add,
+.staff-inline-heading-add {
+  color: #fff;
+  background: linear-gradient(
+    135deg,
+    #4169e1,
+    #27408b
+  );
+  border-color: transparent;
+}
+
+.staff-inline-add:hover,
+.staff-inline-heading-add:hover {
+  filter: brightness(1.08);
+}
