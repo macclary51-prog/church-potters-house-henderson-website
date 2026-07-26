@@ -6,7 +6,7 @@
   <meta name="description" content="Announcements - The Henderson Potter&#x27;s House">
   <title>Announcements | The Henderson Potter's House</title>
   <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="staff-inline.css?v=1">
+  <link rel="stylesheet" href="staff-inline.css?v=12">
 </head>
 
 <body>
@@ -25,10 +25,12 @@
         <a href="index.html">Home</a>
         <a href="announcements.html" class="active">Announcements</a>
         <a href="events.html">Events</a>
+        <a href="services.html">Services</a>
         <a href="ministries.html">Ministries</a>
         <a href="sermons.html">Sermons</a>
+        <a href="giving.html">Giving</a>
+        <a href="connect.html">Connect</a>
         <a href="prayer.html">Prayer</a>
-        <a href="contact.html">Contact</a>
         <a class="staff-link" href="staff-login.html">Staff</a>
       </nav>
 
@@ -282,7 +284,32 @@
             class="staff-inline-status"
             id="staffInlineAccountStatus"
             role="status"
-          ></div>
+          >
+              <label class="staff-inline-full">
+                Photo link
+                <input
+                  type="text"
+                  name="imageUrl"
+                  placeholder="https://... or photos/example.jpg"
+                >
+                <small class="staff-inline-media-help">
+                  Optional. Paste a direct photo link or a photo path from this website.
+                </small>
+              </label>
+
+              <label class="staff-inline-full">
+                Video link
+                <input
+                  type="text"
+                  name="videoUrl"
+                  placeholder="YouTube, Facebook, or direct video link"
+                >
+                <small class="staff-inline-media-help">
+                  Optional. YouTube videos play on the page; other supported links open in a new tab.
+                </small>
+              </label>
+
+            </div>
         </form>
 
         <div>
@@ -307,6 +334,6 @@
   ></div>
 
   <script src="script.js"></script>
-  <script type="module" src="public-content.js?v=4"></script>
+  <script type="module" src="public-content.js?v=12"></script>
 </body>
 </html>
