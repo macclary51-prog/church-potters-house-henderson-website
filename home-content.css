@@ -332,3 +332,24 @@
 .home-card-link:hover {
   filter: brightness(1.08);
 }
+
+
+/* Complete royal blue homepage buttons. */
+.home-heading-add,
+.home-card-link {
+  color: #fff;
+  background: linear-gradient(
+    135deg,
+    #4169e1,
+    #27408b
+  );
+  border-color: transparent;
+  box-shadow: 0 9px 20px rgba(65, 105, 225, 0.2);
+}
+
+.home-heading-add:hover,
+.home-card-link:hover {
+  filter: brightness(1.08);
+}
+
+/* Remove buttons intentionally remain red. */
