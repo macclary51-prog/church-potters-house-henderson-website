@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Sermons - The Henderson Potter&#x27;s House">
-  <title>Sermons | The Henderson Potter's House</title>
+  <meta name="description" content="Events - The Henderson Potter&#x27;s House">
+  <title>Events | The Henderson Potter's House</title>
   <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="staff-inline.css?v=1">
+  <link rel="stylesheet" href="staff-inline.css?v=12">
 </head>
 
 <body>
@@ -24,11 +24,13 @@
       <nav class="nav-links" id="navLinks">
         <a href="index.html">Home</a>
         <a href="announcements.html">Announcements</a>
-        <a href="events.html">Events</a>
+        <a href="events.html" class="active">Events</a>
+        <a href="services.html">Services</a>
         <a href="ministries.html">Ministries</a>
-        <a href="sermons.html" class="active">Sermons</a>
+        <a href="sermons.html">Sermons</a>
+        <a href="giving.html">Giving</a>
+        <a href="connect.html">Connect</a>
         <a href="prayer.html">Prayer</a>
-        <a href="contact.html">Contact</a>
         <a class="staff-link" href="staff-login.html">Staff</a>
       </nav>
 
@@ -49,9 +51,9 @@
     <section class="page-hero">
       <div class="container">
         <div class="page-hero-card">
-          <div class="eyebrow">Messages</div>
-          <h1>Sermons and Messages</h1>
-          <p>Watch and revisit sermons, messages, and teaching from the church.</p>
+          <div class="eyebrow">Upcoming</div>
+          <h1>Events and Gatherings</h1>
+          <p>View upcoming services, Bible studies, fellowship, and community events.</p>
         </div>
       </div>
     </section>
@@ -76,7 +78,7 @@
               id="staffInlineAddButton"
               type="button"
             >
-              + Add Sermon
+              + Add Event
             </button>
 
             <button
@@ -105,7 +107,7 @@
             <div class="staff-inline-editor-heading">
               <div>
                 <span id="staffInlineFormMode">Add New</span>
-                <h2 id="staffInlineFormTitle">Sermon</h2>
+                <h2 id="staffInlineFormTitle">Event</h2>
                 <p>
                   Save it here and the public page updates immediately.
                 </p>
@@ -124,13 +126,8 @@
             <div class="staff-inline-form-grid">
               
           <label class="staff-inline-full">
-            Sermon title
-            <input type="text" name="title" placeholder="Sermon title" required>
-          </label>
-
-          <label>
-            Speaker
-            <input type="text" name="speaker" placeholder="Speaker name" required>
+            Event title
+            <input type="text" name="title" placeholder="Event title" required>
           </label>
 
           <label>
@@ -138,14 +135,19 @@
             <input type="date" name="date" required>
           </label>
 
+          <label>
+            Time
+            <input type="text" name="time" placeholder="Example: 10:30 AM" required>
+          </label>
+
           <label class="staff-inline-full">
-            Video link
-            <input type="url" name="videoUrl" placeholder="YouTube or Facebook link">
+            Location
+            <input type="text" name="location" placeholder="Church or event location" required>
           </label>
 
           <label class="staff-inline-full">
             Details
-            <textarea name="details" rows="7" placeholder="Message description or notes" required></textarea>
+            <textarea name="details" rows="7" placeholder="Event details" required></textarea>
           </label>
         
             </div>
@@ -179,7 +181,7 @@
         <div class="section-heading staff-inline-page-heading">
           <div>
             <span>Current Website Content</span>
-            <h2>Sermons</h2>
+            <h2>Events</h2>
             <p id="staffInlineHint">
               Everything listed below is currently visible on the public website.
             </p>
@@ -191,14 +193,14 @@
             type="button"
             hidden
           >
-            + Add Sermon
+            + Add Event
           </button>
         </div>
 
         <div
           class="content-grid"
           id="publicContentGrid"
-          data-collection="sermons"
+          data-collection="events"
         >
           <div class="empty-state">Loading church information...</div>
         </div>
@@ -292,7 +294,32 @@
             class="staff-inline-status"
             id="staffInlineAccountStatus"
             role="status"
-          ></div>
+          >
+              <label class="staff-inline-full">
+                Photo link
+                <input
+                  type="text"
+                  name="imageUrl"
+                  placeholder="https://... or photos/example.jpg"
+                >
+                <small class="staff-inline-media-help">
+                  Optional. Paste a direct photo link or a photo path from this website.
+                </small>
+              </label>
+
+              <label class="staff-inline-full">
+                Video link
+                <input
+                  type="text"
+                  name="videoUrl"
+                  placeholder="YouTube, Facebook, or direct video link"
+                >
+                <small class="staff-inline-media-help">
+                  Optional. YouTube videos play on the page; other supported links open in a new tab.
+                </small>
+              </label>
+
+            </div>
         </form>
 
         <div>
@@ -317,6 +344,6 @@
   ></div>
 
   <script src="script.js"></script>
-  <script type="module" src="public-content.js?v=4"></script>
+  <script type="module" src="public-content.js?v=12"></script>
 </body>
 </html>
