@@ -1,0 +1,719 @@
+import {
+  auth,
+  db
+} from "./firebase-config.js";
+
+import {
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
+
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  onSnapshot,
+  serverTimestamp,
+  updateDoc
+} from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+
+
+const cardsGrid =
+  document.getElementById("homeCardsGrid");
+
+const pastorShell =
+  document.getElementById("homePastorShell");
+
+const pastorName =
+  document.getElementById("homePastorName");
+
+const addButton =
+  document.getElementById("homeAddButton");
+
+const headingAdd =
+  document.getElementById("homeHeadingAdd");
+
+const editor =
+  document.getElementById("homeEditor");
+
+const editorMode =
+  document.getElementById("homeEditorMode");
+
+const editorTitle =
+  document.getElementById("homeEditorTitle");
+
+const closeButton =
+  document.getElementById("homeCloseButton");
+
+const cancelButton =
+  document.getElementById("homeCancelButton");
+
+const saveButton =
+  document.getElementById("homeSaveButton");
+
+const statusBox =
+  document.getElementById("homeStatus");
+
+const cardsHint =
+  document.getElementById("homeCardsHint");
+
+const toast =
+  document.getElementById("homeToast");
+
+let currentUser = null;
+let currentCards = [];
+let toastTimer = null;
+
+
+function normalizeRole(role) {
+  return String(role || "")
+    .trim()
+    .toLowerCase();
+}
+
+
+function showToast(message, isError = false) {
+  window.clearTimeout(toastTimer);
+
+  toast.textContent = message;
+  toast.classList.toggle("error", isError);
+  toast.classList.add("show");
+
+  toastTimer = window.setTimeout(function () {
+    toast.classList.remove("show");
+  }, 3200);
+}
+
+
+function showStatus(message, isError = false) {
+  statusBox.textContent = message;
+  statusBox.classList.toggle("error", isError);
+  statusBox.style.display = "block";
+}
+
+
+function hideStatus() {
+  statusBox.textContent = "";
+  statusBox.classList.remove("error");
+  statusBox.style.display = "none";
+}
+
+
+function safeLink(value) {
+  const text =
+    String(value || "").trim();
+
+  if (!text) {
+    return "";
+  }
+
+  /*
+    Allow normal local website pages such as services.html.
+  */
+  if (
+    !text.includes(":") &&
+    !text.startsWith("//")
+  ) {
+    return text;
+  }
+
+  try {
+    const url =
+      new URL(text);
+
+    if (
+      url.protocol === "https:" ||
+      url.protocol === "http:"
+    ) {
+      return url.href;
+    }
+  } catch (error) {
+    return "";
+  }
+
+  return "";
+}
+
+
+function timestampSeconds(value) {
+  if (!value) {
+    return 0;
+  }
+
+  if (typeof value.seconds === "number") {
+    return value.seconds;
+  }
+
+  if (typeof value.toDate === "function") {
+    return Math.floor(
+      value.toDate().getTime() / 1000
+    );
+  }
+
+  return 0;
+}
+
+
+function openEditor(item = null) {
+  editor.reset();
+  hideStatus();
+
+  editor.elements.documentId.value =
+    item?.id || "";
+
+  if (item) {
+    editorMode.textContent =
+      "Edit Existing";
+
+    editorTitle.textContent =
+      item.data.title ||
+      "Homepage Card";
+
+    saveButton.textContent =
+      "Save Changes";
+
+    editor.elements.tag.value =
+      item.data.tag || "";
+
+    editor.elements.title.value =
+      item.data.title || "";
+
+    editor.elements.details.value =
+      item.data.details || "";
+
+    editor.elements.displayOrder.value =
+      Number(item.data.displayOrder) || 1;
+
+    editor.elements.buttonText.value =
+      item.data.buttonText || "";
+
+    editor.elements.buttonUrl.value =
+      item.data.buttonUrl || "";
+  } else {
+    editorMode.textContent =
+      "Add New";
+
+    editorTitle.textContent =
+      "Homepage Card";
+
+    saveButton.textContent =
+      "Publish Card";
+
+    editor.elements.displayOrder.value =
+      currentCards.length + 1;
+  }
+
+  editor.hidden = false;
+
+  editor.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+}
+
+
+function closeEditor() {
+  editor.reset();
+  editor.elements.documentId.value = "";
+  editor.hidden = true;
+  hideStatus();
+}
+
+
+function createCard(item) {
+  const data =
+    item.data;
+
+  const card =
+    document.createElement("article");
+
+  card.className =
+    "content-card";
+
+  if (currentUser) {
+    card.classList.add(
+      "home-editable-card"
+    );
+  }
+
+  const tagRow =
+    document.createElement("div");
+
+  const tag =
+    document.createElement("div");
+
+  tag.className =
+    "tag";
+
+  tag.textContent =
+    data.tag ||
+    "Church Update";
+
+  tagRow.appendChild(tag);
+
+  if (currentUser) {
+    const live =
+      document.createElement("span");
+
+    live.className =
+      "home-live-badge";
+
+    live.textContent =
+      "LIVE ON WEBSITE";
+
+    tagRow.appendChild(live);
+  }
+
+  const heading =
+    document.createElement("h3");
+
+  heading.textContent =
+    data.title ||
+    "Untitled Card";
+
+  const details =
+    document.createElement("p");
+
+  details.textContent =
+    data.details ||
+    "";
+
+  card.append(
+    tagRow,
+    heading,
+    details
+  );
+
+  const buttonText =
+    String(data.buttonText || "").trim();
+
+  const buttonUrl =
+    safeLink(data.buttonUrl);
+
+  if (
+    buttonText &&
+    buttonUrl
+  ) {
+    const link =
+      document.createElement("a");
+
+    link.className =
+      "home-card-link";
+
+    link.href =
+      buttonUrl;
+
+    if (
+      buttonUrl.startsWith("http://") ||
+      buttonUrl.startsWith("https://")
+    ) {
+      link.target =
+        "_blank";
+
+      link.rel =
+        "noopener noreferrer";
+    }
+
+    link.textContent =
+      `${buttonText} →`;
+
+    card.appendChild(link);
+  }
+
+  if (currentUser) {
+    const actions =
+      document.createElement("div");
+
+    actions.className =
+      "home-card-actions";
+
+    const edit =
+      document.createElement("button");
+
+    edit.type =
+      "button";
+
+    edit.className =
+      "home-edit-button";
+
+    edit.textContent =
+      "✏ Edit";
+
+    edit.addEventListener(
+      "click",
+      function () {
+        openEditor(item);
+      }
+    );
+
+    const remove =
+      document.createElement("button");
+
+    remove.type =
+      "button";
+
+    remove.className =
+      "home-remove-button";
+
+    remove.textContent =
+      "🗑 Remove From Homepage";
+
+    remove.addEventListener(
+      "click",
+      async function () {
+        const confirmed =
+          window.confirm(
+            `Remove "${data.title || "this card"}" from the homepage?\n\nThis cannot be undone.`
+          );
+
+        if (!confirmed) {
+          return;
+        }
+
+        try {
+          await deleteDoc(
+            doc(db, "homeHighlights", item.id)
+          );
+
+          showToast(
+            "Homepage card removed."
+          );
+        } catch (error) {
+          console.error(error);
+
+          showToast(
+            "The homepage card could not be removed.",
+            true
+          );
+        }
+      }
+    );
+
+    actions.append(
+      edit,
+      remove
+    );
+
+    card.appendChild(
+      actions
+    );
+  }
+
+  return card;
+}
+
+
+function renderCards() {
+  cardsGrid.replaceChildren();
+
+  if (currentCards.length === 0) {
+    const empty =
+      document.createElement("div");
+
+    empty.className =
+      "home-empty-state";
+
+    empty.textContent =
+      currentUser
+        ? "No homepage cards are published. Select Add Homepage Card to create one."
+        : "Church updates will appear here soon.";
+
+    cardsGrid.appendChild(empty);
+    return;
+  }
+
+  currentCards.forEach(function (item) {
+    cardsGrid.appendChild(
+      createCard(item)
+    );
+  });
+}
+
+
+async function loadPastorProfile(user) {
+  const snapshot =
+    await getDoc(
+      doc(db, "staff", user.uid)
+    );
+
+  if (!snapshot.exists()) {
+    return null;
+  }
+
+  const profile =
+    snapshot.data();
+
+  const role =
+    normalizeRole(profile.role);
+
+  if (
+    profile.active !== true ||
+    role !== "pastor"
+  ) {
+    return null;
+  }
+
+  return {
+    ...profile,
+    role
+  };
+}
+
+
+addButton.addEventListener(
+  "click",
+  function () {
+    openEditor();
+  }
+);
+
+headingAdd.addEventListener(
+  "click",
+  function () {
+    openEditor();
+  }
+);
+
+closeButton.addEventListener(
+  "click",
+  closeEditor
+);
+
+cancelButton.addEventListener(
+  "click",
+  closeEditor
+);
+
+
+editor.addEventListener(
+  "submit",
+  async function (event) {
+    event.preventDefault();
+
+    if (!currentUser) {
+      showStatus(
+        "Only the approved pastor can change homepage cards.",
+        true
+      );
+
+      return;
+    }
+
+    const formData =
+      new FormData(editor);
+
+    const documentId =
+      String(
+        formData.get("documentId") || ""
+      ).trim();
+
+    const buttonText =
+      String(
+        formData.get("buttonText") || ""
+      ).trim();
+
+    const buttonUrl =
+      String(
+        formData.get("buttonUrl") || ""
+      ).trim();
+
+    if (
+      (buttonText && !buttonUrl) ||
+      (!buttonText && buttonUrl)
+    ) {
+      showStatus(
+        "For the optional button, enter both a button name and a link.",
+        true
+      );
+
+      return;
+    }
+
+    if (
+      buttonUrl &&
+      !safeLink(buttonUrl)
+    ) {
+      showStatus(
+        "Enter a valid page link such as services.html or a full https:// website link.",
+        true
+      );
+
+      return;
+    }
+
+    const data = {
+      tag:
+        String(
+          formData.get("tag") || ""
+        ).trim(),
+
+      title:
+        String(
+          formData.get("title") || ""
+        ).trim(),
+
+      details:
+        String(
+          formData.get("details") || ""
+        ).trim(),
+
+      displayOrder:
+        Number(
+          formData.get("displayOrder")
+        ) || 1,
+
+      buttonText,
+      buttonUrl,
+
+      updatedAt:
+        serverTimestamp(),
+
+      updatedBy:
+        currentUser.uid
+    };
+
+    saveButton.disabled =
+      true;
+
+    saveButton.textContent =
+      documentId
+        ? "Saving..."
+        : "Publishing...";
+
+    hideStatus();
+
+    try {
+      if (documentId) {
+        await updateDoc(
+          doc(db, "homeHighlights", documentId),
+          data
+        );
+
+        showToast(
+          "Homepage card updated."
+        );
+      } else {
+        await addDoc(
+          collection(db, "homeHighlights"),
+          {
+            ...data,
+            createdAt:
+              serverTimestamp(),
+            createdBy:
+              currentUser.uid
+          }
+        );
+
+        showToast(
+          "Homepage card published."
+        );
+      }
+
+      closeEditor();
+    } catch (error) {
+      console.error(error);
+
+      showStatus(
+        "The homepage card could not be saved. Publish the updated Firestore rules and try again.",
+        true
+      );
+
+      showToast(
+        "The homepage card could not be saved.",
+        true
+      );
+    } finally {
+      saveButton.disabled =
+        false;
+    }
+  }
+);
+
+
+onSnapshot(
+  collection(db, "homeHighlights"),
+  function (snapshot) {
+    currentCards =
+      snapshot.docs
+        .map(function (documentSnapshot) {
+          return {
+            id: documentSnapshot.id,
+            data: documentSnapshot.data()
+          };
+        })
+        .sort(function (a, b) {
+          const orderDifference =
+            (Number(a.data.displayOrder) || 999) -
+            (Number(b.data.displayOrder) || 999);
+
+          if (orderDifference !== 0) {
+            return orderDifference;
+          }
+
+          return (
+            timestampSeconds(a.data.createdAt) -
+            timestampSeconds(b.data.createdAt)
+          );
+        });
+
+    renderCards();
+  },
+  function (error) {
+    console.error(error);
+
+    cardsGrid.innerHTML =
+      '<div class="home-empty-state">Homepage information could not be loaded.</div>';
+  }
+);
+
+
+onAuthStateChanged(
+  auth,
+  async function (user) {
+    currentUser = null;
+    pastorShell.hidden = true;
+    headingAdd.hidden = true;
+    closeEditor();
+
+    if (!user) {
+      cardsHint.textContent =
+        "Current services, fellowship information, and church updates.";
+
+      renderCards();
+      return;
+    }
+
+    try {
+      const profile =
+        await loadPastorProfile(user);
+
+      if (!profile) {
+        renderCards();
+        return;
+      }
+
+      currentUser =
+        user;
+
+      pastorName.textContent =
+        profile.name ||
+        user.email ||
+        "Pastor";
+
+      pastorShell.hidden =
+        false;
+
+      headingAdd.hidden =
+        false;
+
+      cardsHint.textContent =
+        "Pastor editing is active. Use Edit or Remove directly on a homepage card.";
+
+      renderCards();
+    } catch (error) {
+      console.error(error);
+      renderCards();
+    }
+  }
+);
