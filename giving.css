@@ -380,3 +380,19 @@
     grid-template-columns: 1fr;
   }
 }
+
+
+/* Royal blue Giving buttons. */
+.giving-card-actions a.primary {
+  color: #fff;
+  background: linear-gradient(
+    135deg,
+    #4169e1,
+    #27408b
+  );
+  border-color: transparent;
+}
+
+.giving-card-actions a.primary:hover {
+  filter: brightness(1.08);
+}
