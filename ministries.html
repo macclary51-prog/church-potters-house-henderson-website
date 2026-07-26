@@ -3,45 +3,315 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Ministries - The Henderson Potter's House">
+  <meta name="description" content="Ministries - The Henderson Potter&#x27;s House">
   <title>Ministries | The Henderson Potter's House</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="staff-inline.css?v=1">
 </head>
+
 <body>
-<header class="site-header">
-  <div class="container nav-wrap">
-    <a class="brand" href="index.html">
-      <div class="logo header-logo" role="img" aria-label="The Henderson Potter's House logo"></div>
-      <div class="brand-text">
-        <strong>The Henderson Potter's House</strong>
-        <span>Henderson, Nevada</span>
-      </div>
-    </a>
-    <nav class="nav-links" id="navLinks"><a href="index.html">Home</a>
-<a href="announcements.html">Announcements</a>
-<a href="events.html">Events</a>
-<a href="ministries.html" class="active">Ministries</a>
-<a href="sermons.html">Sermons</a>
-<a href="prayer.html">Prayer</a>
-<a href="contact.html">Contact</a></nav>
-    <button class="menu-button" id="menuButton" type="button" aria-label="Open menu">☰</button>
-  </div>
-</header>
-<main><section class="page-hero"><div class="container"><div class="page-hero-card"><div class="eyebrow">Get Involved</div><h1>Church Ministries</h1><p>Learn about ministry opportunities for families, individuals, and the community.</p></div></div></section>
-<section class="section"><div class="container"><div class="content-grid">
-  <article class="content-card"><div class="tag">Families</div><h3>Children and Youth</h3><p>Programs that help young people learn, grow, and build friendships.</p></article>
-  <article class="content-card"><div class="tag">Community</div><h3>Outreach Ministry</h3><p>Opportunities to serve Henderson and support people in the community.</p></article>
-  <article class="content-card"><div class="tag">Connection</div><h3>Men and Women</h3><p>Gatherings focused on fellowship, encouragement, and spiritual growth.</p></article>
-</div></div></section></main>
-<footer>
-  <div class="container footer-wrap">
-    <div class="footer-brand">
-      <div class="logo footer-logo" role="img" aria-label="The Henderson Potter's House logo"></div>
-      <div><strong>The Henderson Potter's House</strong><p>Faith, fellowship, and community.</p></div>
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="brand" href="index.html" aria-label="The Henderson Potter's House home">
+        <div class="logo header-logo" role="img" aria-label="The Henderson Potter's House logo"></div>
+
+        <div class="brand-text">
+          <strong>The Henderson Potter's House</strong>
+          <span>Henderson, Nevada</span>
+        </div>
+      </a>
+
+      <nav class="nav-links" id="navLinks">
+        <a href="index.html">Home</a>
+        <a href="announcements.html">Announcements</a>
+        <a href="events.html">Events</a>
+        <a href="ministries.html" class="active">Ministries</a>
+        <a href="sermons.html">Sermons</a>
+        <a href="prayer.html">Prayer</a>
+        <a href="contact.html">Contact</a>
+        <a class="staff-link" href="staff-login.html">Staff</a>
+      </nav>
+
+      <button
+        class="menu-button"
+        id="menuButton"
+        type="button"
+        aria-label="Open menu"
+        aria-controls="navLinks"
+        aria-expanded="false"
+      >
+        ☰
+      </button>
     </div>
-    <p>© <span id="year"></span> The Henderson Potter's House.</p>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <div class="page-hero-card">
+          <div class="eyebrow">Get Involved</div>
+          <h1>Church Ministries</h1>
+          <p>Learn about ministries, meeting schedules, leaders, and ways to get involved.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Hidden for regular visitors. Shown automatically after an approved staff member signs in. -->
+    <section class="staff-inline-shell" id="staffInlineShell" hidden>
+      <div class="container">
+        <div class="staff-inline-toolbar">
+          <div class="staff-inline-identity">
+            <span class="staff-inline-avatar" id="staffInlineInitials">SM</span>
+
+            <div>
+              <small>Staff editing is on</small>
+              <strong id="staffInlineName">Staff Member</strong>
+              <span id="staffInlineRole">Staff</span>
+            </div>
+          </div>
+
+          <div class="staff-inline-toolbar-actions">
+            <button
+              class="staff-inline-add"
+              id="staffInlineAddButton"
+              type="button"
+            >
+              + Add Ministry
+            </button>
+
+            <button
+              class="staff-inline-accounts-button"
+              id="staffInlineAccountsButton"
+              type="button"
+              hidden
+            >
+              Ministry Accounts
+            </button>
+
+            <button
+              class="staff-inline-signout"
+              id="staffInlineSignOutButton"
+              type="button"
+            >
+              Sign Out
+            </button>
+          </div>
+        </div>
+
+        <div class="staff-inline-editor" id="staffInlineEditor" hidden>
+          <form id="staffInlineForm">
+            <input type="hidden" name="documentId">
+
+            <div class="staff-inline-editor-heading">
+              <div>
+                <span id="staffInlineFormMode">Add New</span>
+                <h2 id="staffInlineFormTitle">Ministry</h2>
+                <p>
+                  Save it here and the public page updates immediately.
+                </p>
+              </div>
+
+              <button
+                class="staff-inline-close"
+                id="staffInlineCloseButton"
+                type="button"
+                aria-label="Close editor"
+              >
+                ×
+              </button>
+            </div>
+
+            <div class="staff-inline-form-grid">
+              
+          <label class="staff-inline-full">
+            Ministry name
+            <input type="text" name="name" placeholder="Ministry name" required>
+          </label>
+
+          <label class="staff-inline-full">
+            Leader
+            <input type="text" name="leader" placeholder="Ministry leader" required>
+          </label>
+
+          <label class="staff-inline-full">
+            Schedule
+            <input type="text" name="schedule" placeholder="Meeting day and time" required>
+          </label>
+
+          <label class="staff-inline-full">
+            Details
+            <textarea name="details" rows="7" placeholder="Ministry information" required></textarea>
+          </label>
+        
+            </div>
+
+            <div class="staff-inline-form-actions">
+              <button
+                class="button button-primary"
+                id="staffInlineSaveButton"
+                type="submit"
+              >
+                Publish
+              </button>
+
+              <button
+                class="staff-inline-cancel"
+                id="staffInlineCancelButton"
+                type="button"
+              >
+                Cancel
+              </button>
+            </div>
+
+            <div class="staff-inline-status" id="staffInlineStatus" role="status"></div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-heading staff-inline-page-heading">
+          <div>
+            <span>Current Website Content</span>
+            <h2>Ministries</h2>
+            <p id="staffInlineHint">
+              Everything listed below is currently visible on the public website.
+            </p>
+          </div>
+
+          <button
+            class="staff-inline-heading-add"
+            id="staffInlineHeadingAdd"
+            type="button"
+            hidden
+          >
+            + Add Ministry
+          </button>
+        </div>
+
+        <div
+          class="content-grid"
+          id="publicContentGrid"
+          data-collection="ministries"
+        >
+          <div class="empty-state">Loading church information...</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-wrap">
+      <div class="footer-brand">
+        <div class="logo footer-logo" role="img" aria-label="The Henderson Potter's House logo"></div>
+
+        <div>
+          <strong>The Henderson Potter's House</strong>
+          <p>Faith, fellowship, and community.</p>
+        </div>
+      </div>
+
+      <p>© <span id="year"></span> The Henderson Potter's House.</p>
+    </div>
+  </footer>
+
+  <div
+    class="staff-inline-modal-backdrop"
+    id="staffInlineAccountsModal"
+    hidden
+  >
+    <div
+      class="staff-inline-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="staffInlineAccountsTitle"
+    >
+      <div class="staff-inline-modal-heading">
+        <div>
+          <span>Pastor Only</span>
+          <h2 id="staffInlineAccountsTitle">Ministry Accounts</h2>
+          <p>Create accounts or remove and restore website access.</p>
+        </div>
+
+        <button
+          class="staff-inline-close"
+          id="staffInlineAccountsClose"
+          type="button"
+          aria-label="Close ministry accounts"
+        >
+          ×
+        </button>
+      </div>
+
+      <div class="staff-inline-account-layout">
+        <form id="staffInlineAccountForm">
+          <h3>Create Ministry Account</h3>
+
+          <label>
+            Full name
+            <input
+              id="staffInlineAccountName"
+              type="text"
+              placeholder="Ministry member's name"
+              required
+            >
+          </label>
+
+          <label>
+            Email
+            <input
+              id="staffInlineAccountEmail"
+              type="email"
+              placeholder="member@email.com"
+              required
+            >
+          </label>
+
+          <label>
+            Temporary password
+            <input
+              id="staffInlineAccountPassword"
+              type="password"
+              minlength="6"
+              placeholder="At least 6 characters"
+              required
+            >
+          </label>
+
+          <button class="button button-primary" type="submit">
+            Create Account
+          </button>
+
+          <div
+            class="staff-inline-status"
+            id="staffInlineAccountStatus"
+            role="status"
+          ></div>
+        </form>
+
+        <div>
+          <h3>Current Ministry Accounts</h3>
+
+          <div
+            class="staff-inline-account-list"
+            id="staffInlineAccountList"
+          >
+            <div class="staff-inline-empty">Loading accounts...</div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-</footer>
-<script src="script.js"></script>
+
+  <div
+    class="staff-inline-toast"
+    id="staffInlineToast"
+    role="status"
+    aria-live="polite"
+  ></div>
+
+  <script src="script.js"></script>
+  <script type="module" src="public-content.js?v=4"></script>
 </body>
 </html>
