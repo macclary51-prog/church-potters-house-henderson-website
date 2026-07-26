@@ -534,7 +534,7 @@ editorForm.addEventListener(
       console.error(error);
 
       showStatus(
-        "The giving information could not be saved. Publish the updated Firestore rules and try again.",
+        "The giving information could not be saved. Please refresh and try again.",
         true
       );
 
