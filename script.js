@@ -26,6 +26,73 @@ if (menuButton && navLinks) {
   });
 }
 
+function ensureGivingNavigation() {
+  const navigation =
+    document.getElementById("navLinks");
+
+  if (!navigation) {
+    return;
+  }
+
+  let givingLink =
+    navigation.querySelector(
+      'a[href="giving.html"]'
+    );
+
+  if (!givingLink) {
+    givingLink =
+      document.createElement("a");
+
+    givingLink.href =
+      "giving.html";
+
+    givingLink.textContent =
+      "Giving";
+
+    const prayerLink =
+      navigation.querySelector(
+        'a[href="prayer.html"]'
+      );
+
+    const contactLink =
+      navigation.querySelector(
+        'a[href="contact.html"]'
+      );
+
+    const staffLink =
+      navigation.querySelector(
+        'a[href="staff-login.html"], a[data-staff-navigation]'
+      );
+
+    navigation.insertBefore(
+      givingLink,
+      prayerLink ||
+      contactLink ||
+      staffLink ||
+      null
+    );
+  }
+
+  const path =
+    window.location.pathname
+      .split("/")
+      .pop();
+
+  if (path === "giving.html") {
+    navigation
+      .querySelectorAll("a")
+      .forEach(function (link) {
+        link.classList.toggle(
+          "active",
+          link.getAttribute("href") ===
+            "giving.html"
+        );
+      });
+  }
+}
+
+ensureGivingNavigation();
+
 document.querySelectorAll("[data-demo-form]").forEach(function (form) {
   form.addEventListener("submit", function (event) {
     event.preventDefault();
@@ -49,10 +116,6 @@ if (year) {
     new Date().getFullYear();
 }
 
-/*
-  Load the universal staff navigation and staff-status bar.
-  This keeps Staff visible on every page of the same website.
-*/
 const staffSiteModule =
   document.createElement("script");
 
@@ -60,7 +123,7 @@ staffSiteModule.type =
   "module";
 
 staffSiteModule.src =
-  "staff-site.js?v=1";
+  "staff-site.js?v=2";
 
 document.body.appendChild(
   staffSiteModule
