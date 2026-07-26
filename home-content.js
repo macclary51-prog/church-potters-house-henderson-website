@@ -615,7 +615,7 @@ editor.addEventListener(
       console.error(error);
 
       showStatus(
-        "The homepage card could not be saved. Publish the updated Firestore rules and try again.",
+        "The homepage card could not be saved. Please refresh and try again.",
         true
       );
 
