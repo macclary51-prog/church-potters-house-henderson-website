@@ -40,7 +40,7 @@ function showMessage(message, isError = false) {
 }
 
 
-function friendlyAuthError(error) {
+function friendlyError(error) {
   switch (error.code) {
     case "auth/invalid-email":
       return "Enter a valid email address.";
@@ -55,86 +55,60 @@ function friendlyAuthError(error) {
       return "Check your internet connection and try again.";
 
     case "auth/unauthorized-domain":
-      return "Your GitHub Pages domain must be added to Firebase Authorized domains.";
-
-    case "permission-denied":
-    case "firestore/permission-denied":
-      return "Firestore denied access. Check that your security rules were published.";
+      return "This website domain must be added to Firebase Authorized domains.";
 
     default:
-      console.error("Firebase error:", error);
-      return (
-        "Firebase error: " +
-        (error.code || error.message || "Unknown error")
-      );
+      console.error(error);
+      return "Something went wrong. Please try again.";
   }
 }
 
 
-async function checkStaffAccount(user) {
-  const staffDocumentPath =
-    `/staff/${user.uid}`;
-
-  console.log("Logged-in email:", user.email);
-  console.log("Logged-in UID:", user.uid);
-  console.log("Checking:", staffDocumentPath);
-
-  const staffReference =
-    doc(db, "staff", user.uid);
-
-  const staffSnapshot =
-    await getDoc(staffReference);
+async function getApprovedStaff(user) {
+  const staffSnapshot = await getDoc(
+    doc(db, "staff", user.uid)
+  );
 
   if (!staffSnapshot.exists()) {
-    return {
-      approved: false,
-      reason:
-        "No staff document was found at " +
-        staffDocumentPath +
-        ". The UID of the account that logged in is " +
-        user.uid +
-        "."
-    };
+    return null;
   }
 
-  const staffData =
-    staffSnapshot.data();
-
-  console.log("Staff document data:", staffData);
-
+  const staff = staffSnapshot.data();
   const role =
-    typeof staffData.role === "string"
-      ? staffData.role.trim().toLowerCase()
-      : "";
-
-  if (staffData.active !== true) {
-    return {
-      approved: false,
-      reason:
-        "The staff document exists, but active is not the Boolean true."
-    };
-  }
+    String(staff.role || "")
+      .trim()
+      .toLowerCase();
 
   if (
-    role !== "pastor" &&
-    role !== "ministry"
+    staff.active !== true ||
+    !["pastor", "ministry"].includes(role)
   ) {
-    return {
-      approved: false,
-      reason:
-        'The staff document exists, but the role is "' +
-        String(staffData.role) +
-        '". It must be pastor or ministry.'
-    };
+    return null;
   }
 
   return {
-    approved: true,
-    staff: {
-      ...staffData,
-      role: role
-    }
+    ...staff,
+    role
   };
+}
+
+
+async function sendStaffToWebsite(user) {
+  const staff =
+    await getApprovedStaff(user);
+
+  if (!staff) {
+    return false;
+  }
+
+  /*
+    Staff now edit directly on the normal public pages.
+    There is no separate dashboard destination.
+  */
+  window.location.href =
+    "announcements.html";
+
+  return true;
 }
 
 
@@ -158,8 +132,6 @@ if (loginForm) {
       loginButton.disabled = true;
       loginButton.textContent = "Signing In...";
 
-      showMessage("");
-
       try {
         const result =
           await signInWithEmailAndPassword(
@@ -168,31 +140,24 @@ if (loginForm) {
             password
           );
 
-        const check =
-          await checkStaffAccount(
+        const approved =
+          await sendStaffToWebsite(
             result.user
           );
 
-        if (!check.approved) {
+        if (!approved) {
           await signOut(auth);
 
           showMessage(
-            check.reason,
+            "This account is not approved for church staff access.",
             true
           );
-
-          return;
         }
-
-        window.location.href =
-          "staff-dashboard.html";
-
       } catch (error) {
         showMessage(
-          friendlyAuthError(error),
+          friendlyError(error),
           true
         );
-
       } finally {
         loginButton.disabled = false;
         loginButton.textContent =
@@ -215,7 +180,7 @@ if (resetButton) {
 
       if (!email) {
         showMessage(
-          "Enter your email address first.",
+          "Enter your email address first, then select Reset Password.",
           true
         );
 
@@ -231,10 +196,9 @@ if (resetButton) {
         showMessage(
           "A password reset email has been sent."
         );
-
       } catch (error) {
         showMessage(
-          friendlyAuthError(error),
+          friendlyError(error),
           true
         );
       }
@@ -251,19 +215,9 @@ onAuthStateChanged(
     }
 
     try {
-      const check =
-        await checkStaffAccount(user);
-
-      if (check.approved) {
-        window.location.href =
-          "staff-dashboard.html";
-      }
-
+      await sendStaffToWebsite(user);
     } catch (error) {
-      console.error(
-        "Automatic staff check failed:",
-        error
-      );
+      console.error(error);
     }
   }
 );
