@@ -407,3 +407,37 @@
     grid-template-columns: 1fr;
   }
 }
+
+
+.connect-pastor-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 9px;
+}
+
+.connect-found-links-button {
+  min-height: 48px;
+  padding: 0 16px;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 900;
+}
+
+.connect-found-links-button:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+@media (max-width: 680px) {
+  .connect-pastor-buttons {
+    display: grid;
+    width: 100%;
+  }
+
+  .connect-pastor-buttons button {
+    width: 100%;
+  }
+}
