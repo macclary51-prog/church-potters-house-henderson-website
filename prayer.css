@@ -447,3 +447,21 @@
 .prayer-form-container .prayer-form {
   width: 100%;
 }
+
+
+/* Royal blue Prayer buttons. */
+.prayer-filters button.active,
+.prayer-action-primary {
+  color: #fff;
+  background: linear-gradient(
+    135deg,
+    #4169e1,
+    #27408b
+  );
+  border-color: transparent;
+}
+
+.prayer-filters button.active:hover,
+.prayer-action-primary:hover {
+  filter: brightness(1.08);
+}
