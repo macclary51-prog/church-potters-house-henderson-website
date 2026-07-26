@@ -55,7 +55,7 @@ function friendlyError(error) {
       return "Check your internet connection and try again.";
 
     case "auth/unauthorized-domain":
-      return "This website domain must be added to Firebase Authorized domains.";
+      return "Staff sign-in is not available from this website address. Please contact the site administrator.";
 
     default:
       console.error(error);
