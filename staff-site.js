@@ -294,7 +294,8 @@ function createStaffBar(user, profile) {
     document.getElementById("staffInlineShell") ||
     document.getElementById("givingPastorShell") ||
     document.getElementById("connectPastorShell") ||
-    document.getElementById("homePastorShell")
+    document.getElementById("homePastorShell") ||
+    document.getElementById("prayerStaffShell")
   ) {
     removeStaffBar();
     return;
@@ -397,6 +398,10 @@ function createStaffBar(user, profile) {
     {
       href: "ministries.html",
       text: "Edit Ministries"
+    },
+    {
+      href: "prayer.html",
+      text: "Prayer Requests"
     }
   ];
 
