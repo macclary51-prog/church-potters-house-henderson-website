@@ -649,13 +649,13 @@ requestForm.addEventListener(
         error.code === "firestore/permission-denied"
       ) {
         message =
-          "Your prayer request could not be submitted. Please try again shortly.";
+          "The prayer request service is not ready yet. Please try again shortly.";
       } else if (
         error.code === "unavailable" ||
         error.code === "firestore/unavailable"
       ) {
         message =
-          "The prayer request service is temporarily unavailable. Please try again shortly.";
+          "The prayer request service is temporarily unavailable. Check your connection and try again.";
       } else if (error.code) {
         message =
           `The prayer request could not be submitted (${error.code}).`;
