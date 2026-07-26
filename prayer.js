@@ -447,7 +447,7 @@ function subscribeToRequests() {
         console.error(error);
 
         requestList.innerHTML =
-          '<div class="prayer-empty">Prayer requests could not be loaded. Check the Firestore rules.</div>';
+          '<div class="prayer-empty">Prayer requests could not be loaded. Refresh the page and try again.</div>';
       }
     );
 }
@@ -649,13 +649,13 @@ requestForm.addEventListener(
         error.code === "firestore/permission-denied"
       ) {
         message =
-          "Firebase blocked the prayer request. Publish the updated Firestore rules.";
+          "Your prayer request could not be submitted. Please try again shortly.";
       } else if (
         error.code === "unavailable" ||
         error.code === "firestore/unavailable"
       ) {
         message =
-          "Firebase is temporarily unavailable. Check the connection and try again.";
+          "The prayer request service is temporarily unavailable. Please try again shortly.";
       } else if (error.code) {
         message =
           `The prayer request could not be submitted (${error.code}).`;
