@@ -1,0 +1,409 @@
+/* =========================================================
+   CHURCH LOCATION AND SOCIAL LINKS
+   ========================================================= */
+
+[hidden] {
+  display: none !important;
+}
+
+.connect-pastor-shell {
+  padding: 10px 0 0;
+}
+
+.connect-pastor-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 22px;
+  padding: 20px;
+  color: #fff;
+  background:
+    radial-gradient(circle at 85% 20%, rgba(224, 58, 47, 0.22), transparent 20rem),
+    linear-gradient(135deg, var(--navy-dark), var(--navy));
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+}
+
+.connect-pastor-toolbar > div {
+  display: grid;
+  min-width: 0;
+}
+
+.connect-pastor-toolbar span,
+.connect-editor-heading span {
+  color: #ffc9b1;
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.connect-pastor-toolbar strong {
+  margin-top: 2px;
+  font-size: 1rem;
+}
+
+.connect-pastor-toolbar small {
+  margin-top: 3px;
+  color: #cad6e3;
+}
+
+.connect-editor {
+  margin-top: 16px;
+  padding: 28px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-top: 5px solid var(--red);
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+}
+
+.connect-editor-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 22px;
+}
+
+.connect-editor-heading span {
+  color: var(--red);
+}
+
+.connect-editor-heading h2 {
+  margin: 4px 0 0;
+  color: var(--navy);
+}
+
+.connect-editor-heading p {
+  max-width: 700px;
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.connect-close-button {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  flex: 0 0 auto;
+  place-items: center;
+  color: var(--navy);
+  background: var(--surface-soft);
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  cursor: pointer;
+  font-size: 1.4rem;
+}
+
+.connect-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.connect-full-field {
+  grid-column: 1 / -1;
+}
+
+.connect-form-grid select {
+  width: 100%;
+  min-height: 48px;
+  padding: 0 13px;
+  color: var(--text);
+  background: #fbfcfd;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font: inherit;
+}
+
+.connect-form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.connect-cancel-button {
+  min-height: 48px;
+  padding: 0 18px;
+  color: var(--navy);
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 850;
+}
+
+.connect-status {
+  display: none;
+  margin-top: 14px;
+  padding: 12px 14px;
+  color: #17643d;
+  background: #e7f7ee;
+  border: 1px solid #bce1ca;
+  border-radius: 12px;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.connect-status.error {
+  color: #b4232d;
+  background: #fff0f1;
+  border-color: #efc4c8;
+}
+
+.connect-section {
+  padding-top: 38px;
+}
+
+.connect-heading {
+  display: flex;
+  max-width: none;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 22px;
+}
+
+.connect-heading > div {
+  max-width: 720px;
+}
+
+.connect-heading-add {
+  min-height: 44px;
+  flex: 0 0 auto;
+  padding: 0 16px;
+  color: #fff;
+  background: linear-gradient(135deg, var(--red), var(--orange));
+  border: 0;
+  border-radius: 11px;
+  cursor: pointer;
+  font-weight: 900;
+}
+
+.connect-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.connect-card {
+  display: flex;
+  min-height: 270px;
+  flex-direction: column;
+  padding: 25px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-top: 5px solid var(--navy);
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(23, 32, 51, 0.05);
+}
+
+.connect-card[data-type="location"] {
+  border-top-color: #d74d35;
+}
+
+.connect-card[data-type="facebook"] {
+  border-top-color: #1877f2;
+}
+
+.connect-card[data-type="instagram"] {
+  border-top-color: #c13584;
+}
+
+.connect-card[data-type="youtube"] {
+  border-top-color: #ff0000;
+}
+
+.connect-card[data-type="tiktok"] {
+  border-top-color: #111;
+}
+
+.connect-card-icon {
+  display: grid;
+  width: 52px;
+  height: 52px;
+  place-items: center;
+  color: var(--navy);
+  background: var(--surface-soft);
+  border-radius: 15px;
+  font-size: 1.15rem;
+  font-weight: 900;
+}
+
+.connect-card h3 {
+  margin: 18px 0 7px;
+  color: var(--navy);
+}
+
+.connect-card p {
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.connect-card-type {
+  display: inline-flex;
+  width: fit-content;
+  margin-top: 10px;
+  padding: 5px 9px;
+  color: var(--navy);
+  background: var(--surface-soft);
+  border-radius: 999px;
+  font-size: 0.66rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.connect-card-open {
+  display: inline-flex;
+  min-height: 43px;
+  align-items: center;
+  justify-content: center;
+  margin-top: auto;
+  padding: 0 15px;
+  color: #fff;
+  background: linear-gradient(135deg, var(--red), var(--orange));
+  border-radius: 10px;
+  font-size: 0.79rem;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.connect-card-actions {
+  display: grid;
+  grid-template-columns: minmax(90px, 0.8fr) minmax(160px, 1.2fr);
+  gap: 9px;
+  margin-top: 10px;
+}
+
+.connect-card-actions button {
+  min-height: 42px;
+  padding: 0 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: 900;
+}
+
+.connect-edit-button {
+  color: var(--navy);
+  background: var(--surface-soft);
+  border: 1px solid #cfd7e0;
+}
+
+.connect-remove-button {
+  color: #fff;
+  background: linear-gradient(135deg, #bd2530, var(--red));
+  border: 1px solid #bd2530;
+}
+
+.connect-empty {
+  grid-column: 1 / -1;
+  display: grid;
+  min-height: 180px;
+  place-items: center;
+  padding: 28px;
+  color: var(--muted);
+  text-align: center;
+  background: #fff;
+  border: 1px dashed #cfd7e0;
+  border-radius: 18px;
+}
+
+.connect-safety-note {
+  margin-top: 22px;
+  padding: 17px 19px;
+  color: #704d18;
+  background: #fff8e9;
+  border: 1px solid #efd9a8;
+  border-radius: 14px;
+  font-size: 0.84rem;
+}
+
+.connect-safety-note strong {
+  display: block;
+  margin-bottom: 3px;
+}
+
+.connect-toast {
+  position: fixed;
+  z-index: 4000;
+  right: 20px;
+  bottom: 20px;
+  max-width: min(420px, calc(100vw - 40px));
+  padding: 13px 16px;
+  color: #fff;
+  background: var(--navy-dark);
+  border-radius: 11px;
+  box-shadow: var(--shadow);
+  font-size: 0.82rem;
+  font-weight: 850;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(12px);
+  transition: 0.18s ease;
+}
+
+.connect-toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.connect-toast.error {
+  background: #b4232d;
+}
+
+@media (max-width: 920px) {
+  .connect-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 680px) {
+  .connect-pastor-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .connect-pastor-toolbar .button {
+    width: 100%;
+  }
+
+  .connect-editor {
+    padding: 22px 16px;
+  }
+
+  .connect-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .connect-full-field {
+    grid-column: auto;
+  }
+
+  .connect-form-actions {
+    display: grid;
+  }
+
+  .connect-form-actions .button,
+  .connect-cancel-button {
+    width: 100%;
+  }
+
+  .connect-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .connect-heading-add {
+    width: 100%;
+  }
+
+  .connect-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .connect-card-actions {
+    grid-template-columns: 1fr;
+  }
+}
