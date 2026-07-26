@@ -3,57 +3,324 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Home - The Henderson Potter's House">
+  <meta
+    name="description"
+    content="Home - The Henderson Potter's House"
+  >
   <title>Home | The Henderson Potter's House</title>
+
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="home-content.css?v=1">
 </head>
+
 <body>
-<header class="site-header">
-  <div class="container nav-wrap">
-    <a class="brand" href="index.html">
-      <div class="logo header-logo" role="img" aria-label="The Henderson Potter's House logo"></div>
-      <div class="brand-text">
-        <strong>The Henderson Potter's House</strong>
-        <span>Henderson, Nevada</span>
-      </div>
-    </a>
-    <nav class="nav-links" id="navLinks"><a href="index.html" class="active">Home</a>
-<a href="announcements.html">Announcements</a>
-<a href="events.html">Events</a>
-<a href="ministries.html">Ministries</a>
-<a href="sermons.html">Sermons</a>
-<a href="prayer.html">Prayer</a>
-<a href="contact.html">Contact</a></nav>
-    <button class="menu-button" id="menuButton" type="button" aria-label="Open menu">☰</button>
-  </div>
-</header>
-<main><section class="hero"><div class="container"><div class="hero-card">
-  <div><div class="eyebrow">Welcome Home</div><h1>A place to grow, worship, and belong.</h1>
-  <p>Welcome to The Henderson Potter's House. Join us for worship, fellowship, prayer, and messages centered on faith and everyday life.</p>
-  <div class="hero-actions"><a class="button button-primary" href="events.html">View Upcoming Events</a><a class="button button-secondary" href="contact.html">Plan Your Visit</a></div></div>
-  <div class="hero-logo" role="img" aria-label="The Henderson Potter's House logo"></div>
-</div></div></section>
-<section class="quick-links"><div class="container quick-grid">
-  <a class="quick-card" href="announcements.html"><div class="quick-icon">📢</div><h3>Announcements</h3><p>See the latest church news and updates.</p></a>
-  <a class="quick-card" href="events.html"><div class="quick-icon">📅</div><h3>Events</h3><p>View upcoming services and gatherings.</p></a>
-  <a class="quick-card" href="sermons.html"><div class="quick-icon">▶</div><h3>Sermons</h3><p>Watch or listen to recent messages.</p></a>
-  <a class="quick-card" href="prayer.html"><div class="quick-icon">♥</div><h3>Prayer Request</h3><p>Share a request with the prayer team.</p></a>
-</div></section>
-<section class="section"><div class="container"><div class="section-heading"><span>Welcome</span><h2>Stay connected throughout the week</h2><p>Use the pages above to view announcements, events, ministries, sermons, prayer requests, and church contact information.</p></div>
-<div class="content-grid">
-  <article class="content-card"><div class="tag">This Week</div><h3>Sunday Worship</h3><p>Add the official service time and address when the church provides them.</p></article>
-  <article class="content-card"><div class="tag">Community</div><h3>Church Fellowship</h3><p>Share upcoming fellowship meals, meetings, and activities.</p></article>
-  <article class="content-card"><div class="tag">Online</div><h3>Messages and Updates</h3><p>Connect sermon videos and church announcements when ready.</p></article>
-</div></div></section></main>
-<footer>
-  <div class="container footer-wrap">
-    <div class="footer-brand">
-      <div class="logo footer-logo" role="img" aria-label="The Henderson Potter's House logo"></div>
-      <div><strong>The Henderson Potter's House</strong><p>Faith, fellowship, and community.</p></div>
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="brand" href="index.html">
+        <div
+          class="logo header-logo"
+          role="img"
+          aria-label="The Henderson Potter's House logo"
+        ></div>
+
+        <div class="brand-text">
+          <strong>The Henderson Potter's House</strong>
+          <span>Henderson, Nevada</span>
+        </div>
+      </a>
+
+      <nav class="nav-links" id="navLinks">
+        <a href="index.html" class="active">Home</a>
+        <a href="announcements.html">Announcements</a>
+        <a href="events.html">Events</a>
+        <a href="services.html">Services</a>
+        <a href="ministries.html">Ministries</a>
+        <a href="sermons.html">Sermons</a>
+        <a href="giving.html">Giving</a>
+        <a href="connect.html">Connect</a>
+        <a href="prayer.html">Prayer</a>
+        <a href="contact.html">Contact</a>
+        <a class="staff-link" href="staff-login.html">Staff</a>
+      </nav>
+
+      <button
+        class="menu-button"
+        id="menuButton"
+        type="button"
+        aria-label="Open menu"
+        aria-controls="navLinks"
+        aria-expanded="false"
+      >
+        ☰
+      </button>
     </div>
-    <p>© <span id="year"></span> The Henderson Potter's House.</p>
-  </div>
-</footer>
-<script src="script.js"></script>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="hero-card">
+          <div>
+            <div class="eyebrow">Welcome Home</div>
+
+            <h1>
+              A place to grow, worship, and belong.
+            </h1>
+
+            <p>
+              Welcome to The Henderson Potter's House. Join us for worship,
+              fellowship, prayer, and messages centered on faith and everyday life.
+            </p>
+
+            <div class="hero-actions">
+              <a
+                class="button button-primary"
+                href="services.html"
+              >
+                View Church Services
+              </a>
+
+              <a
+                class="button button-secondary"
+                href="connect.html"
+              >
+                Plan Your Visit
+              </a>
+            </div>
+          </div>
+
+          <div
+            class="hero-logo"
+            role="img"
+            aria-label="The Henderson Potter's House logo"
+          ></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="quick-links">
+      <div class="container quick-grid">
+        <a class="quick-card" href="announcements.html">
+          <div class="quick-icon">📢</div>
+          <h3>Announcements</h3>
+          <p>See the latest church news and updates.</p>
+        </a>
+
+        <a class="quick-card" href="services.html">
+          <div class="quick-icon">⛪</div>
+          <h3>Services</h3>
+          <p>View current church services, times, and locations.</p>
+        </a>
+
+        <a class="quick-card" href="giving.html">
+          <div class="quick-icon">♥</div>
+          <h3>Giving</h3>
+          <p>View the church's verified giving information.</p>
+        </a>
+
+        <a class="quick-card" href="connect.html">
+          <div class="quick-icon">⌖</div>
+          <h3>Connect</h3>
+          <p>Find the church and visit its official social pages.</p>
+        </a>
+      </div>
+    </section>
+
+    <!-- Only the approved pastor sees these homepage editing controls. -->
+    <section class="home-pastor-shell" id="homePastorShell" hidden>
+      <div class="container">
+        <div class="home-pastor-toolbar">
+          <div>
+            <span>Pastor Homepage Controls</span>
+            <strong id="homePastorName">Pastor</strong>
+            <small>
+              Add, edit, change, or remove the cards shown on the homepage.
+            </small>
+          </div>
+
+          <button
+            class="button button-primary"
+            id="homeAddButton"
+            type="button"
+          >
+            + Add Homepage Card
+          </button>
+        </div>
+
+        <form class="home-editor" id="homeEditor" hidden>
+          <input type="hidden" name="documentId">
+
+          <div class="home-editor-heading">
+            <div>
+              <span id="homeEditorMode">Add New</span>
+              <h2 id="homeEditorTitle">Homepage Card</h2>
+              <p>
+                This card will be visible to everyone on the church homepage.
+              </p>
+            </div>
+
+            <button
+              class="home-close-button"
+              id="homeCloseButton"
+              type="button"
+              aria-label="Close homepage-card editor"
+            >
+              ×
+            </button>
+          </div>
+
+          <div class="home-form-grid">
+            <label>
+              Small label
+              <input
+                type="text"
+                name="tag"
+                placeholder="This Week, Community, Online"
+                maxlength="50"
+                required
+              >
+            </label>
+
+            <label>
+              Display order
+              <input
+                type="number"
+                name="displayOrder"
+                value="1"
+                min="1"
+                max="100"
+                required
+              >
+            </label>
+
+            <label class="home-full-field">
+              Card title
+              <input
+                type="text"
+                name="title"
+                placeholder="Sunday Worship"
+                maxlength="100"
+                required
+              >
+            </label>
+
+            <label class="home-full-field">
+              Description
+              <textarea
+                name="details"
+                rows="5"
+                placeholder="Add the service time, location, or another update."
+                maxlength="800"
+                required
+              ></textarea>
+            </label>
+
+            <label>
+              Optional button name
+              <input
+                type="text"
+                name="buttonText"
+                placeholder="View Services"
+                maxlength="50"
+              >
+            </label>
+
+            <label>
+              Optional page or website link
+              <input
+                type="text"
+                name="buttonUrl"
+                placeholder="services.html or https://..."
+                maxlength="500"
+              >
+            </label>
+          </div>
+
+          <div class="home-form-actions">
+            <button
+              class="button button-primary"
+              id="homeSaveButton"
+              type="submit"
+            >
+              Publish Card
+            </button>
+
+            <button
+              class="home-cancel-button"
+              id="homeCancelButton"
+              type="button"
+            >
+              Cancel
+            </button>
+          </div>
+
+          <div
+            class="home-status"
+            id="homeStatus"
+            role="status"
+          ></div>
+        </form>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-heading home-section-heading">
+          <div>
+            <span>Stay Connected</span>
+            <h2>Church Updates</h2>
+
+            <p id="homeCardsHint">
+              Current services, fellowship information, and church updates.
+            </p>
+          </div>
+
+          <button
+            class="home-heading-add"
+            id="homeHeadingAdd"
+            type="button"
+            hidden
+          >
+            + Add Homepage Card
+          </button>
+        </div>
+
+        <div class="content-grid" id="homeCardsGrid">
+          <div class="home-empty-state">
+            Loading homepage information...
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-wrap">
+      <div class="footer-brand">
+        <div
+          class="logo footer-logo"
+          role="img"
+          aria-label="The Henderson Potter's House logo"
+        ></div>
+
+        <div>
+          <strong>The Henderson Potter's House</strong>
+          <p>Faith, fellowship, and community.</p>
+        </div>
+      </div>
+
+      <p>© <span id="year"></span> The Henderson Potter's House.</p>
+    </div>
+  </footer>
+
+  <div
+    class="home-toast"
+    id="homeToast"
+    role="status"
+    aria-live="polite"
+  ></div>
+
+  <script src="script.js"></script>
+  <script type="module" src="home-content.js?v=1"></script>
 </body>
 </html>
