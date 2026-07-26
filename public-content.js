@@ -14,6 +14,7 @@ import {
   createUserWithEmailAndPassword,
   deleteUser,
   onAuthStateChanged,
+  sendPasswordResetEmail,
   signOut
 } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
 
@@ -853,72 +854,172 @@ function renderAccounts(snapshot) {
       badge
     );
 
+    const actions =
+      document.createElement("div");
+
+    actions.className =
+      "staff-inline-account-actions";
+
+    const resetButton =
+      document.createElement("button");
+
+    resetButton.type =
+      "button";
+
+    resetButton.className =
+      "staff-inline-account-action password-reset";
+
+    resetButton.textContent =
+      "Send Password Reset";
+
+    resetButton.addEventListener(
+      "click",
+      async function () {
+        const accountEmail =
+          String(account.data.email || "")
+            .trim()
+            .toLowerCase();
+
+        if (!accountEmail) {
+          showToast(
+            "This account does not have an email address.",
+            true
+          );
+
+          return;
+        }
+
+        const confirmed =
+          window.confirm(
+            `Send a password-reset email to ${accountEmail}?`
+          );
+
+        if (!confirmed) {
+          return;
+        }
+
+        resetButton.disabled = true;
+        resetButton.textContent = "Sending...";
+
+        try {
+          await sendPasswordResetEmail(
+            auth,
+            accountEmail
+          );
+
+          showToast(
+            "Password-reset email sent."
+          );
+        } catch (error) {
+          console.error(error);
+
+          let message =
+            "The password-reset email could not be sent.";
+
+          if (
+            error.code === "auth/user-not-found"
+          ) {
+            message =
+              "That Firebase Authentication user no longer exists.";
+          } else if (
+            error.code === "auth/invalid-email"
+          ) {
+            message =
+              "This ministry account has an invalid email address.";
+          } else if (
+            error.code === "auth/too-many-requests"
+          ) {
+            message =
+              "Too many reset attempts were made. Wait a few minutes and try again.";
+          }
+
+          showToast(
+            message,
+            true
+          );
+        } finally {
+          resetButton.disabled = false;
+          resetButton.textContent =
+            "Send Password Reset";
+        }
+      }
+    );
+
     const toggle =
       document.createElement("button");
 
-    toggle.type = "button";
+    toggle.type =
+      "button";
 
     toggle.className =
       account.data.active === true
-        ? "staff-inline-account-toggle remove"
-        : "staff-inline-account-toggle restore";
+        ? "staff-inline-account-action access-remove"
+        : "staff-inline-account-action access-restore";
 
     toggle.textContent =
       account.data.active === true
         ? "Remove Website Access"
         : "Restore Website Access";
 
-    toggle.addEventListener("click", async function () {
-      const nextActive =
-        account.data.active !== true;
+    toggle.addEventListener(
+      "click",
+      async function () {
+        const nextActive =
+          account.data.active !== true;
 
-      const confirmed =
-        window.confirm(
-          `${
-            nextActive ? "Restore" : "Remove"
-          } access for ${
-            account.data.name ||
-            account.data.email ||
-            "this account"
-          }?`
-        );
+        const confirmed =
+          window.confirm(
+            `${
+              nextActive ? "Restore" : "Remove"
+            } website access for ${
+              account.data.name ||
+              account.data.email ||
+              "this account"
+            }?`
+          );
 
-      if (!confirmed) {
-        return;
+        if (!confirmed) {
+          return;
+        }
+
+        toggle.disabled = true;
+
+        try {
+          await updateDoc(
+            doc(db, "staff", account.id),
+            {
+              active: nextActive,
+              updatedAt: serverTimestamp(),
+              updatedBy: currentUser.uid
+            }
+          );
+
+          showToast(
+            nextActive
+              ? "Ministry access restored."
+              : "Ministry access removed."
+          );
+        } catch (error) {
+          console.error(error);
+
+          showToast(
+            "The account access could not be updated.",
+            true
+          );
+        } finally {
+          toggle.disabled = false;
+        }
       }
+    );
 
-      toggle.disabled = true;
-
-      try {
-        await updateDoc(
-          doc(db, "staff", account.id),
-          {
-            active: nextActive,
-            updatedAt: serverTimestamp(),
-            updatedBy: currentUser.uid
-          }
-        );
-
-        showToast(
-          nextActive
-            ? "Ministry access restored."
-            : "Ministry access removed."
-        );
-      } catch (error) {
-        console.error(error);
-
-        showToast(
-          "The account could not be updated.",
-          true
-        );
-      } finally {
-        toggle.disabled = false;
-      }
-    });
+    actions.append(
+      resetButton,
+      toggle
+    );
 
     item.append(
       head,
-      toggle
+      actions
     );
 
     accountList.appendChild(item);
