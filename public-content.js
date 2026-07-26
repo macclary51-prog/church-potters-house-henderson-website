@@ -376,6 +376,232 @@ function createTextElement(tagName, className, text) {
 }
 
 
+function getSafeMediaUrl(value) {
+  const text =
+    String(value || "").trim();
+
+  if (!text) {
+    return "";
+  }
+
+  if (
+    /^(javascript|data|vbscript):/i.test(text)
+  ) {
+    return "";
+  }
+
+  try {
+    const resolved =
+      new URL(text, window.location.href);
+
+    if (
+      !["http:", "https:"].includes(
+        resolved.protocol
+      )
+    ) {
+      return "";
+    }
+
+    return resolved.href;
+  } catch (error) {
+    return "";
+  }
+}
+
+
+function getYouTubeEmbedUrl(value) {
+  const safeUrl =
+    getSafeMediaUrl(value);
+
+  if (!safeUrl) {
+    return "";
+  }
+
+  try {
+    const parsed =
+      new URL(safeUrl);
+
+    let videoId = "";
+
+    if (
+      parsed.hostname === "youtu.be" ||
+      parsed.hostname === "www.youtu.be"
+    ) {
+      videoId =
+        parsed.pathname
+          .split("/")
+          .filter(Boolean)[0] || "";
+    } else if (
+      parsed.hostname.includes("youtube.com")
+    ) {
+      if (
+        parsed.pathname === "/watch"
+      ) {
+        videoId =
+          parsed.searchParams.get("v") || "";
+      } else {
+        const parts =
+          parsed.pathname
+            .split("/")
+            .filter(Boolean);
+
+        if (
+          ["embed", "shorts", "live"].includes(
+            parts[0]
+          )
+        ) {
+          videoId =
+            parts[1] || "";
+        }
+      }
+    }
+
+    if (
+      !/^[a-zA-Z0-9_-]{6,20}$/.test(videoId)
+    ) {
+      return "";
+    }
+
+    return `https://www.youtube.com/embed/${videoId}`;
+  } catch (error) {
+    return "";
+  }
+}
+
+
+function isDirectVideoUrl(value) {
+  const safeUrl =
+    getSafeMediaUrl(value);
+
+  return /\.(mp4|webm|ogg)(?:[?#].*)?$/i.test(
+    safeUrl
+  );
+}
+
+
+function appendMediaToCard(card, data) {
+  const imageUrl =
+    getSafeMediaUrl(data.imageUrl);
+
+  const videoUrl =
+    getSafeMediaUrl(data.videoUrl);
+
+  if (imageUrl) {
+    const image =
+      document.createElement("img");
+
+    image.className =
+      "staff-inline-card-image";
+
+    image.src =
+      imageUrl;
+
+    image.alt =
+      data.imageAlt ||
+      getItemTitle(data);
+
+    image.loading =
+      "lazy";
+
+    image.addEventListener(
+      "error",
+      function () {
+        image.remove();
+      },
+      {
+        once: true
+      }
+    );
+
+    card.appendChild(image);
+  }
+
+  if (!videoUrl) {
+    return;
+  }
+
+  const youtubeEmbed =
+    getYouTubeEmbedUrl(videoUrl);
+
+  if (youtubeEmbed) {
+    const frameWrap =
+      document.createElement("div");
+
+    frameWrap.className =
+      "staff-inline-card-video-frame";
+
+    const frame =
+      document.createElement("iframe");
+
+    frame.src =
+      youtubeEmbed;
+
+    frame.title =
+      `${getItemTitle(data)} video`;
+
+    frame.loading =
+      "lazy";
+
+    frame.allow =
+      "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+
+    frame.referrerPolicy =
+      "strict-origin-when-cross-origin";
+
+    frame.allowFullscreen =
+      true;
+
+    frameWrap.appendChild(frame);
+    card.appendChild(frameWrap);
+
+    return;
+  }
+
+  if (isDirectVideoUrl(videoUrl)) {
+    const video =
+      document.createElement("video");
+
+    video.className =
+      "staff-inline-card-direct-video";
+
+    video.src =
+      videoUrl;
+
+    video.controls =
+      true;
+
+    video.preload =
+      "metadata";
+
+    card.appendChild(video);
+
+    return;
+  }
+
+  const videoLink =
+    document.createElement("a");
+
+  videoLink.className =
+    "staff-inline-card-video";
+
+  videoLink.href =
+    videoUrl;
+
+  videoLink.target =
+    "_blank";
+
+  videoLink.rel =
+    "noopener noreferrer";
+
+  videoLink.textContent =
+    collectionName === "sermons"
+      ? "Watch Sermon →"
+      : "Watch Video →";
+
+  card.appendChild(videoLink);
+}
+
+
 function createContentCard(item) {
   const data = item.data;
   const card = document.createElement("article");
@@ -431,6 +657,11 @@ function createContentCard(item) {
     );
   }
 
+  appendMediaToCard(
+    card,
+    data
+  );
+
   if (data.details) {
     card.appendChild(
       createTextElement(
@@ -439,24 +670,6 @@ function createContentCard(item) {
         data.details
       )
     );
-  }
-
-  if (
-    collectionName === "sermons" &&
-    data.videoUrl
-  ) {
-    const videoLink =
-      document.createElement("a");
-
-    videoLink.className =
-      "staff-inline-card-video";
-
-    videoLink.href = data.videoUrl;
-    videoLink.target = "_blank";
-    videoLink.rel = "noopener noreferrer";
-    videoLink.textContent = "Watch Sermon →";
-
-    card.appendChild(videoLink);
   }
 
   if (currentStaff) {
