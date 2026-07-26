@@ -265,9 +265,7 @@ function initials(name) {
 
   return parts
     .map(function (part) {
-      return part
-        .charAt(0)
-        .toUpperCase();
+      return part.charAt(0).toUpperCase();
     })
     .join("");
 }
@@ -280,9 +278,7 @@ function removeStaffBar() {
   }
 
   document
-    .querySelectorAll(
-      ".persistent-staff-bar"
-    )
+    .querySelectorAll(".persistent-staff-bar")
     .forEach(function (bar) {
       bar.remove();
     });
@@ -291,13 +287,12 @@ function removeStaffBar() {
 
 function createStaffBar(user, profile) {
   /*
-    The editable content pages already include their own full staff toolbar.
-    Do not show a duplicate bar there.
+    These pages already show their own full staff controls.
+    Avoid a duplicate staff bar.
   */
   if (
-    document.getElementById(
-      "staffInlineShell"
-    )
+    document.getElementById("staffInlineShell") ||
+    document.getElementById("givingPastorShell")
   ) {
     removeStaffBar();
     return;
@@ -399,6 +394,13 @@ function createStaffBar(user, profile) {
     }
   ];
 
+  if (profile.role === "pastor") {
+    links.push({
+      href: "giving.html",
+      text: "Edit Giving"
+    });
+  }
+
   links.forEach(function (item) {
     const link =
       document.createElement("a");
@@ -410,14 +412,10 @@ function createStaffBar(user, profile) {
       item.text;
 
     if (item.primary) {
-      link.classList.add(
-        "primary"
-      );
+      link.classList.add("primary");
     }
 
-    actions.appendChild(
-      link
-    );
+    actions.appendChild(link);
   });
 
   const signOutButton =
@@ -432,19 +430,15 @@ function createStaffBar(user, profile) {
   signOutButton.addEventListener(
     "click",
     async function () {
-      signOutButton.disabled =
-        true;
+      signOutButton.disabled = true;
 
       try {
         await signOut(auth);
-
         window.location.href =
           "index.html";
       } catch (error) {
         console.error(error);
-
-        signOutButton.disabled =
-          false;
+        signOutButton.disabled = false;
 
         window.alert(
           "Could not sign out. Please try again."
@@ -453,23 +447,17 @@ function createStaffBar(user, profile) {
     }
   );
 
-  actions.appendChild(
-    signOutButton
-  );
+  actions.appendChild(signOutButton);
 
   inner.append(
     identity,
     actions
   );
 
-  staffBar.appendChild(
-    inner
-  );
+  staffBar.appendChild(inner);
 
   const header =
-    document.querySelector(
-      ".site-header"
-    );
+    document.querySelector(".site-header");
 
   if (header) {
     header.insertAdjacentElement(
@@ -477,9 +465,7 @@ function createStaffBar(user, profile) {
       staffBar
     );
   } else {
-    document.body.prepend(
-      staffBar
-    );
+    document.body.prepend(staffBar);
   }
 }
 
@@ -498,15 +484,11 @@ async function loadApprovedStaff(user) {
     snapshot.data();
 
   const role =
-    normalizeRole(
-      profile.role
-    );
+    normalizeRole(profile.role);
 
   if (
     profile.active !== true ||
-    !["pastor", "ministry"].includes(
-      role
-    )
+    !["pastor", "ministry"].includes(role)
   ) {
     return null;
   }
@@ -549,9 +531,7 @@ onAuthStateChanged(
 
     try {
       const profile =
-        await loadApprovedStaff(
-          user
-        );
+        await loadApprovedStaff(user);
 
       if (!profile) {
         removeStaffBar();
@@ -574,7 +554,9 @@ onAuthStateChanged(
 
       if (staffLink) {
         staffLink.href =
-          "announcements.html";
+          profile.role === "pastor"
+            ? "giving.html"
+            : "announcements.html";
 
         staffLink.textContent =
           `Staff: ${displayName}`;
