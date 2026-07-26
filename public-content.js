@@ -1,21 +1,18 @@
 import {
+  app,
   auth,
-  db,
-  firebaseConfig
+  db
 } from "./firebase-config.js";
 
 import {
-  initializeApp,
-  deleteApp
-} from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
-
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  deleteUser,
   onAuthStateChanged,
   signOut
 } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
+
+import {
+  getFunctions,
+  httpsCallable
+} from "https://www.gstatic.com/firebasejs/12.16.0/firebase-functions.js";
 
 import {
   addDoc,
@@ -57,6 +54,18 @@ const accountsClose = document.getElementById("staffInlineAccountsClose");
 const accountForm = document.getElementById("staffInlineAccountForm");
 const accountStatus = document.getElementById("staffInlineAccountStatus");
 const accountList = document.getElementById("staffInlineAccountList");
+
+const functions =
+  getFunctions(
+    app,
+    "us-central1"
+  );
+
+const manageMinistryAccount =
+  httpsCallable(
+    functions,
+    "manageMinistryAccount"
+  );
 
 let currentUser = null;
 let currentStaff = null;
@@ -765,6 +774,175 @@ document.addEventListener("keydown", function (event) {
 });
 
 
+function getAccountFunctionMessage(error, fallback) {
+  const code =
+    String(error?.code || "");
+
+  if (
+    code === "functions/unauthenticated"
+  ) {
+    return "Your staff login expired. Sign in again.";
+  }
+
+  if (
+    code === "functions/permission-denied"
+  ) {
+    return "Only the active pastor can manage ministry accounts.";
+  }
+
+  if (
+    code === "functions/not-found"
+  ) {
+    return "That ministry account no longer exists.";
+  }
+
+  if (
+    code === "functions/already-exists"
+  ) {
+    return "An account already exists with that email address.";
+  }
+
+  if (
+    code === "functions/invalid-argument"
+  ) {
+    return error?.message ||
+      "Check the account information and try again.";
+  }
+
+  if (
+    code === "functions/unavailable"
+  ) {
+    return "The secure account service is temporarily unavailable.";
+  }
+
+  console.error(
+    "Ministry account function error:",
+    error
+  );
+
+  return fallback;
+}
+
+
+async function changeMinistryPassword(account) {
+  if (
+    currentStaff?.role !== "pastor"
+  ) {
+    showToast(
+      "Only the pastor can change ministry passwords.",
+      true
+    );
+
+    return;
+  }
+
+  const accountName =
+    account.data.name ||
+    account.data.email ||
+    "this ministry account";
+
+  const newPassword =
+    window.prompt(
+      `Enter a new temporary password for ${accountName}.\n\nIt must contain at least 6 characters.`
+    );
+
+  if (newPassword === null) {
+    return;
+  }
+
+  if (newPassword.length < 6) {
+    showToast(
+      "The new password must contain at least 6 characters.",
+      true
+    );
+
+    return;
+  }
+
+  const confirmed =
+    window.confirm(
+      `Change the password for ${accountName}?\n\nThey will need to use the new password the next time they sign in.`
+    );
+
+  if (!confirmed) {
+    return;
+  }
+
+  try {
+    await manageMinistryAccount({
+      action: "changePassword",
+      targetUid: account.id,
+      newPassword
+    });
+
+    showToast(
+      "Ministry password changed."
+    );
+  } catch (error) {
+    showToast(
+      getAccountFunctionMessage(
+        error,
+        "The password could not be changed."
+      ),
+      true
+    );
+  }
+}
+
+
+async function permanentlyDeleteMinistryAccount(account) {
+  if (
+    currentStaff?.role !== "pastor"
+  ) {
+    showToast(
+      "Only the pastor can permanently delete ministry accounts.",
+      true
+    );
+
+    return;
+  }
+
+  const accountName =
+    account.data.name ||
+    account.data.email ||
+    "this ministry account";
+
+  const confirmation =
+    window.prompt(
+      `Permanently delete ${accountName}?\n\nThis removes the Firebase login and the ministry staff record. This cannot be undone.\n\nType DELETE to continue.`
+    );
+
+  if (confirmation !== "DELETE") {
+    if (confirmation !== null) {
+      showToast(
+        "Account deletion was cancelled."
+      );
+    }
+
+    return;
+  }
+
+  try {
+    await manageMinistryAccount({
+      action: "delete",
+      targetUid: account.id
+    });
+
+    showToast(
+      "Ministry account permanently deleted."
+    );
+  } catch (error) {
+    showToast(
+      getAccountFunctionMessage(
+        error,
+        "The ministry account could not be deleted."
+      ),
+      true
+    );
+  }
+}
+
+
 function renderAccounts(snapshot) {
   if (!accountList) {
     return;
@@ -853,15 +1031,49 @@ function renderAccounts(snapshot) {
       badge
     );
 
+    const actions =
+      document.createElement("div");
+
+    actions.className =
+      "staff-inline-account-actions";
+
+    const passwordButton =
+      document.createElement("button");
+
+    passwordButton.type =
+      "button";
+
+    passwordButton.className =
+      "staff-inline-account-action password";
+
+    passwordButton.textContent =
+      "Change Password";
+
+    passwordButton.addEventListener(
+      "click",
+      async function () {
+        passwordButton.disabled = true;
+
+        try {
+          await changeMinistryPassword(
+            account
+          );
+        } finally {
+          passwordButton.disabled = false;
+        }
+      }
+    );
+
     const toggle =
       document.createElement("button");
 
-    toggle.type = "button";
+    toggle.type =
+      "button";
 
     toggle.className =
       account.data.active === true
-        ? "staff-inline-account-toggle remove"
-        : "staff-inline-account-toggle restore";
+        ? "staff-inline-account-action access-remove"
+        : "staff-inline-account-action access-restore";
 
     toggle.textContent =
       account.data.active === true
@@ -876,7 +1088,7 @@ function renderAccounts(snapshot) {
         window.confirm(
           `${
             nextActive ? "Restore" : "Remove"
-          } access for ${
+          } website access for ${
             account.data.name ||
             account.data.email ||
             "this account"
@@ -908,7 +1120,7 @@ function renderAccounts(snapshot) {
         console.error(error);
 
         showToast(
-          "The account could not be updated.",
+          "The account access could not be updated.",
           true
         );
       } finally {
@@ -916,9 +1128,42 @@ function renderAccounts(snapshot) {
       }
     });
 
+    const deleteButton =
+      document.createElement("button");
+
+    deleteButton.type =
+      "button";
+
+    deleteButton.className =
+      "staff-inline-account-action permanent-delete";
+
+    deleteButton.textContent =
+      "Delete Account Completely";
+
+    deleteButton.addEventListener(
+      "click",
+      async function () {
+        deleteButton.disabled = true;
+
+        try {
+          await permanentlyDeleteMinistryAccount(
+            account
+          );
+        } finally {
+          deleteButton.disabled = false;
+        }
+      }
+    );
+
+    actions.append(
+      passwordButton,
+      toggle,
+      deleteButton
+    );
+
     item.append(
       head,
-      toggle
+      actions
     );
 
     accountList.appendChild(item);
@@ -968,7 +1213,8 @@ if (accountForm) {
     const email = document
       .getElementById("staffInlineAccountEmail")
       .value
-      .trim();
+      .trim()
+      .toLowerCase();
 
     const password = document
       .getElementById("staffInlineAccountPassword")
@@ -977,46 +1223,17 @@ if (accountForm) {
     const submitButton =
       accountForm.querySelector('[type="submit"]');
 
-    let secondaryApp = null;
-    let createdUser = null;
-
     submitButton.disabled = true;
     submitButton.textContent = "Creating Account...";
     hideStatus(accountStatus);
 
     try {
-      secondaryApp = initializeApp(
-        firebaseConfig,
-        `ministry-account-${Date.now()}`
-      );
-
-      const secondaryAuth =
-        getAuth(secondaryApp);
-
-      const credential =
-        await createUserWithEmailAndPassword(
-          secondaryAuth,
-          email,
-          password
-        );
-
-      createdUser = credential.user;
-
-      await setDoc(
-        doc(db, "staff", createdUser.uid),
-        {
-          name,
-          email,
-          role: "ministry",
-          active: true,
-          createdAt: serverTimestamp(),
-          updatedAt: serverTimestamp(),
-          createdBy: currentUser.uid,
-          updatedBy: currentUser.uid
-        }
-      );
-
-      await signOut(secondaryAuth);
+      await manageMinistryAccount({
+        action: "create",
+        name,
+        email,
+        password
+      });
 
       accountForm.reset();
 
@@ -1025,37 +1242,15 @@ if (accountForm) {
         "Ministry account created successfully."
       );
 
-      showToast("Ministry account created.");
+      showToast(
+        "Ministry account created."
+      );
     } catch (error) {
-      console.error(error);
-
-      if (createdUser) {
-        try {
-          await deleteUser(createdUser);
-        } catch (cleanupError) {
-          console.error(cleanupError);
-        }
-      }
-
-      let message =
-        "The ministry account could not be created.";
-
-      if (error.code === "auth/email-already-in-use") {
-        message =
-          "An account already exists with that email address.";
-      } else if (error.code === "auth/weak-password") {
-        message =
-          "The temporary password must contain at least 6 characters.";
-      } else if (error.code === "auth/invalid-email") {
-        message =
-          "Enter a valid email address.";
-      } else if (
-        error.code === "permission-denied" ||
-        error.code === "firestore/permission-denied"
-      ) {
-        message =
-          "Firestore denied the new account. Check that the staff rules were published.";
-      }
+      const message =
+        getAccountFunctionMessage(
+          error,
+          "The ministry account could not be created."
+        );
 
       showStatus(
         accountStatus,
@@ -1068,14 +1263,6 @@ if (accountForm) {
         true
       );
     } finally {
-      if (secondaryApp) {
-        try {
-          await deleteApp(secondaryApp);
-        } catch (error) {
-          console.error(error);
-        }
-      }
-
       submitButton.disabled = false;
       submitButton.textContent = "Create Account";
     }
