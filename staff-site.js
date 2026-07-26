@@ -396,6 +396,11 @@ function createStaffBar(user, profile) {
 
   if (profile.role === "pastor") {
     links.push({
+      href: "services.html",
+      text: "Edit Services"
+    });
+
+    links.push({
       href: "giving.html",
       text: "Edit Giving"
     });
@@ -555,7 +560,7 @@ onAuthStateChanged(
       if (staffLink) {
         staffLink.href =
           profile.role === "pastor"
-            ? "giving.html"
+            ? "services.html"
             : "announcements.html";
 
         staffLink.textContent =
