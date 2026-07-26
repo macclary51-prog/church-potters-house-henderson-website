@@ -1,584 +1,912 @@
+
+Generated image: Global flame logo design
+
+Edit
+
+
+Worked for 2m 43s
+Generated image: Henderson Potter's House logo
+
+Edit
+
+
+Thursday 4:03 PM
+good now i want to seprate pages again for this
+
+I want this logo on the site instead 
+
+Worked for 1m 5s
+Generated image: Church staff dashboard interface design
+
+
+Edit
+
+
+Worked for 1m 30s
+
+like it doesn't need to be a separate thing it should be on the same site not another URL
+
+Worked for 16s
+Yes, I understand. It should feel like part of the church website, not like a separate app.
+
+The better setup is:
+
+Keep the normal church website at the same domain.
+
+Add a small Staff link in the main navigation or footer.
+
+After login, open the dashboard inside the same church website layout.
+
+Show Edit and Remove buttons directly beside every announcement, event, sermon, and ministry item.
+
+The pastor should not have to open a separate “current content” area just to delete something.
+
+Technically, the secure staff area can still use staff-dashboard.html, but it will remain on the same website:
+
+macclary51-prog.github.io/church-potters-house-henderson-website/
+It would just be another page on that same site, like events.html or sermons.html, not another website.
+
+I would redesign each section like this:
+
+Announcements
+
+[ + Add Announcement ]
+
+Church Picnic
+Community • July 24
+Picnic details...
+
+[ Edit ] [ Remove ]
+That makes removing existing content obvious and keeps everything together. The public navigation and logo can also stay visible at the top so the pastor always feels like he is still on the main church site.
+
+
+do it
+
+Worked for 1m 3s
+Done. This version now looks like part of the regular church website instead of a separate dashboard app.
+
+It includes:
+
+The same church header, navigation, logo, colors, and footer
+
+Large Edit and Remove From Website buttons beside every existing item
+
+Clear labels showing which content is currently live
+
+Direct links to view the public announcements, events, sermons, and ministries pages
+
+Pastor-only ministry account controls
+
+The existing Firebase login and publishing system
+
+Download everything
+Download the same-site dashboard package
+
+Individual replacement files
+staff-dashboard.html
+
+staff-dashboard.css
+
+staff-dashboard.js
+
+Replace those three files in the main GitHub repository folder. Keep these unchanged:
+
+style.css
+script.js
+firebase-config.js
+church_logo.png
+Commit the changes, wait about one minute, then reopen the dashboard and press Ctrl + F5. 
+
+
+
+Library
+/
+Business contractor
+/
+staff-dashboard.html
+
+
+
+
+
+Library
+/
+Business contractor
+/
+staff-dashboard.html
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Church staff dashboard">
+  <meta name="description" content="Church staff dashboard for The Henderson Potter's House">
   <title>Staff Dashboard | The Henderson Potter's House</title>
-  <link rel="stylesheet" href="staff-dashboard.css?v=1">
+
+  <!-- Keep the normal church website styling -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Dashboard-only styling -->
+  <link rel="stylesheet" href="staff-dashboard.css?v=3">
 </head>
 
-<body class="staff-dashboard-page">
-  <div class="staff-loading-screen" id="dashboardLoading">
-    <div class="staff-loading-card">
-      <div class="staff-spinner" aria-hidden="true"></div>
-      <strong>Loading staff dashboard</strong>
-      <span>Checking your church staff access…</span>
+<body class="church-admin-page">
+  <div class="church-admin-loading" id="dashboardLoading">
+    <div class="church-admin-loading-card">
+      <div class="church-admin-spinner" aria-hidden="true"></div>
+      <strong>Loading Staff Dashboard</strong>
+      <span>Checking church staff access…</span>
     </div>
   </div>
 
-  <section class="staff-app" id="dashboardContent" hidden>
-    <div class="staff-sidebar-backdrop" id="staffSidebarBackdrop"></div>
+  <div id="dashboardContent" hidden>
+    <!-- SAME HEADER AS THE PUBLIC CHURCH WEBSITE -->
+    <header class="site-header">
+      <div class="container nav-wrap">
+        <a class="brand" href="index.html">
+          <img
+            class="church-admin-header-logo"
+            src="church_logo.png"
+            alt="The Henderson Potter's House logo"
+          >
 
-    <aside class="staff-sidebar" id="staffSidebar" aria-label="Staff dashboard navigation">
-      <a class="staff-brand" href="index.html" aria-label="Return to church website">
-        <img src="church_logo.png" alt="The Potter's House Henderson logo">
-      </a>
-
-      <nav class="staff-navigation">
-        <button class="staff-nav-button active" type="button" data-tab="overview" aria-current="page">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M3 11.5 12 4l9 7.5"></path>
-            <path d="M5.5 10.5V20h13v-9.5"></path>
-            <path d="M9.5 20v-6h5v6"></path>
-          </svg>
-          <span>Dashboard</span>
-        </button>
-
-        <button class="staff-nav-button" type="button" data-tab="announcements">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M4 13h3l9 4V7l-9 4H4z"></path>
-            <path d="M7 13v5"></path>
-            <path d="M19 9.5a4 4 0 0 1 0 5"></path>
-          </svg>
-          <span>Announcements</span>
-          <span class="staff-nav-count" id="navAnnouncementCount">0</span>
-        </button>
-
-        <button class="staff-nav-button" type="button" data-tab="events">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <rect x="3" y="5" width="18" height="16" rx="2"></rect>
-            <path d="M7 3v4M17 3v4M3 10h18"></path>
-          </svg>
-          <span>Events</span>
-          <span class="staff-nav-count" id="navEventCount">0</span>
-        </button>
-
-        <button class="staff-nav-button" type="button" data-tab="sermons">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <rect x="3" y="4" width="18" height="16" rx="2"></rect>
-            <path d="m10 9 5 3-5 3z"></path>
-          </svg>
-          <span>Sermons</span>
-          <span class="staff-nav-count" id="navSermonCount">0</span>
-        </button>
-
-        <button class="staff-nav-button" type="button" data-tab="ministries">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <circle cx="8" cy="8" r="3"></circle>
-            <circle cx="17" cy="9" r="2.5"></circle>
-            <path d="M2.5 20c.5-4 2.4-6 5.5-6s5 2 5.5 6"></path>
-            <path d="M14 15c3.5-.4 5.7 1.3 6.5 5"></path>
-          </svg>
-          <span>Ministries</span>
-          <span class="staff-nav-count" id="navMinistryCount">0</span>
-        </button>
-
-        <button class="staff-nav-button" id="accountsNavButton" type="button" data-tab="accounts">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M4 20h16"></path>
-            <path d="M6 20V9h12v11"></path>
-            <path d="M4 9 12 4l8 5"></path>
-            <path d="M9 12v5M12 12v5M15 12v5"></path>
-          </svg>
-          <span>Ministry Accounts</span>
-          <span class="staff-nav-count" id="navAccountCount">0</span>
-        </button>
-      </nav>
-
-      <div class="staff-sidebar-bottom">
-        <a class="staff-site-link" href="index.html">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <circle cx="12" cy="12" r="9"></circle>
-            <path d="M3 12h18M12 3c3 3.2 3 14.8 0 18M12 3c-3 3.2-3 14.8 0 18"></path>
-          </svg>
-          View Public Website
+          <div class="brand-text">
+            <strong>The Henderson Potter's House</strong>
+            <span>Henderson, Nevada</span>
+          </div>
         </a>
 
-        <p>Faith, fellowship, and community.</p>
+        <nav class="nav-links" id="navLinks">
+          <a href="index.html">Home</a>
+          <a href="announcements.html">Announcements</a>
+          <a href="events.html">Events</a>
+          <a href="ministries.html">Ministries</a>
+          <a href="sermons.html">Sermons</a>
+          <a href="prayer.html">Prayer</a>
+          <a href="contact.html">Contact</a>
+          <a href="staff-dashboard.html" class="active">Staff</a>
+        </nav>
+
+        <button
+          class="menu-button"
+          id="menuButton"
+          type="button"
+          aria-label="Open menu"
+          aria-controls="navLinks"
+          aria-expanded="false"
+        >
+          ☰
+        </button>
       </div>
-    </aside>
+    </header>
 
-    <main class="staff-main">
-      <header class="staff-topbar">
-        <div class="staff-topbar-left">
-          <button
-            class="staff-mobile-menu"
-            id="dashboardMenuButton"
-            type="button"
-            aria-label="Open dashboard menu"
-            aria-controls="staffSidebar"
-            aria-expanded="false"
-          >
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M4 7h16M4 12h16M4 17h16"></path>
-            </svg>
-          </button>
-
-          <div>
-            <h1 id="dashboardPageTitle">Staff Dashboard</h1>
-            <p id="dashboardPageDescription">Manage church website content from one simple place.</p>
-          </div>
-        </div>
-
-        <div class="staff-user-actions">
-          <div class="staff-user-card">
-            <span class="staff-avatar" id="staffInitials">SM</span>
-            <span class="staff-user-copy">
-              <strong id="staffName">Staff Member</strong>
-              <span id="staffRole">Staff</span>
-            </span>
-          </div>
-
-          <button class="staff-signout-button" id="logoutButton" type="button">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M10 5H5v14h5"></path>
-              <path d="M13 8l4 4-4 4M8 12h9"></path>
-            </svg>
-            <span>Sign Out</span>
-          </button>
-        </div>
-      </header>
-
-      <div class="staff-content">
-        <section class="staff-panel" data-panel="overview">
-          <div class="staff-welcome-card">
+    <main>
+      <!-- STAFF HEADER THAT STILL MATCHES THE WEBSITE -->
+      <section class="page-hero church-admin-hero">
+        <div class="container">
+          <div class="page-hero-card church-admin-hero-card">
             <div>
-              <span class="staff-eyebrow">Church Website Manager</span>
-              <h2>Welcome back, <span id="welcomeName">Staff Member</span>.</h2>
-              <p>Choose a section below to publish or update church information.</p>
+              <div class="eyebrow">Church Staff Area</div>
+              <h1 id="dashboardPageTitle">Staff Dashboard</h1>
+              <p id="dashboardPageDescription">
+                Add, edit, or remove website content from one place.
+              </p>
             </div>
 
-            <button class="staff-primary-button" type="button" data-open-tab="announcements">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M12 5v14M5 12h14"></path>
-              </svg>
-              New Announcement
+            <div class="church-admin-user-panel">
+              <div class="church-admin-avatar" id="staffInitials">SM</div>
+
+              <div class="church-admin-user-copy">
+                <span>Signed in as</span>
+                <strong id="staffName">Staff Member</strong>
+                <small id="staffRole">Staff</small>
+              </div>
+
+              <button class="church-admin-signout" id="logoutButton" type="button">
+                Sign Out
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- DASHBOARD NAVIGATION -->
+      <section class="church-admin-tabs-section">
+        <div class="container">
+          <div class="church-admin-tabs" aria-label="Staff dashboard sections">
+            <button class="church-admin-tab active" type="button" data-tab="overview">
+              Dashboard
+            </button>
+
+            <button class="church-admin-tab" type="button" data-tab="announcements">
+              Announcements
+              <span id="navAnnouncementCount">0</span>
+            </button>
+
+            <button class="church-admin-tab" type="button" data-tab="events">
+              Events
+              <span id="navEventCount">0</span>
+            </button>
+
+            <button class="church-admin-tab" type="button" data-tab="sermons">
+              Sermons
+              <span id="navSermonCount">0</span>
+            </button>
+
+            <button class="church-admin-tab" type="button" data-tab="ministries">
+              Ministries
+              <span id="navMinistryCount">0</span>
+            </button>
+
+            <button
+              class="church-admin-tab"
+              id="accountsNavButton"
+              type="button"
+              data-tab="accounts"
+            >
+              Ministry Accounts
+              <span id="navAccountCount">0</span>
             </button>
           </div>
+        </div>
+      </section>
 
-          <div class="staff-stat-grid">
-            <button class="staff-stat-card" type="button" data-open-tab="announcements">
-              <span class="staff-stat-icon blue">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M4 13h3l9 4V7l-9 4H4z"></path>
-                  <path d="M7 13v5"></path>
-                </svg>
-              </span>
-              <span>
+      <section class="section church-admin-main-section">
+        <div class="container">
+          <!-- OVERVIEW -->
+          <section class="church-admin-panel" data-panel="overview">
+            <div class="church-admin-welcome">
+              <div>
+                <span>Website Manager</span>
+                <h2>Welcome back, <span id="welcomeName">Staff Member</span>.</h2>
+                <p>
+                  Pick a section below. Existing website items can be edited or
+                  removed directly from their section.
+                </p>
+              </div>
+
+              <button
+                class="button button-primary"
+                type="button"
+                data-open-tab="announcements"
+              >
+                + New Announcement
+              </button>
+            </div>
+
+            <div class="church-admin-summary-grid">
+              <button type="button" data-open-tab="announcements">
+                <span class="church-admin-summary-icon">📢</span>
                 <strong id="statAnnouncements">0</strong>
-                <span>Announcements</span>
-                <small>Published</small>
-              </span>
-            </button>
+                <h3>Announcements</h3>
+                <p>Add, edit, or remove church updates.</p>
+                <small>Manage Announcements →</small>
+              </button>
 
-            <button class="staff-stat-card" type="button" data-open-tab="events">
-              <span class="staff-stat-icon red">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <rect x="3" y="5" width="18" height="16" rx="2"></rect>
-                  <path d="M7 3v4M17 3v4M3 10h18"></path>
-                </svg>
-              </span>
-              <span>
+              <button type="button" data-open-tab="events">
+                <span class="church-admin-summary-icon">📅</span>
                 <strong id="statEvents">0</strong>
-                <span>Upcoming Events</span>
-                <small>On the calendar</small>
-              </span>
-            </button>
+                <h3>Events</h3>
+                <p>Manage services, gatherings, and dates.</p>
+                <small>Manage Events →</small>
+              </button>
 
-            <button class="staff-stat-card" type="button" data-open-tab="sermons">
-              <span class="staff-stat-icon blue">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <rect x="3" y="4" width="18" height="16" rx="2"></rect>
-                  <path d="m10 9 5 3-5 3z"></path>
-                </svg>
-              </span>
-              <span>
+              <button type="button" data-open-tab="sermons">
+                <span class="church-admin-summary-icon">▶</span>
                 <strong id="statSermons">0</strong>
-                <span>Sermons</span>
-                <small>Available online</small>
-              </span>
-            </button>
+                <h3>Sermons</h3>
+                <p>Publish messages and video links.</p>
+                <small>Manage Sermons →</small>
+              </button>
 
-            <button class="staff-stat-card" type="button" data-open-tab="ministries">
-              <span class="staff-stat-icon red">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <circle cx="8" cy="8" r="3"></circle>
-                  <circle cx="17" cy="9" r="2.5"></circle>
-                  <path d="M2.5 20c.5-4 2.4-6 5.5-6s5 2 5.5 6"></path>
-                  <path d="M14 15c3.5-.4 5.7 1.3 6.5 5"></path>
-                </svg>
-              </span>
-              <span>
+              <button type="button" data-open-tab="ministries">
+                <span class="church-admin-summary-icon">♥</span>
                 <strong id="statMinistries">0</strong>
-                <span>Ministries</span>
-                <small>Listed on the site</small>
-              </span>
-            </button>
-          </div>
+                <h3>Ministries</h3>
+                <p>Keep ministry information current.</p>
+                <small>Manage Ministries →</small>
+              </button>
+            </div>
 
-          <div class="staff-overview-grid">
-            <section class="staff-card">
-              <div class="staff-card-heading">
-                <div>
-                  <span class="staff-eyebrow">Latest Updates</span>
-                  <h2>Recent Website Content</h2>
+            <div class="church-admin-overview-grid">
+              <article class="church-admin-card">
+                <div class="church-admin-card-heading">
+                  <div>
+                    <span>Recent Website Content</span>
+                    <h2>Latest Updates</h2>
+                  </div>
                 </div>
-              </div>
 
-              <div class="staff-recent-list" id="recentContentList">
-                <div class="staff-empty-state">Published content will appear here.</div>
-              </div>
-            </section>
-
-            <section class="staff-card">
-              <div class="staff-card-heading">
-                <div>
-                  <span class="staff-eyebrow">Shortcuts</span>
-                  <h2>Quick Actions</h2>
+                <div class="church-admin-recent-list" id="recentContentList">
+                  <div class="church-admin-empty">
+                    Published content will appear here.
+                  </div>
                 </div>
-              </div>
+              </article>
 
-              <div class="staff-quick-actions">
-                <button type="button" data-open-tab="events">
-                  <span>＋</span>
-                  <strong>New Event</strong>
-                  <small>Add a service or gathering</small>
-                </button>
-
-                <button type="button" data-open-tab="sermons">
-                  <span>＋</span>
-                  <strong>New Sermon</strong>
-                  <small>Publish a message or video</small>
-                </button>
-
-                <button type="button" data-open-tab="ministries">
-                  <span>＋</span>
-                  <strong>New Ministry</strong>
-                  <small>Add ministry information</small>
-                </button>
-
-                <button class="pastor-only-action" type="button" data-open-tab="accounts">
-                  <span>＋</span>
-                  <strong>Ministry Account</strong>
-                  <small>Create staff access</small>
-                </button>
-              </div>
-            </section>
-          </div>
-        </section>
-
-        <section class="staff-panel" data-panel="announcements" hidden>
-          <div class="staff-workspace-grid">
-            <form class="staff-card staff-form-card" data-content-form="announcements">
-              <div class="staff-card-heading">
-                <div>
-                  <span class="staff-eyebrow">Website Update</span>
-                  <h2>Publish Announcement</h2>
-                  <p>Create a church update for the announcements page.</p>
+              <article class="church-admin-card">
+                <div class="church-admin-card-heading">
+                  <div>
+                    <span>Public Website</span>
+                    <h2>View Live Pages</h2>
+                  </div>
                 </div>
-              </div>
 
-              <input type="hidden" name="documentId">
+                <div class="church-admin-public-links">
+                  <a href="announcements.html">
+                    Announcements Page
+                    <span>Open →</span>
+                  </a>
 
-              <div class="staff-form-grid">
-                <label class="staff-field staff-field-full">
-                  <span>Title</span>
-                  <input type="text" name="title" placeholder="Announcement title" required>
-                </label>
+                  <a href="events.html">
+                    Events Page
+                    <span>Open →</span>
+                  </a>
 
-                <label class="staff-field staff-field-full">
-                  <span>Category</span>
-                  <input type="text" name="category" placeholder="This Week, Community, Update" required>
-                </label>
+                  <a href="sermons.html">
+                    Sermons Page
+                    <span>Open →</span>
+                  </a>
 
-                <label class="staff-field staff-field-full">
-                  <span>Details</span>
-                  <textarea name="details" rows="7" placeholder="Write the announcement details…" required></textarea>
-                </label>
-              </div>
-
-              <div class="staff-form-actions">
-                <button class="staff-primary-button staff-submit-button" type="submit" data-default-text="Publish Announcement">
-                  Publish Announcement
-                </button>
-                <button class="staff-secondary-button" type="button" data-cancel-edit hidden>Cancel Edit</button>
-              </div>
-
-              <div class="staff-form-status" role="status"></div>
-            </form>
-
-            <section class="staff-card staff-list-card">
-              <div class="staff-card-heading">
-                <div>
-                  <span class="staff-eyebrow">Current Content</span>
-                  <h2>Published Announcements</h2>
+                  <a href="ministries.html">
+                    Ministries Page
+                    <span>Open →</span>
+                  </a>
                 </div>
+              </article>
+            </div>
+          </section>
+
+          <!-- ANNOUNCEMENTS -->
+          <section class="church-admin-panel" data-panel="announcements" hidden>
+            <div class="church-admin-section-heading">
+              <div>
+                <span>Website Content</span>
+                <h2>Announcements</h2>
+                <p>
+                  Publish a new announcement or use the buttons beside an existing
+                  announcement to edit or remove it.
+                </p>
               </div>
 
-              <div class="staff-manage-list" data-manage-list="announcements">
-                <div class="staff-empty-state">Loading announcements…</div>
-              </div>
-            </section>
-          </div>
-        </section>
+              <a class="church-admin-view-page" href="announcements.html">
+                View Public Page →
+              </a>
+            </div>
 
-        <section class="staff-panel" data-panel="events" hidden>
-          <div class="staff-workspace-grid">
-            <form class="staff-card staff-form-card" data-content-form="events">
-              <div class="staff-card-heading">
-                <div>
-                  <span class="staff-eyebrow">Church Calendar</span>
-                  <h2>Publish Event</h2>
-                  <p>Add an upcoming service, gathering, or special event.</p>
+            <div class="church-admin-workspace">
+              <form class="church-admin-card church-admin-form" data-content-form="announcements">
+                <div class="church-admin-card-heading">
+                  <div>
+                    <span>Add or Edit</span>
+                    <h2>Announcement Details</h2>
+                  </div>
                 </div>
-              </div>
 
-              <input type="hidden" name="documentId">
+                <input type="hidden" name="documentId">
 
-              <div class="staff-form-grid">
-                <label class="staff-field staff-field-full">
-                  <span>Event title</span>
-                  <input type="text" name="title" placeholder="Event title" required>
-                </label>
+                <div class="church-admin-form-grid">
+                  <label>
+                    Title
+                    <input
+                      type="text"
+                      name="title"
+                      placeholder="Announcement title"
+                      required
+                    >
+                  </label>
 
-                <label class="staff-field">
-                  <span>Date</span>
-                  <input type="date" name="date" required>
-                </label>
+                  <label>
+                    Category
+                    <input
+                      type="text"
+                      name="category"
+                      placeholder="This Week, Community, Update"
+                      required
+                    >
+                  </label>
 
-                <label class="staff-field">
-                  <span>Time</span>
-                  <input type="text" name="time" placeholder="Example: 10:30 AM" required>
-                </label>
-
-                <label class="staff-field staff-field-full">
-                  <span>Location</span>
-                  <input type="text" name="location" placeholder="Church or event location" required>
-                </label>
-
-                <label class="staff-field staff-field-full">
-                  <span>Details</span>
-                  <textarea name="details" rows="6" placeholder="Write the event details…" required></textarea>
-                </label>
-              </div>
-
-              <div class="staff-form-actions">
-                <button class="staff-primary-button staff-submit-button" type="submit" data-default-text="Publish Event">
-                  Publish Event
-                </button>
-                <button class="staff-secondary-button" type="button" data-cancel-edit hidden>Cancel Edit</button>
-              </div>
-
-              <div class="staff-form-status" role="status"></div>
-            </form>
-
-            <section class="staff-card staff-list-card">
-              <div class="staff-card-heading">
-                <div>
-                  <span class="staff-eyebrow">Current Content</span>
-                  <h2>Published Events</h2>
+                  <label class="church-admin-full-field">
+                    Details
+                    <textarea
+                      name="details"
+                      rows="7"
+                      placeholder="Announcement details"
+                      required
+                    ></textarea>
+                  </label>
                 </div>
-              </div>
 
-              <div class="staff-manage-list" data-manage-list="events">
-                <div class="staff-empty-state">Loading events…</div>
-              </div>
-            </section>
-          </div>
-        </section>
+                <div class="church-admin-form-actions">
+                  <button
+                    class="button button-primary church-admin-submit"
+                    type="submit"
+                    data-default-text="Publish Announcement"
+                  >
+                    Publish Announcement
+                  </button>
 
-        <section class="staff-panel" data-panel="sermons" hidden>
-          <div class="staff-workspace-grid">
-            <form class="staff-card staff-form-card" data-content-form="sermons">
-              <div class="staff-card-heading">
-                <div>
-                  <span class="staff-eyebrow">Messages</span>
-                  <h2>Publish Sermon</h2>
-                  <p>Add a sermon description and an optional video link.</p>
+                  <button
+                    class="button church-admin-cancel"
+                    type="button"
+                    data-cancel-edit
+                    hidden
+                  >
+                    Cancel Edit
+                  </button>
                 </div>
-              </div>
 
-              <input type="hidden" name="documentId">
+                <div class="church-admin-status" role="status"></div>
+              </form>
 
-              <div class="staff-form-grid">
-                <label class="staff-field staff-field-full">
-                  <span>Sermon title</span>
-                  <input type="text" name="title" placeholder="Sermon title" required>
-                </label>
-
-                <label class="staff-field">
-                  <span>Speaker</span>
-                  <input type="text" name="speaker" placeholder="Speaker name" required>
-                </label>
-
-                <label class="staff-field">
-                  <span>Date</span>
-                  <input type="date" name="date" required>
-                </label>
-
-                <label class="staff-field staff-field-full">
-                  <span>Video link <small>Optional</small></span>
-                  <input type="url" name="videoUrl" placeholder="YouTube or Facebook link">
-                </label>
-
-                <label class="staff-field staff-field-full">
-                  <span>Details</span>
-                  <textarea name="details" rows="6" placeholder="Message description or notes…" required></textarea>
-                </label>
-              </div>
-
-              <div class="staff-form-actions">
-                <button class="staff-primary-button staff-submit-button" type="submit" data-default-text="Publish Sermon">
-                  Publish Sermon
-                </button>
-                <button class="staff-secondary-button" type="button" data-cancel-edit hidden>Cancel Edit</button>
-              </div>
-
-              <div class="staff-form-status" role="status"></div>
-            </form>
-
-            <section class="staff-card staff-list-card">
-              <div class="staff-card-heading">
-                <div>
-                  <span class="staff-eyebrow">Current Content</span>
-                  <h2>Published Sermons</h2>
+              <article class="church-admin-card church-admin-current-card">
+                <div class="church-admin-card-heading">
+                  <div>
+                    <span>Already On The Website</span>
+                    <h2>Current Announcements</h2>
+                    <p>Edit or remove any item below.</p>
+                  </div>
                 </div>
-              </div>
 
-              <div class="staff-manage-list" data-manage-list="sermons">
-                <div class="staff-empty-state">Loading sermons…</div>
-              </div>
-            </section>
-          </div>
-        </section>
-
-        <section class="staff-panel" data-panel="ministries" hidden>
-          <div class="staff-workspace-grid">
-            <form class="staff-card staff-form-card" data-content-form="ministries">
-              <div class="staff-card-heading">
-                <div>
-                  <span class="staff-eyebrow">Church Community</span>
-                  <h2>Publish Ministry</h2>
-                  <p>Add a ministry and its meeting information.</p>
+                <div class="church-admin-manage-list" data-manage-list="announcements">
+                  <div class="church-admin-empty">Loading announcements…</div>
                 </div>
+              </article>
+            </div>
+          </section>
+
+          <!-- EVENTS -->
+          <section class="church-admin-panel" data-panel="events" hidden>
+            <div class="church-admin-section-heading">
+              <div>
+                <span>Website Content</span>
+                <h2>Events</h2>
+                <p>
+                  Add a new event or edit and remove events that are already live.
+                </p>
               </div>
 
-              <input type="hidden" name="documentId">
+              <a class="church-admin-view-page" href="events.html">
+                View Public Page →
+              </a>
+            </div>
 
-              <div class="staff-form-grid">
-                <label class="staff-field staff-field-full">
-                  <span>Ministry name</span>
-                  <input type="text" name="name" placeholder="Ministry name" required>
-                </label>
-
-                <label class="staff-field staff-field-full">
-                  <span>Leader</span>
-                  <input type="text" name="leader" placeholder="Ministry leader" required>
-                </label>
-
-                <label class="staff-field staff-field-full">
-                  <span>Schedule</span>
-                  <input type="text" name="schedule" placeholder="Meeting day and time" required>
-                </label>
-
-                <label class="staff-field staff-field-full">
-                  <span>Details</span>
-                  <textarea name="details" rows="7" placeholder="Ministry information…" required></textarea>
-                </label>
-              </div>
-
-              <div class="staff-form-actions">
-                <button class="staff-primary-button staff-submit-button" type="submit" data-default-text="Publish Ministry">
-                  Publish Ministry
-                </button>
-                <button class="staff-secondary-button" type="button" data-cancel-edit hidden>Cancel Edit</button>
-              </div>
-
-              <div class="staff-form-status" role="status"></div>
-            </form>
-
-            <section class="staff-card staff-list-card">
-              <div class="staff-card-heading">
-                <div>
-                  <span class="staff-eyebrow">Current Content</span>
-                  <h2>Published Ministries</h2>
+            <div class="church-admin-workspace">
+              <form class="church-admin-card church-admin-form" data-content-form="events">
+                <div class="church-admin-card-heading">
+                  <div>
+                    <span>Add or Edit</span>
+                    <h2>Event Details</h2>
+                  </div>
                 </div>
-              </div>
 
-              <div class="staff-manage-list" data-manage-list="ministries">
-                <div class="staff-empty-state">Loading ministries…</div>
-              </div>
-            </section>
-          </div>
-        </section>
+                <input type="hidden" name="documentId">
 
-        <section class="staff-panel" id="ministryAccountsPanel" data-panel="accounts" hidden>
-          <div class="staff-workspace-grid">
-            <form class="staff-card staff-form-card" id="ministryAccountForm">
-              <div class="staff-card-heading">
-                <div>
-                  <span class="staff-eyebrow">Pastor Only</span>
-                  <h2>Create Ministry Account</h2>
-                  <p>Create login access for a ministry team member.</p>
+                <div class="church-admin-form-grid">
+                  <label class="church-admin-full-field">
+                    Event title
+                    <input
+                      type="text"
+                      name="title"
+                      placeholder="Event title"
+                      required
+                    >
+                  </label>
+
+                  <label>
+                    Date
+                    <input type="date" name="date" required>
+                  </label>
+
+                  <label>
+                    Time
+                    <input
+                      type="text"
+                      name="time"
+                      placeholder="Example: 10:30 AM"
+                      required
+                    >
+                  </label>
+
+                  <label class="church-admin-full-field">
+                    Location
+                    <input
+                      type="text"
+                      name="location"
+                      placeholder="Church or event location"
+                      required
+                    >
+                  </label>
+
+                  <label class="church-admin-full-field">
+                    Details
+                    <textarea
+                      name="details"
+                      rows="6"
+                      placeholder="Event details"
+                      required
+                    ></textarea>
+                  </label>
                 </div>
-              </div>
 
-              <div class="staff-form-grid">
-                <label class="staff-field staff-field-full">
-                  <span>Full name</span>
-                  <input id="ministryName" type="text" placeholder="Ministry member's name" autocomplete="name" required>
-                </label>
+                <div class="church-admin-form-actions">
+                  <button
+                    class="button button-primary church-admin-submit"
+                    type="submit"
+                    data-default-text="Publish Event"
+                  >
+                    Publish Event
+                  </button>
 
-                <label class="staff-field staff-field-full">
-                  <span>Email</span>
-                  <input id="ministryEmail" type="email" placeholder="member@email.com" autocomplete="email" required>
-                </label>
-
-                <label class="staff-field staff-field-full">
-                  <span>Temporary password</span>
-                  <input id="ministryPassword" type="password" minlength="6" placeholder="At least 6 characters" autocomplete="new-password" required>
-                </label>
-              </div>
-
-              <div class="staff-form-actions">
-                <button class="staff-primary-button staff-submit-button" type="submit">
-                  Create Ministry Account
-                </button>
-              </div>
-
-              <div class="staff-form-status" id="accountMessage" role="status"></div>
-
-              <div class="staff-info-note">
-                The member can change their password later using the reset-password option on the staff login page.
-              </div>
-            </form>
-
-            <section class="staff-card staff-list-card">
-              <div class="staff-card-heading">
-                <div>
-                  <span class="staff-eyebrow">Access Management</span>
-                  <h2>Ministry Accounts</h2>
-                  <p>Remove or restore website editing access.</p>
+                  <button
+                    class="button church-admin-cancel"
+                    type="button"
+                    data-cancel-edit
+                    hidden
+                  >
+                    Cancel Edit
+                  </button>
                 </div>
+
+                <div class="church-admin-status" role="status"></div>
+              </form>
+
+              <article class="church-admin-card church-admin-current-card">
+                <div class="church-admin-card-heading">
+                  <div>
+                    <span>Already On The Website</span>
+                    <h2>Current Events</h2>
+                    <p>Edit or remove any item below.</p>
+                  </div>
+                </div>
+
+                <div class="church-admin-manage-list" data-manage-list="events">
+                  <div class="church-admin-empty">Loading events…</div>
+                </div>
+              </article>
+            </div>
+          </section>
+
+          <!-- SERMONS -->
+          <section class="church-admin-panel" data-panel="sermons" hidden>
+            <div class="church-admin-section-heading">
+              <div>
+                <span>Website Content</span>
+                <h2>Sermons</h2>
+                <p>
+                  Publish a message or manage sermons that are already displayed.
+                </p>
               </div>
 
-              <div class="staff-manage-list" id="ministryAccountList">
-                <div class="staff-empty-state">Loading ministry accounts…</div>
-              </div>
-            </section>
-          </div>
-        </section>
-      </div>
+              <a class="church-admin-view-page" href="sermons.html">
+                View Public Page →
+              </a>
+            </div>
 
-      <footer class="staff-footer">
-        © <span id="year"></span> The Henderson Potter's House.
-      </footer>
+            <div class="church-admin-workspace">
+              <form class="church-admin-card church-admin-form" data-content-form="sermons">
+                <div class="church-admin-card-heading">
+                  <div>
+                    <span>Add or Edit</span>
+                    <h2>Sermon Details</h2>
+                  </div>
+                </div>
+
+                <input type="hidden" name="documentId">
+
+                <div class="church-admin-form-grid">
+                  <label class="church-admin-full-field">
+                    Sermon title
+                    <input
+                      type="text"
+                      name="title"
+                      placeholder="Sermon title"
+                      required
+                    >
+                  </label>
+
+                  <label>
+                    Speaker
+                    <input
+                      type="text"
+                      name="speaker"
+                      placeholder="Speaker name"
+                      required
+                    >
+                  </label>
+
+                  <label>
+                    Date
+                    <input type="date" name="date" required>
+                  </label>
+
+                  <label class="church-admin-full-field">
+                    Video link
+                    <input
+                      type="url"
+                      name="videoUrl"
+                      placeholder="YouTube or Facebook link"
+                    >
+                  </label>
+
+                  <label class="church-admin-full-field">
+                    Details
+                    <textarea
+                      name="details"
+                      rows="6"
+                      placeholder="Message description or notes"
+                      required
+                    ></textarea>
+                  </label>
+                </div>
+
+                <div class="church-admin-form-actions">
+                  <button
+                    class="button button-primary church-admin-submit"
+                    type="submit"
+                    data-default-text="Publish Sermon"
+                  >
+                    Publish Sermon
+                  </button>
+
+                  <button
+                    class="button church-admin-cancel"
+                    type="button"
+                    data-cancel-edit
+                    hidden
+                  >
+                    Cancel Edit
+                  </button>
+                </div>
+
+                <div class="church-admin-status" role="status"></div>
+              </form>
+
+              <article class="church-admin-card church-admin-current-card">
+                <div class="church-admin-card-heading">
+                  <div>
+                    <span>Already On The Website</span>
+                    <h2>Current Sermons</h2>
+                    <p>Edit or remove any item below.</p>
+                  </div>
+                </div>
+
+                <div class="church-admin-manage-list" data-manage-list="sermons">
+                  <div class="church-admin-empty">Loading sermons…</div>
+                </div>
+              </article>
+            </div>
+          </section>
+
+          <!-- MINISTRIES -->
+          <section class="church-admin-panel" data-panel="ministries" hidden>
+            <div class="church-admin-section-heading">
+              <div>
+                <span>Website Content</span>
+                <h2>Ministries</h2>
+                <p>
+                  Add ministry information or manage ministries already on the site.
+                </p>
+              </div>
+
+              <a class="church-admin-view-page" href="ministries.html">
+                View Public Page →
+              </a>
+            </div>
+
+            <div class="church-admin-workspace">
+              <form class="church-admin-card church-admin-form" data-content-form="ministries">
+                <div class="church-admin-card-heading">
+                  <div>
+                    <span>Add or Edit</span>
+                    <h2>Ministry Details</h2>
+                  </div>
+                </div>
+
+                <input type="hidden" name="documentId">
+
+                <div class="church-admin-form-grid">
+                  <label class="church-admin-full-field">
+                    Ministry name
+                    <input
+                      type="text"
+                      name="name"
+                      placeholder="Ministry name"
+                      required
+                    >
+                  </label>
+
+                  <label class="church-admin-full-field">
+                    Leader
+                    <input
+                      type="text"
+                      name="leader"
+                      placeholder="Ministry leader"
+                      required
+                    >
+                  </label>
+
+                  <label class="church-admin-full-field">
+                    Schedule
+                    <input
+                      type="text"
+                      name="schedule"
+                      placeholder="Meeting day and time"
+                      required
+                    >
+                  </label>
+
+                  <label class="church-admin-full-field">
+                    Details
+                    <textarea
+                      name="details"
+                      rows="7"
+                      placeholder="Ministry information"
+                      required
+                    ></textarea>
+                  </label>
+                </div>
+
+                <div class="church-admin-form-actions">
+                  <button
+                    class="button button-primary church-admin-submit"
+                    type="submit"
+                    data-default-text="Publish Ministry"
+                  >
+                    Publish Ministry
+                  </button>
+
+                  <button
+                    class="button church-admin-cancel"
+                    type="button"
+                    data-cancel-edit
+                    hidden
+                  >
+                    Cancel Edit
+                  </button>
+                </div>
+
+                <div class="church-admin-status" role="status"></div>
+              </form>
+
+              <article class="church-admin-card church-admin-current-card">
+                <div class="church-admin-card-heading">
+                  <div>
+                    <span>Already On The Website</span>
+                    <h2>Current Ministries</h2>
+                    <p>Edit or remove any item below.</p>
+                  </div>
+                </div>
+
+                <div class="church-admin-manage-list" data-manage-list="ministries">
+                  <div class="church-admin-empty">Loading ministries…</div>
+                </div>
+              </article>
+            </div>
+          </section>
+
+          <!-- MINISTRY ACCOUNTS -->
+          <section
+            class="church-admin-panel"
+            id="ministryAccountsPanel"
+            data-panel="accounts"
+            hidden
+          >
+            <div class="church-admin-section-heading">
+              <div>
+                <span>Pastor Only</span>
+                <h2>Ministry Accounts</h2>
+                <p>
+                  Create ministry logins and remove or restore website editing access.
+                </p>
+              </div>
+            </div>
+
+            <div class="church-admin-workspace">
+              <form class="church-admin-card church-admin-form" id="ministryAccountForm">
+                <div class="church-admin-card-heading">
+                  <div>
+                    <span>Create Access</span>
+                    <h2>New Ministry Account</h2>
+                  </div>
+                </div>
+
+                <div class="church-admin-form-grid">
+                  <label class="church-admin-full-field">
+                    Full name
+                    <input
+                      id="ministryName"
+                      type="text"
+                      placeholder="Ministry member's name"
+                      autocomplete="name"
+                      required
+                    >
+                  </label>
+
+                  <label class="church-admin-full-field">
+                    Email
+                    <input
+                      id="ministryEmail"
+                      type="email"
+                      placeholder="member@email.com"
+                      autocomplete="email"
+                      required
+                    >
+                  </label>
+
+                  <label class="church-admin-full-field">
+                    Temporary password
+                    <input
+                      id="ministryPassword"
+                      type="password"
+                      minlength="6"
+                      placeholder="At least 6 characters"
+                      autocomplete="new-password"
+                      required
+                    >
+                  </label>
+                </div>
+
+                <div class="church-admin-form-actions">
+                  <button class="button button-primary church-admin-submit" type="submit">
+                    Create Ministry Account
+                  </button>
+                </div>
+
+                <div class="church-admin-status" id="accountMessage" role="status"></div>
+              </form>
+
+              <article class="church-admin-card church-admin-current-card">
+                <div class="church-admin-card-heading">
+                  <div>
+                    <span>Current Access</span>
+                    <h2>Ministry Accounts</h2>
+                    <p>
+                      Use the button beside each account to remove or restore access.
+                    </p>
+                  </div>
+                </div>
+
+                <div class="church-admin-manage-list" id="ministryAccountList">
+                  <div class="church-admin-empty">Loading ministry accounts…</div>
+                </div>
+              </article>
+            </div>
+          </section>
+        </div>
+      </section>
     </main>
-  </section>
 
-  <div class="staff-toast" id="dashboardToast" role="status" aria-live="polite"></div>
+    <!-- SAME FOOTER AS THE PUBLIC CHURCH WEBSITE -->
+    <footer>
+      <div class="container footer-wrap">
+        <div class="footer-brand">
+          <img
+            class="church-admin-footer-logo"
+            src="church_logo.png"
+            alt="The Henderson Potter's House logo"
+          >
 
-  <script type="module" src="staff-dashboard.js?v=2"></script>
+          <div>
+            <strong>The Henderson Potter's House</strong>
+            <p>Faith, fellowship, and community.</p>
+          </div>
+        </div>
+
+        <p>© <span id="year"></span> The Henderson Potter's House.</p>
+      </div>
+    </footer>
+  </div>
+
+  <div class="church-admin-toast" id="dashboardToast" role="status" aria-live="polite"></div>
+
+  <!-- Normal website mobile-menu script -->
+  <script src="script.js"></script>
+
+  <!-- Staff dashboard Firebase code -->
+  <script type="module" src="staff-dashboard.js?v=3"></script>
 </body>
 </html>
