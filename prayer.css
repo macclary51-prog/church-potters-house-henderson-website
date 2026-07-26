@@ -437,3 +437,13 @@
     margin-left: 0;
   }
 }
+
+
+/* Single-column prayer form after removing the introduction panel. */
+.prayer-form-container {
+  max-width: 820px;
+}
+
+.prayer-form-container .prayer-form {
+  width: 100%;
+}
