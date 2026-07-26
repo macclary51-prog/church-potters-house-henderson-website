@@ -514,3 +514,64 @@
     padding: 20px 14px;
   }
 }
+
+
+/* =========================================================
+   FULL MINISTRY ACCOUNT MANAGEMENT
+   ========================================================= */
+
+.staff-inline-account-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+  margin-top: 13px;
+}
+
+.staff-inline-account-action {
+  min-height: 42px;
+  padding: 0 11px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 0.74rem;
+  font-weight: 900;
+}
+
+.staff-inline-account-action:disabled {
+  cursor: wait;
+  opacity: 0.62;
+}
+
+.staff-inline-account-action.password {
+  color: var(--navy);
+  background: var(--surface-soft);
+  border: 1px solid #cfd7e0;
+}
+
+.staff-inline-account-action.access-remove {
+  color: #9d4f12;
+  background: #fff8e9;
+  border: 1px solid #efd9a8;
+}
+
+.staff-inline-account-action.access-restore {
+  color: #17643d;
+  background: #e7f7ee;
+  border: 1px solid #bce1ca;
+}
+
+.staff-inline-account-action.permanent-delete {
+  grid-column: 1 / -1;
+  color: #fff;
+  background: linear-gradient(135deg, #941b24, #d92d3a);
+  border: 1px solid #941b24;
+}
+
+@media (max-width: 620px) {
+  .staff-inline-account-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .staff-inline-account-action.permanent-delete {
+    grid-column: auto;
+  }
+}
