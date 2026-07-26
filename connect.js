@@ -499,7 +499,7 @@ function createCard(item) {
           console.error(error);
 
           showToast(
-            "The link could not be removed. Publish the updated Firestore rules.",
+            "The link could not be removed. Please refresh and try again.",
             true
           );
         }
@@ -720,7 +720,7 @@ editor.addEventListener(
       console.error(error);
 
       showStatus(
-        "The link could not be saved. Publish the updated Firestore rules and try again.",
+        "The link could not be saved. Please refresh and try again.",
         true
       );
 
