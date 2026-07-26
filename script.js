@@ -74,30 +74,36 @@ function insertNavigationLink({
 }
 
 function ensureChurchNavigation() {
-  const servicesLink =
-    insertNavigationLink({
-      href: "services.html",
-      label: "Services",
-      beforeSelectors: [
-        'a[href="ministries.html"]',
-        'a[href="sermons.html"]',
-        'a[href="giving.html"]',
-        'a[href="prayer.html"]',
-        'a[href="contact.html"]'
-      ]
-    });
+  insertNavigationLink({
+    href: "services.html",
+    label: "Services",
+    beforeSelectors: [
+      'a[href="ministries.html"]',
+      'a[href="sermons.html"]',
+      'a[href="giving.html"]'
+    ]
+  });
 
-  const givingLink =
-    insertNavigationLink({
-      href: "giving.html",
-      label: "Giving",
-      beforeSelectors: [
-        'a[href="prayer.html"]',
-        'a[href="contact.html"]',
-        'a[href="staff-login.html"]',
-        'a[data-staff-navigation]'
-      ]
-    });
+  insertNavigationLink({
+    href: "giving.html",
+    label: "Giving",
+    beforeSelectors: [
+      'a[href="connect.html"]',
+      'a[href="prayer.html"]',
+      'a[href="contact.html"]'
+    ]
+  });
+
+  insertNavigationLink({
+    href: "connect.html",
+    label: "Connect",
+    beforeSelectors: [
+      'a[href="prayer.html"]',
+      'a[href="contact.html"]',
+      'a[href="staff-login.html"]',
+      'a[data-staff-navigation]'
+    ]
+  });
 
   const currentFile =
     window.location.pathname
@@ -107,24 +113,20 @@ function ensureChurchNavigation() {
   document
     .querySelectorAll("#navLinks a")
     .forEach(function (link) {
-      const linkFile =
+      const href =
         link.getAttribute("href");
 
       if (
-        linkFile === "services.html" ||
-        linkFile === "giving.html"
+        href === "services.html" ||
+        href === "giving.html" ||
+        href === "connect.html"
       ) {
         link.classList.toggle(
           "active",
-          linkFile === currentFile
+          href === currentFile
         );
       }
     });
-
-  return {
-    servicesLink,
-    givingLink
-  };
 }
 
 ensureChurchNavigation();
@@ -159,8 +161,21 @@ staffSiteModule.type =
   "module";
 
 staffSiteModule.src =
-  "staff-site.js?v=3";
+  "staff-site.js?v=4";
 
 document.body.appendChild(
   staffSiteModule
+);
+
+const publicLinksModule =
+  document.createElement("script");
+
+publicLinksModule.type =
+  "module";
+
+publicLinksModule.src =
+  "site-links.js?v=1";
+
+document.body.appendChild(
+  publicLinksModule
 );
