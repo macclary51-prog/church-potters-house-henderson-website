@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta
+    name="description"
+    content="Giving information for The Henderson Potter's House"
+  >
+  <title>Giving | The Henderson Potter's House</title>
+
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="giving.css?v=1">
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a
+        class="brand"
+        href="index.html"
+        aria-label="The Henderson Potter's House home"
+      >
+        <div
+          class="logo header-logo"
+          role="img"
+          aria-label="The Henderson Potter's House logo"
+        ></div>
+
+        <div class="brand-text">
+          <strong>The Henderson Potter's House</strong>
+          <span>Henderson, Nevada</span>
+        </div>
+      </a>
+
+      <nav class="nav-links" id="navLinks">
+        <a href="index.html">Home</a>
+        <a href="announcements.html">Announcements</a>
+        <a href="events.html">Events</a>
+        <a href="ministries.html">Ministries</a>
+        <a href="sermons.html">Sermons</a>
+        <a href="giving.html" class="active">Giving</a>
+        <a href="prayer.html">Prayer</a>
+        <a href="contact.html">Contact</a>
+        <a class="staff-link" href="staff-login.html">Staff</a>
+      </nav>
+
+      <button
+        class="menu-button"
+        id="menuButton"
+        type="button"
+        aria-label="Open menu"
+        aria-controls="navLinks"
+        aria-expanded="false"
+      >
+        ☰
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero giving-hero">
+      <div class="container">
+        <div class="page-hero-card giving-hero-card">
+          <div class="eyebrow">Support the Ministry</div>
+          <h1 id="givingPublicTitle">Giving</h1>
+
+          <p id="givingPublicMessage">
+            Giving information will be added soon.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Only an approved pastor sees this editor. -->
+    <section class="giving-pastor-shell" id="givingPastorShell" hidden>
+      <div class="container">
+        <div class="giving-pastor-toolbar">
+          <div>
+            <span>Pastor Giving Controls</span>
+            <strong id="givingPastorName">Pastor</strong>
+            <small>
+              Update the phone number, Zelle, Cash App, or other giving instructions.
+            </small>
+          </div>
+
+          <button
+            class="button button-primary"
+            id="givingEditButton"
+            type="button"
+          >
+            Edit Giving Information
+          </button>
+        </div>
+
+        <form class="giving-editor" id="givingEditor" hidden>
+          <div class="giving-editor-heading">
+            <div>
+              <span>Pastor Only</span>
+              <h2>Giving Information</h2>
+              <p>
+                Leave a field blank when the church does not use that giving method.
+              </p>
+            </div>
+
+            <button
+              class="giving-close-button"
+              id="givingCloseButton"
+              type="button"
+              aria-label="Close giving editor"
+            >
+              ×
+            </button>
+          </div>
+
+          <div class="giving-form-grid">
+            <label class="giving-full-field">
+              Page title
+              <input
+                type="text"
+                name="title"
+                placeholder="Giving"
+                maxlength="80"
+              >
+            </label>
+
+            <label class="giving-full-field">
+              Giving message
+              <textarea
+                name="message"
+                rows="5"
+                placeholder="Thank you for supporting the work of the church."
+                maxlength="1000"
+              ></textarea>
+            </label>
+
+            <label>
+              Church phone number
+              <input
+                type="tel"
+                name="phone"
+                placeholder="(702) 555-1234"
+                maxlength="40"
+              >
+            </label>
+
+            <label>
+              Zelle phone number or email
+              <input
+                type="text"
+                name="zelle"
+                placeholder="phone number or email"
+                maxlength="120"
+              >
+            </label>
+
+            <label>
+              Cash App name
+              <input
+                type="text"
+                name="cashApp"
+                placeholder="$ChurchCashTag"
+                maxlength="80"
+              >
+            </label>
+
+            <label>
+              Cash App link
+              <input
+                type="url"
+                name="cashAppLink"
+                placeholder="Paste the church's Cash App link"
+                maxlength="300"
+              >
+            </label>
+
+            <label class="giving-full-field">
+              Other giving instructions
+              <textarea
+                name="otherInstructions"
+                rows="5"
+                placeholder="Add any other verified giving information or instructions."
+                maxlength="1000"
+              ></textarea>
+            </label>
+          </div>
+
+          <div class="giving-form-actions">
+            <button
+              class="button button-primary"
+              id="givingSaveButton"
+              type="submit"
+            >
+              Save Giving Information
+            </button>
+
+            <button
+              class="giving-cancel-button"
+              id="givingCancelButton"
+              type="button"
+            >
+              Cancel
+            </button>
+          </div>
+
+          <div
+            class="giving-status"
+            id="givingStatus"
+            role="status"
+          ></div>
+        </form>
+      </div>
+    </section>
+
+    <section class="section giving-section">
+      <div class="container">
+        <div class="section-heading">
+          <span>Ways to Give</span>
+          <h2>Choose a Giving Method</h2>
+
+          <p>
+            Use only the verified church information shown below.
+          </p>
+        </div>
+
+        <div class="giving-method-grid" id="givingMethodGrid">
+          <div class="giving-empty-state">
+            Giving information has not been published yet.
+          </div>
+        </div>
+
+        <article
+          class="giving-other-card"
+          id="givingOtherCard"
+          hidden
+        >
+          <span>Additional Instructions</span>
+          <h2>Other Ways to Give</h2>
+          <p id="givingOtherInstructions"></p>
+        </article>
+
+        <div class="giving-safety-note">
+          <strong>Please verify before sending.</strong>
+          Only use the giving details displayed on this official church website.
+          This page does not collect debit-card or credit-card information.
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-wrap">
+      <div class="footer-brand">
+        <div
+          class="logo footer-logo"
+          role="img"
+          aria-label="The Henderson Potter's House logo"
+        ></div>
+
+        <div>
+          <strong>The Henderson Potter's House</strong>
+          <p>Faith, fellowship, and community.</p>
+        </div>
+      </div>
+
+      <p>© <span id="year"></span> The Henderson Potter's House.</p>
+    </div>
+  </footer>
+
+  <div
+    class="giving-toast"
+    id="givingToast"
+    role="status"
+    aria-live="polite"
+  ></div>
+
+  <script src="script.js"></script>
+  <script type="module" src="giving.js?v=1"></script>
+</body>
+</html>
