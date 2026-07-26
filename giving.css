@@ -396,3 +396,20 @@
 .giving-card-actions a.primary:hover {
   filter: brightness(1.08);
 }
+
+
+/* Complete royal blue Giving buttons. */
+.giving-card-actions a.primary {
+  color: #fff;
+  background: linear-gradient(
+    135deg,
+    #4169e1,
+    #27408b
+  );
+  border-color: transparent;
+  box-shadow: 0 9px 20px rgba(65, 105, 225, 0.2);
+}
+
+.giving-card-actions a.primary:hover {
+  filter: brightness(1.08);
+}
