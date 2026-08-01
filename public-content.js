@@ -31,17 +31,6 @@ import {
   updateDoc
 } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
-import {
-  deleteObject,
-  getDownloadURL,
-  getStorage,
-  ref,
-  uploadBytes
-} from "https://www.gstatic.com/firebasejs/12.16.0/firebase-storage.js";
-
-
-const storage = getStorage(app);
-
 const contentGrid = document.getElementById("publicContentGrid");
 const collectionName = contentGrid?.dataset.collection || "";
 
@@ -78,6 +67,8 @@ const eventPhotoRemove = document.getElementById("removeEventPhoto");
 const eventPhotoRemoveWrap = document.getElementById("eventPhotoRemoveWrap");
 
 const EVENT_PHOTO_MAX_BYTES = 8 * 1024 * 1024;
+const EVENT_PHOTO_MAX_DATA_URL_LENGTH = 320000;
+const EVENT_PHOTO_MAX_DIMENSION = 1200;
 const EVENT_PHOTO_TYPES = new Set([
   "image/jpeg",
   "image/png",
@@ -278,6 +269,31 @@ function showEventPhotoPreview({
 }
 
 
+function getSafeEventPhotoDataUrl(value) {
+  const text =
+    String(value || "").trim();
+
+  if (
+    text.length > EVENT_PHOTO_MAX_DATA_URL_LENGTH ||
+    !/^data:image\/(?:jpeg|png|webp);base64,[a-zA-Z0-9+/=]+$/.test(text)
+  ) {
+    return "";
+  }
+
+  return text;
+}
+
+
+function getEventPhotoSource(data = null) {
+  return (
+    getSafeEventPhotoDataUrl(
+      data?.imageDataUrl
+    ) ||
+    getSafeMediaUrl(data?.imageUrl)
+  );
+}
+
+
 function syncEventPhotoEditor(data = null) {
   clearEventPhotoObjectUrl();
 
@@ -294,7 +310,7 @@ function syncEventPhotoEditor(data = null) {
   }
 
   const currentPhoto =
-    getSafeMediaUrl(data?.imageUrl);
+    getEventPhotoSource(data);
 
   if (currentPhoto) {
     showEventPhotoPreview({
@@ -333,63 +349,153 @@ function eventPhotoValidationMessage(file) {
 }
 
 
-function eventPhotoStoragePath(file) {
-  const cleanedName =
-    String(file.name || "event-photo")
-      .replace(/[^a-zA-Z0-9._-]+/g, "-")
-      .slice(-100) ||
-    "event-photo";
-
-  const uniqueId =
-    window.crypto?.randomUUID?.() ||
-    `${Date.now()}-${Math.random().toString(16).slice(2)}`;
-
-  return `event-photos/${currentUser.uid}/${uniqueId}-${cleanedName}`;
+function createEventPhotoError(code, message) {
+  const error = new Error(message);
+  error.code = `event-photo/${code}`;
+  return error;
 }
 
 
-async function uploadEventPhoto(file) {
-  const path =
-    eventPhotoStoragePath(file);
+function loadEventPhotoImage(file) {
+  return new Promise(function (resolve, reject) {
+    const objectUrl =
+      URL.createObjectURL(file);
 
-  const uploadSnapshot =
-    await uploadBytes(
-      ref(storage, path),
-      file,
-      {
-        contentType: file.type,
-        customMetadata: {
-          uploadedBy: currentUser.uid
-        }
-      }
-    );
+    const image =
+      new Image();
 
-  return {
-    path,
-    url: await getDownloadURL(
-      uploadSnapshot.ref
-    )
-  };
-}
+    image.onload = function () {
+      URL.revokeObjectURL(objectUrl);
+      resolve(image);
+    };
 
-
-async function deleteEventPhoto(path) {
-  if (!path) {
-    return;
-  }
-
-  try {
-    await deleteObject(
-      ref(storage, path)
-    );
-  } catch (error) {
-    if (error.code !== "storage/object-not-found") {
-      console.error(
-        "Event photo cleanup failed:",
-        error
+    image.onerror = function () {
+      URL.revokeObjectURL(objectUrl);
+      reject(
+        createEventPhotoError(
+          "unreadable",
+          "The selected photo could not be read. Choose another image."
+        )
       );
-    }
+    };
+
+    image.src = objectUrl;
+  });
+}
+
+
+function drawEventPhotoCanvas(image, maximumDimension) {
+  const originalWidth =
+    image.naturalWidth || image.width;
+
+  const originalHeight =
+    image.naturalHeight || image.height;
+
+  if (!originalWidth || !originalHeight) {
+    throw createEventPhotoError(
+      "invalid-dimensions",
+      "The selected photo has invalid dimensions. Choose another image."
+    );
   }
+
+  const scale = Math.min(
+    1,
+    maximumDimension / Math.max(
+      originalWidth,
+      originalHeight
+    )
+  );
+
+  const width = Math.max(
+    1,
+    Math.round(originalWidth * scale)
+  );
+
+  const height = Math.max(
+    1,
+    Math.round(originalHeight * scale)
+  );
+
+  const canvas =
+    document.createElement("canvas");
+
+  canvas.width = width;
+  canvas.height = height;
+
+  const context =
+    canvas.getContext("2d");
+
+  if (!context) {
+    throw createEventPhotoError(
+      "unsupported-browser",
+      "This browser could not prepare the photo. Try a newer browser."
+    );
+  }
+
+  context.fillStyle = "#ffffff";
+  context.fillRect(0, 0, width, height);
+  context.drawImage(image, 0, 0, width, height);
+
+  return canvas;
+}
+
+
+function canvasToEventPhotoDataUrl(canvas, quality) {
+  const webp =
+    canvas.toDataURL("image/webp", quality);
+
+  if (webp.startsWith("data:image/webp;base64,")) {
+    return webp;
+  }
+
+  return canvas.toDataURL("image/jpeg", quality);
+}
+
+
+async function compressEventPhoto(file) {
+  const image =
+    await loadEventPhotoImage(file);
+
+  const qualityLevels = [
+    0.78,
+    0.68,
+    0.58,
+    0.48
+  ];
+
+  let maximumDimension =
+    EVENT_PHOTO_MAX_DIMENSION;
+
+  for (let sizeAttempt = 0; sizeAttempt < 4; sizeAttempt += 1) {
+    const canvas =
+      drawEventPhotoCanvas(
+        image,
+        maximumDimension
+      );
+
+    for (const quality of qualityLevels) {
+      const dataUrl =
+        canvasToEventPhotoDataUrl(
+          canvas,
+          quality
+        );
+
+      if (
+        dataUrl.length <=
+        EVENT_PHOTO_MAX_DATA_URL_LENGTH
+      ) {
+        return dataUrl;
+      }
+    }
+
+    maximumDimension =
+      Math.round(maximumDimension * 0.78);
+  }
+
+  throw createEventPhotoError(
+    "compression-limit",
+    "This photo could not be compressed enough. Choose a simpler or smaller image."
+  );
 }
 
 
@@ -668,7 +774,7 @@ function isDirectVideoUrl(value) {
 
 function appendMediaToCard(card, data) {
   const imageUrl =
-    getSafeMediaUrl(data.imageUrl);
+    getEventPhotoSource(data);
 
   const videoUrl =
     getSafeMediaUrl(data.videoUrl);
@@ -903,15 +1009,6 @@ function createContentCard(item) {
           doc(db, collectionName, item.id)
         );
 
-        if (
-          collectionName === "events" &&
-          data.imagePath
-        ) {
-          await deleteEventPhoto(
-            data.imagePath
-          );
-        }
-
         showToast(
           `${getSingularLabel()} removed from the website.`
         );
@@ -1131,27 +1228,15 @@ if (editorForm) {
       data[key] = String(value).trim();
     }
 
-    const existingItem =
-      documentId
-        ? currentItems.find(function (item) {
-            return item.id === documentId;
-          })
-        : null;
-
-    const existingPhotoPath =
-      String(existingItem?.data.imagePath || "");
-
     const removePhoto =
       eventPhotoRemove?.checked === true;
 
-    let uploadedPhoto = null;
     let contentSaved = false;
-    let deletePreviousPhoto = false;
 
     saveButton.disabled = true;
     saveButton.textContent =
       photoFile
-        ? "Uploading Photo..."
+        ? "Compressing Photo..."
         : documentId
         ? "Saving Changes..."
         : "Publishing...";
@@ -1163,25 +1248,18 @@ if (editorForm) {
         collectionName === "events" &&
         photoFile
       ) {
-        uploadedPhoto =
-          await uploadEventPhoto(photoFile);
+        data.imageDataUrl =
+          await compressEventPhoto(photoFile);
 
-        data.imageUrl =
-          uploadedPhoto.url;
-
-        data.imagePath =
-          uploadedPhoto.path;
-
-        deletePreviousPhoto =
-          Boolean(existingPhotoPath);
+        data.imageUrl = "";
+        data.imagePath = "";
       } else if (
         collectionName === "events" &&
         removePhoto
       ) {
+        data.imageDataUrl = "";
         data.imageUrl = "";
         data.imagePath = "";
-        deletePreviousPhoto =
-          Boolean(existingPhotoPath);
       }
 
       if (documentId) {
@@ -1213,35 +1291,27 @@ if (editorForm) {
       }
 
       contentSaved = true;
-
-      if (deletePreviousPhoto) {
-        await deleteEventPhoto(
-          existingPhotoPath
-        );
-      }
-
       closeEditor();
     } catch (error) {
       console.error(error);
 
-      if (
-        uploadedPhoto?.path &&
-        !contentSaved
-      ) {
-        await deleteEventPhoto(
-          uploadedPhoto.path
-        );
-      }
-
       let message =
         "The item could not be saved. Check your connection and try again.";
 
-      if (error.code === "storage/unauthorized") {
+      if (
+        String(error.code || "").startsWith(
+          "event-photo/"
+        )
+      ) {
         message =
-          "The photo upload was not authorized. Check the Firebase Storage staff rules.";
-      } else if (error.code === "storage/retry-limit-exceeded") {
+          error.message;
+      } else if (
+        error.code === "firestore/resource-exhausted" ||
+        error.code === "firestore/invalid-argument" ||
+        error.code === "invalid-argument"
+      ) {
         message =
-          "The photo upload timed out. Check your connection and try again.";
+          "The compressed photo was still too large. Choose a smaller image and try again.";
       }
 
       showStatus(
