@@ -6,7 +6,7 @@
   <meta name="description" content="Events - The Henderson Potter&#x27;s House">
   <title>Events | The Henderson Potter's House</title>
   <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="staff-inline.css?v=16">
+  <link rel="stylesheet" href="staff-inline.css?v=17">
 </head>
 
 <body>
@@ -144,6 +144,46 @@
             Location
             <input type="text" name="location" placeholder="Church or event location" required>
           </label>
+
+          <label class="staff-inline-full">
+            Event photo
+            <input
+              id="eventPhotoInput"
+              type="file"
+              name="eventPhoto"
+              accept="image/jpeg,image/png,image/webp,image/gif"
+              aria-describedby="eventPhotoHelp"
+            >
+            <small class="staff-inline-media-help" id="eventPhotoHelp">
+              Optional. Choose a JPG, PNG, WebP, or GIF image up to 8 MB.
+            </small>
+          </label>
+
+          <div
+            class="staff-inline-photo-preview staff-inline-full"
+            id="eventPhotoPreview"
+            hidden
+          >
+            <img id="eventPhotoPreviewImage" alt="Event photo preview">
+
+            <div class="staff-inline-photo-preview-copy">
+              <strong id="eventPhotoPreviewLabel">Current event photo</strong>
+              <span>A new photo replaces the current one when the event is saved.</span>
+
+              <label
+                class="staff-inline-photo-remove"
+                id="eventPhotoRemoveWrap"
+                hidden
+              >
+                <input
+                  id="removeEventPhoto"
+                  type="checkbox"
+                  name="removeEventPhoto"
+                >
+                Remove the current photo
+              </label>
+            </div>
+          </div>
 
           <label class="staff-inline-full">
             Details
@@ -294,32 +334,7 @@
             class="staff-inline-status"
             id="staffInlineAccountStatus"
             role="status"
-          >
-              <label class="staff-inline-full">
-                Photo link
-                <input
-                  type="text"
-                  name="imageUrl"
-                  placeholder="https://... or photos/example.jpg"
-                >
-                <small class="staff-inline-media-help">
-                  Optional. Paste a direct photo link or a photo path from this website.
-                </small>
-              </label>
-
-              <label class="staff-inline-full">
-                Video link
-                <input
-                  type="text"
-                  name="videoUrl"
-                  placeholder="YouTube, Facebook, or direct video link"
-                >
-                <small class="staff-inline-media-help">
-                  Optional. YouTube videos play on the page; other supported links open in a new tab.
-                </small>
-              </label>
-
-            </div>
+          ></div>
         </form>
 
         <div>
@@ -344,6 +359,6 @@
   ></div>
 
   <script src="script.js"></script>
-  <script type="module" src="public-content.js?v=16"></script>
+  <script type="module" src="public-content.js?v=18"></script>
 </body>
 </html>

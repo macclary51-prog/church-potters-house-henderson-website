@@ -1,4 +1,5 @@
 import {
+  app,
   auth,
   db,
   firebaseConfig
@@ -30,6 +31,16 @@ import {
   updateDoc
 } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
+import {
+  deleteObject,
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytes
+} from "https://www.gstatic.com/firebasejs/12.16.0/firebase-storage.js";
+
+
+const storage = getStorage(app);
 
 const contentGrid = document.getElementById("publicContentGrid");
 const collectionName = contentGrid?.dataset.collection || "";
@@ -59,11 +70,27 @@ const accountForm = document.getElementById("staffInlineAccountForm");
 const accountStatus = document.getElementById("staffInlineAccountStatus");
 const accountList = document.getElementById("staffInlineAccountList");
 
+const eventPhotoInput = document.getElementById("eventPhotoInput");
+const eventPhotoPreview = document.getElementById("eventPhotoPreview");
+const eventPhotoPreviewImage = document.getElementById("eventPhotoPreviewImage");
+const eventPhotoPreviewLabel = document.getElementById("eventPhotoPreviewLabel");
+const eventPhotoRemove = document.getElementById("removeEventPhoto");
+const eventPhotoRemoveWrap = document.getElementById("eventPhotoRemoveWrap");
+
+const EVENT_PHOTO_MAX_BYTES = 8 * 1024 * 1024;
+const EVENT_PHOTO_TYPES = new Set([
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "image/gif"
+]);
+
 let currentUser = null;
 let currentStaff = null;
 let currentItems = [];
 let accountUnsubscribe = null;
 let toastTimer = null;
+let eventPhotoObjectUrl = "";
 
 
 function normalizeRole(role) {
@@ -211,6 +238,161 @@ function getSortTime(data) {
 }
 
 
+function clearEventPhotoObjectUrl() {
+  if (!eventPhotoObjectUrl) {
+    return;
+  }
+
+  URL.revokeObjectURL(
+    eventPhotoObjectUrl
+  );
+
+  eventPhotoObjectUrl = "";
+}
+
+
+function showEventPhotoPreview({
+  url,
+  label,
+  removable = false
+}) {
+  if (
+    !eventPhotoPreview ||
+    !eventPhotoPreviewImage ||
+    !eventPhotoPreviewLabel
+  ) {
+    return;
+  }
+
+  eventPhotoPreviewImage.src = url;
+  eventPhotoPreviewLabel.textContent = label;
+  eventPhotoPreview.hidden = false;
+
+  if (eventPhotoRemove) {
+    eventPhotoRemove.checked = false;
+  }
+
+  if (eventPhotoRemoveWrap) {
+    eventPhotoRemoveWrap.hidden = !removable;
+  }
+}
+
+
+function syncEventPhotoEditor(data = null) {
+  clearEventPhotoObjectUrl();
+
+  if (eventPhotoInput) {
+    eventPhotoInput.value = "";
+  }
+
+  if (eventPhotoRemove) {
+    eventPhotoRemove.checked = false;
+  }
+
+  if (eventPhotoRemoveWrap) {
+    eventPhotoRemoveWrap.hidden = true;
+  }
+
+  const currentPhoto =
+    getSafeMediaUrl(data?.imageUrl);
+
+  if (currentPhoto) {
+    showEventPhotoPreview({
+      url: currentPhoto,
+      label: "Current event photo",
+      removable: true
+    });
+
+    return;
+  }
+
+  if (eventPhotoPreview) {
+    eventPhotoPreview.hidden = true;
+  }
+
+  if (eventPhotoPreviewImage) {
+    eventPhotoPreviewImage.removeAttribute("src");
+  }
+}
+
+
+function eventPhotoValidationMessage(file) {
+  if (!file) {
+    return "";
+  }
+
+  if (!EVENT_PHOTO_TYPES.has(file.type)) {
+    return "Choose a JPG, PNG, WebP, or GIF image.";
+  }
+
+  if (file.size > EVENT_PHOTO_MAX_BYTES) {
+    return "Choose a photo smaller than 8 MB.";
+  }
+
+  return "";
+}
+
+
+function eventPhotoStoragePath(file) {
+  const cleanedName =
+    String(file.name || "event-photo")
+      .replace(/[^a-zA-Z0-9._-]+/g, "-")
+      .slice(-100) ||
+    "event-photo";
+
+  const uniqueId =
+    window.crypto?.randomUUID?.() ||
+    `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+
+  return `event-photos/${currentUser.uid}/${uniqueId}-${cleanedName}`;
+}
+
+
+async function uploadEventPhoto(file) {
+  const path =
+    eventPhotoStoragePath(file);
+
+  const uploadSnapshot =
+    await uploadBytes(
+      ref(storage, path),
+      file,
+      {
+        contentType: file.type,
+        customMetadata: {
+          uploadedBy: currentUser.uid
+        }
+      }
+    );
+
+  return {
+    path,
+    url: await getDownloadURL(
+      uploadSnapshot.ref
+    )
+  };
+}
+
+
+async function deleteEventPhoto(path) {
+  if (!path) {
+    return;
+  }
+
+  try {
+    await deleteObject(
+      ref(storage, path)
+    );
+  } catch (error) {
+    if (error.code !== "storage/object-not-found") {
+      console.error(
+        "Event photo cleanup failed:",
+        error
+      );
+    }
+  }
+}
+
+
 function openEditor(item = null) {
   if (!currentStaff || !editor || !editorForm) {
     return;
@@ -246,6 +428,10 @@ function openEditor(item = null) {
     saveButton.textContent = `Publish ${getSingularLabel()}`;
   }
 
+  syncEventPhotoEditor(
+    item?.data || null
+  );
+
   editor.hidden = false;
 
   editor.scrollIntoView({
@@ -262,6 +448,7 @@ function closeEditor() {
 
   editorForm.reset();
   editorForm.elements.documentId.value = "";
+  syncEventPhotoEditor();
   editor.hidden = true;
   hideStatus(formStatus);
 }
@@ -716,6 +903,15 @@ function createContentCard(item) {
           doc(db, collectionName, item.id)
         );
 
+        if (
+          collectionName === "events" &&
+          data.imagePath
+        ) {
+          await deleteEventPhoto(
+            data.imagePath
+          );
+        }
+
         showToast(
           `${getSingularLabel()} removed from the website.`
         );
@@ -825,6 +1021,68 @@ if (closeButton) {
 }
 
 
+if (eventPhotoInput) {
+  eventPhotoInput.addEventListener("change", function () {
+    const file =
+      eventPhotoInput.files?.[0] || null;
+
+    if (!file) {
+      const documentId =
+        editorForm?.elements.documentId.value || "";
+
+      const currentItem =
+        currentItems.find(function (item) {
+          return item.id === documentId;
+        });
+
+      syncEventPhotoEditor(
+        currentItem?.data || null
+      );
+
+      return;
+    }
+
+    const validationMessage =
+      eventPhotoValidationMessage(file);
+
+    if (validationMessage) {
+      showStatus(
+        formStatus,
+        validationMessage,
+        true
+      );
+
+      eventPhotoInput.value = "";
+
+      const documentId =
+        editorForm?.elements.documentId.value || "";
+
+      const currentItem =
+        currentItems.find(function (item) {
+          return item.id === documentId;
+        });
+
+      syncEventPhotoEditor(
+        currentItem?.data || null
+      );
+
+      return;
+    }
+
+    hideStatus(formStatus);
+    clearEventPhotoObjectUrl();
+
+    eventPhotoObjectUrl =
+      URL.createObjectURL(file);
+
+    showEventPhotoPreview({
+      url: eventPhotoObjectUrl,
+      label: `Selected: ${file.name}`
+    });
+  });
+}
+
+
 if (editorForm) {
   editorForm.addEventListener("submit", async function (event) {
     event.preventDefault();
@@ -843,25 +1101,89 @@ if (editorForm) {
     const documentId =
       String(formData.get("documentId") || "").trim();
 
+    const photoFile =
+      eventPhotoInput?.files?.[0] || null;
+
+    const photoValidationMessage =
+      eventPhotoValidationMessage(photoFile);
+
+    if (photoValidationMessage) {
+      showStatus(
+        formStatus,
+        photoValidationMessage,
+        true
+      );
+
+      return;
+    }
+
     const data = {};
 
     for (const [key, value] of formData.entries()) {
-      if (key === "documentId") {
+      if (
+        key === "documentId" ||
+        key === "eventPhoto" ||
+        key === "removeEventPhoto"
+      ) {
         continue;
       }
 
       data[key] = String(value).trim();
     }
 
+    const existingItem =
+      documentId
+        ? currentItems.find(function (item) {
+            return item.id === documentId;
+          })
+        : null;
+
+    const existingPhotoPath =
+      String(existingItem?.data.imagePath || "");
+
+    const removePhoto =
+      eventPhotoRemove?.checked === true;
+
+    let uploadedPhoto = null;
+    let contentSaved = false;
+    let deletePreviousPhoto = false;
+
     saveButton.disabled = true;
     saveButton.textContent =
-      documentId
+      photoFile
+        ? "Uploading Photo..."
+        : documentId
         ? "Saving Changes..."
         : "Publishing...";
 
     hideStatus(formStatus);
 
     try {
+      if (
+        collectionName === "events" &&
+        photoFile
+      ) {
+        uploadedPhoto =
+          await uploadEventPhoto(photoFile);
+
+        data.imageUrl =
+          uploadedPhoto.url;
+
+        data.imagePath =
+          uploadedPhoto.path;
+
+        deletePreviousPhoto =
+          Boolean(existingPhotoPath);
+      } else if (
+        collectionName === "events" &&
+        removePhoto
+      ) {
+        data.imageUrl = "";
+        data.imagePath = "";
+        deletePreviousPhoto =
+          Boolean(existingPhotoPath);
+      }
+
       if (documentId) {
         await updateDoc(
           doc(db, collectionName, documentId),
@@ -890,22 +1212,57 @@ if (editorForm) {
         );
       }
 
+      contentSaved = true;
+
+      if (deletePreviousPhoto) {
+        await deleteEventPhoto(
+          existingPhotoPath
+        );
+      }
+
       closeEditor();
     } catch (error) {
       console.error(error);
 
+      if (
+        uploadedPhoto?.path &&
+        !contentSaved
+      ) {
+        await deleteEventPhoto(
+          uploadedPhoto.path
+        );
+      }
+
+      let message =
+        "The item could not be saved. Check your connection and try again.";
+
+      if (error.code === "storage/unauthorized") {
+        message =
+          "The photo upload was not authorized. Check the Firebase Storage staff rules.";
+      } else if (error.code === "storage/retry-limit-exceeded") {
+        message =
+          "The photo upload timed out. Check your connection and try again.";
+      }
+
       showStatus(
         formStatus,
-        "The item could not be saved. Check your connection and try again.",
+        message,
         true
       );
 
       showToast(
-        "The item could not be saved.",
+        message,
         true
       );
     } finally {
       saveButton.disabled = false;
+
+      if (!contentSaved) {
+        saveButton.textContent =
+          documentId
+            ? "Save Changes"
+            : `Publish ${getSingularLabel()}`;
+      }
     }
   });
 }

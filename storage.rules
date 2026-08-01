@@ -1,0 +1,28 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    function isApprovedStaff() {
+      return request.auth != null
+        && firestore.exists(
+          /databases/(default)/documents/staff/$(request.auth.uid)
+        )
+        && firestore.get(
+          /databases/(default)/documents/staff/$(request.auth.uid)
+        ).data.active == true
+        && firestore.get(
+          /databases/(default)/documents/staff/$(request.auth.uid)
+        ).data.role in ["pastor", "ministry"];
+    }
+
+    match /event-photos/{staffUid}/{fileName} {
+      allow read: if true;
+
+      allow create, update: if isApprovedStaff()
+        && request.resource.size <= 8 * 1024 * 1024
+        && request.resource.contentType.matches("image/(jpeg|png|webp|gif)");
+
+      allow delete: if isApprovedStaff();
+    }
+  }
+}
