@@ -270,9 +270,14 @@ function renderGiving(data) {
     safeText(currentGiving.title) ||
     "Giving";
 
+  const givingMessage =
+    safeText(currentGiving.message);
+
   publicMessage.textContent =
-    safeText(currentGiving.message) ||
-    "Giving information will be added soon.";
+    givingMessage;
+
+  publicMessage.hidden =
+    !givingMessage;
 
   methodGrid.replaceChildren();
 
