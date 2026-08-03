@@ -1,4 +1,5 @@
 import {
+  app,
   auth,
   db,
   firebaseConfig
@@ -30,7 +31,6 @@ import {
   updateDoc
 } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
-
 const contentGrid = document.getElementById("publicContentGrid");
 const collectionName = contentGrid?.dataset.collection || "";
 
@@ -59,11 +59,29 @@ const accountForm = document.getElementById("staffInlineAccountForm");
 const accountStatus = document.getElementById("staffInlineAccountStatus");
 const accountList = document.getElementById("staffInlineAccountList");
 
+const eventPhotoInput = document.getElementById("eventPhotoInput");
+const eventPhotoPreview = document.getElementById("eventPhotoPreview");
+const eventPhotoPreviewImage = document.getElementById("eventPhotoPreviewImage");
+const eventPhotoPreviewLabel = document.getElementById("eventPhotoPreviewLabel");
+const eventPhotoRemove = document.getElementById("removeEventPhoto");
+const eventPhotoRemoveWrap = document.getElementById("eventPhotoRemoveWrap");
+
+const EVENT_PHOTO_MAX_BYTES = 8 * 1024 * 1024;
+const EVENT_PHOTO_MAX_DATA_URL_LENGTH = 320000;
+const EVENT_PHOTO_MAX_DIMENSION = 1200;
+const EVENT_PHOTO_TYPES = new Set([
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "image/gif"
+]);
+
 let currentUser = null;
 let currentStaff = null;
 let currentItems = [];
 let accountUnsubscribe = null;
 let toastTimer = null;
+let eventPhotoObjectUrl = "";
 
 
 function normalizeRole(role) {
@@ -211,6 +229,276 @@ function getSortTime(data) {
 }
 
 
+function clearEventPhotoObjectUrl() {
+  if (!eventPhotoObjectUrl) {
+    return;
+  }
+
+  URL.revokeObjectURL(
+    eventPhotoObjectUrl
+  );
+
+  eventPhotoObjectUrl = "";
+}
+
+
+function showEventPhotoPreview({
+  url,
+  label,
+  removable = false
+}) {
+  if (
+    !eventPhotoPreview ||
+    !eventPhotoPreviewImage ||
+    !eventPhotoPreviewLabel
+  ) {
+    return;
+  }
+
+  eventPhotoPreviewImage.src = url;
+  eventPhotoPreviewLabel.textContent = label;
+  eventPhotoPreview.hidden = false;
+
+  if (eventPhotoRemove) {
+    eventPhotoRemove.checked = false;
+  }
+
+  if (eventPhotoRemoveWrap) {
+    eventPhotoRemoveWrap.hidden = !removable;
+  }
+}
+
+
+function getSafeEventPhotoDataUrl(value) {
+  const text =
+    String(value || "").trim();
+
+  if (
+    text.length > EVENT_PHOTO_MAX_DATA_URL_LENGTH ||
+    !/^data:image\/(?:jpeg|png|webp);base64,[a-zA-Z0-9+/=]+$/.test(text)
+  ) {
+    return "";
+  }
+
+  return text;
+}
+
+
+function getEventPhotoSource(data = null) {
+  return (
+    getSafeEventPhotoDataUrl(
+      data?.imageDataUrl
+    ) ||
+    getSafeMediaUrl(data?.imageUrl)
+  );
+}
+
+
+function syncEventPhotoEditor(data = null) {
+  clearEventPhotoObjectUrl();
+
+  if (eventPhotoInput) {
+    eventPhotoInput.value = "";
+  }
+
+  if (eventPhotoRemove) {
+    eventPhotoRemove.checked = false;
+  }
+
+  if (eventPhotoRemoveWrap) {
+    eventPhotoRemoveWrap.hidden = true;
+  }
+
+  const currentPhoto =
+    getEventPhotoSource(data);
+
+  if (currentPhoto) {
+    showEventPhotoPreview({
+      url: currentPhoto,
+      label: "Current event photo",
+      removable: true
+    });
+
+    return;
+  }
+
+  if (eventPhotoPreview) {
+    eventPhotoPreview.hidden = true;
+  }
+
+  if (eventPhotoPreviewImage) {
+    eventPhotoPreviewImage.removeAttribute("src");
+  }
+}
+
+
+function eventPhotoValidationMessage(file) {
+  if (!file) {
+    return "";
+  }
+
+  if (!EVENT_PHOTO_TYPES.has(file.type)) {
+    return "Choose a JPG, PNG, WebP, or GIF image.";
+  }
+
+  if (file.size > EVENT_PHOTO_MAX_BYTES) {
+    return "Choose a photo smaller than 8 MB.";
+  }
+
+  return "";
+}
+
+
+function createEventPhotoError(code, message) {
+  const error = new Error(message);
+  error.code = `event-photo/${code}`;
+  return error;
+}
+
+
+function loadEventPhotoImage(file) {
+  return new Promise(function (resolve, reject) {
+    const objectUrl =
+      URL.createObjectURL(file);
+
+    const image =
+      new Image();
+
+    image.onload = function () {
+      URL.revokeObjectURL(objectUrl);
+      resolve(image);
+    };
+
+    image.onerror = function () {
+      URL.revokeObjectURL(objectUrl);
+      reject(
+        createEventPhotoError(
+          "unreadable",
+          "The selected photo could not be read. Choose another image."
+        )
+      );
+    };
+
+    image.src = objectUrl;
+  });
+}
+
+
+function drawEventPhotoCanvas(image, maximumDimension) {
+  const originalWidth =
+    image.naturalWidth || image.width;
+
+  const originalHeight =
+    image.naturalHeight || image.height;
+
+  if (!originalWidth || !originalHeight) {
+    throw createEventPhotoError(
+      "invalid-dimensions",
+      "The selected photo has invalid dimensions. Choose another image."
+    );
+  }
+
+  const scale = Math.min(
+    1,
+    maximumDimension / Math.max(
+      originalWidth,
+      originalHeight
+    )
+  );
+
+  const width = Math.max(
+    1,
+    Math.round(originalWidth * scale)
+  );
+
+  const height = Math.max(
+    1,
+    Math.round(originalHeight * scale)
+  );
+
+  const canvas =
+    document.createElement("canvas");
+
+  canvas.width = width;
+  canvas.height = height;
+
+  const context =
+    canvas.getContext("2d");
+
+  if (!context) {
+    throw createEventPhotoError(
+      "unsupported-browser",
+      "This browser could not prepare the photo. Try a newer browser."
+    );
+  }
+
+  context.fillStyle = "#ffffff";
+  context.fillRect(0, 0, width, height);
+  context.drawImage(image, 0, 0, width, height);
+
+  return canvas;
+}
+
+
+function canvasToEventPhotoDataUrl(canvas, quality) {
+  const webp =
+    canvas.toDataURL("image/webp", quality);
+
+  if (webp.startsWith("data:image/webp;base64,")) {
+    return webp;
+  }
+
+  return canvas.toDataURL("image/jpeg", quality);
+}
+
+
+async function compressEventPhoto(file) {
+  const image =
+    await loadEventPhotoImage(file);
+
+  const qualityLevels = [
+    0.78,
+    0.68,
+    0.58,
+    0.48
+  ];
+
+  let maximumDimension =
+    EVENT_PHOTO_MAX_DIMENSION;
+
+  for (let sizeAttempt = 0; sizeAttempt < 4; sizeAttempt += 1) {
+    const canvas =
+      drawEventPhotoCanvas(
+        image,
+        maximumDimension
+      );
+
+    for (const quality of qualityLevels) {
+      const dataUrl =
+        canvasToEventPhotoDataUrl(
+          canvas,
+          quality
+        );
+
+      if (
+        dataUrl.length <=
+        EVENT_PHOTO_MAX_DATA_URL_LENGTH
+      ) {
+        return dataUrl;
+      }
+    }
+
+    maximumDimension =
+      Math.round(maximumDimension * 0.78);
+  }
+
+  throw createEventPhotoError(
+    "compression-limit",
+    "This photo could not be compressed enough. Choose a simpler or smaller image."
+  );
+}
+
+
 function openEditor(item = null) {
   if (!currentStaff || !editor || !editorForm) {
     return;
@@ -246,6 +534,10 @@ function openEditor(item = null) {
     saveButton.textContent = `Publish ${getSingularLabel()}`;
   }
 
+  syncEventPhotoEditor(
+    item?.data || null
+  );
+
   editor.hidden = false;
 
   editor.scrollIntoView({
@@ -262,6 +554,7 @@ function closeEditor() {
 
   editorForm.reset();
   editorForm.elements.documentId.value = "";
+  syncEventPhotoEditor();
   editor.hidden = true;
   hideStatus(formStatus);
 }
@@ -481,7 +774,7 @@ function isDirectVideoUrl(value) {
 
 function appendMediaToCard(card, data) {
   const imageUrl =
-    getSafeMediaUrl(data.imageUrl);
+    getEventPhotoSource(data);
 
   const videoUrl =
     getSafeMediaUrl(data.videoUrl);
@@ -825,6 +1118,68 @@ if (closeButton) {
 }
 
 
+if (eventPhotoInput) {
+  eventPhotoInput.addEventListener("change", function () {
+    const file =
+      eventPhotoInput.files?.[0] || null;
+
+    if (!file) {
+      const documentId =
+        editorForm?.elements.documentId.value || "";
+
+      const currentItem =
+        currentItems.find(function (item) {
+          return item.id === documentId;
+        });
+
+      syncEventPhotoEditor(
+        currentItem?.data || null
+      );
+
+      return;
+    }
+
+    const validationMessage =
+      eventPhotoValidationMessage(file);
+
+    if (validationMessage) {
+      showStatus(
+        formStatus,
+        validationMessage,
+        true
+      );
+
+      eventPhotoInput.value = "";
+
+      const documentId =
+        editorForm?.elements.documentId.value || "";
+
+      const currentItem =
+        currentItems.find(function (item) {
+          return item.id === documentId;
+        });
+
+      syncEventPhotoEditor(
+        currentItem?.data || null
+      );
+
+      return;
+    }
+
+    hideStatus(formStatus);
+    clearEventPhotoObjectUrl();
+
+    eventPhotoObjectUrl =
+      URL.createObjectURL(file);
+
+    showEventPhotoPreview({
+      url: eventPhotoObjectUrl,
+      label: `Selected: ${file.name}`
+    });
+  });
+}
+
+
 if (editorForm) {
   editorForm.addEventListener("submit", async function (event) {
     event.preventDefault();
@@ -843,25 +1198,70 @@ if (editorForm) {
     const documentId =
       String(formData.get("documentId") || "").trim();
 
+    const photoFile =
+      eventPhotoInput?.files?.[0] || null;
+
+    const photoValidationMessage =
+      eventPhotoValidationMessage(photoFile);
+
+    if (photoValidationMessage) {
+      showStatus(
+        formStatus,
+        photoValidationMessage,
+        true
+      );
+
+      return;
+    }
+
     const data = {};
 
     for (const [key, value] of formData.entries()) {
-      if (key === "documentId") {
+      if (
+        key === "documentId" ||
+        key === "eventPhoto" ||
+        key === "removeEventPhoto"
+      ) {
         continue;
       }
 
       data[key] = String(value).trim();
     }
 
+    const removePhoto =
+      eventPhotoRemove?.checked === true;
+
+    let contentSaved = false;
+
     saveButton.disabled = true;
     saveButton.textContent =
-      documentId
+      photoFile
+        ? "Compressing Photo..."
+        : documentId
         ? "Saving Changes..."
         : "Publishing...";
 
     hideStatus(formStatus);
 
     try {
+      if (
+        collectionName === "events" &&
+        photoFile
+      ) {
+        data.imageDataUrl =
+          await compressEventPhoto(photoFile);
+
+        data.imageUrl = "";
+        data.imagePath = "";
+      } else if (
+        collectionName === "events" &&
+        removePhoto
+      ) {
+        data.imageDataUrl = "";
+        data.imageUrl = "";
+        data.imagePath = "";
+      }
+
       if (documentId) {
         await updateDoc(
           doc(db, collectionName, documentId),
@@ -890,22 +1290,49 @@ if (editorForm) {
         );
       }
 
+      contentSaved = true;
       closeEditor();
     } catch (error) {
       console.error(error);
 
+      let message =
+        "The item could not be saved. Check your connection and try again.";
+
+      if (
+        String(error.code || "").startsWith(
+          "event-photo/"
+        )
+      ) {
+        message =
+          error.message;
+      } else if (
+        error.code === "firestore/resource-exhausted" ||
+        error.code === "firestore/invalid-argument" ||
+        error.code === "invalid-argument"
+      ) {
+        message =
+          "The compressed photo was still too large. Choose a smaller image and try again.";
+      }
+
       showStatus(
         formStatus,
-        "The item could not be saved. Check your connection and try again.",
+        message,
         true
       );
 
       showToast(
-        "The item could not be saved.",
+        message,
         true
       );
     } finally {
       saveButton.disabled = false;
+
+      if (!contentSaved) {
+        saveButton.textContent =
+          documentId
+            ? "Save Changes"
+            : `Publish ${getSingularLabel()}`;
+      }
     }
   });
 }
