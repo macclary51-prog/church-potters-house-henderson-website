@@ -19,6 +19,15 @@ import {
 const GIVING_DOCUMENT =
   doc(db, "siteSettings", "giving");
 
+const DEFAULT_ZELLE =
+  "(702) 600-7632";
+
+const DEFAULT_CASH_APP =
+  "$potterhousehenderson";
+
+const DEFAULT_CASH_APP_LINK =
+  "https://cash.app/$potterhousehenderson";
+
 const publicTitle =
   document.getElementById("givingPublicTitle");
 
@@ -271,13 +280,16 @@ function renderGiving(data) {
     safeText(currentGiving.phone);
 
   const zelle =
-    safeText(currentGiving.zelle);
+    safeText(currentGiving.zelle) ||
+    DEFAULT_ZELLE;
 
   const cashApp =
-    safeText(currentGiving.cashApp);
+    safeText(currentGiving.cashApp) ||
+    DEFAULT_CASH_APP;
 
   const cashAppLink =
-    safeLink(currentGiving.cashAppLink);
+    safeLink(currentGiving.cashAppLink) ||
+    DEFAULT_CASH_APP_LINK;
 
   let methodCount = 0;
 
@@ -380,13 +392,16 @@ function fillEditor() {
     safeText(currentGiving.phone);
 
   editorForm.elements.zelle.value =
-    safeText(currentGiving.zelle);
+    safeText(currentGiving.zelle) ||
+    DEFAULT_ZELLE;
 
   editorForm.elements.cashApp.value =
-    safeText(currentGiving.cashApp);
+    safeText(currentGiving.cashApp) ||
+    DEFAULT_CASH_APP;
 
   editorForm.elements.cashAppLink.value =
-    safeText(currentGiving.cashAppLink);
+    safeText(currentGiving.cashAppLink) ||
+    DEFAULT_CASH_APP_LINK;
 
   editorForm.elements.otherInstructions.value =
     safeText(
