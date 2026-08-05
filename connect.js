@@ -80,18 +80,72 @@ const TYPE_LABELS = {
   other: "Other"
 };
 
-const TYPE_ICONS = {
-  location: "⌖",
-  facebook: "f",
-  instagram: "◎",
-  youtube: "▶",
-  tiktok: "♪",
-  x: "X",
-  website: "↗",
-  email: "✉",
-  phone: "☎",
-  other: "🔗"
-};
+function getTypeIcon(type) {
+  const icons = {
+    location: `
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"></path>
+        <circle cx="12" cy="10" r="2.5"></circle>
+      </svg>
+    `,
+    facebook: `
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path class="connect-icon-fill" d="M14.3 8.2V6.7c0-.8.5-1 1-1h2.5V2.1L14.5 2C11.2 2 9 4 9 7v1.2H6v4h3V22h4.5v-9.8h3.4l.6-4h-4Z"></path>
+      </svg>
+    `,
+    instagram: `
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <rect x="3" y="3" width="18" height="18" rx="5"></rect>
+        <circle cx="12" cy="12" r="4"></circle>
+        <circle class="connect-icon-fill" cx="17.4" cy="6.7" r="1"></circle>
+      </svg>
+    `,
+    youtube: `
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <rect x="2.5" y="5.5" width="19" height="13" rx="4"></rect>
+        <path class="connect-icon-fill" d="m10 9 5 3-5 3V9Z"></path>
+      </svg>
+    `,
+    tiktok: `
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M14 4v10.2a4.7 4.7 0 1 1-3.7-4.6"></path>
+        <path d="M14 4c.8 2.5 2.7 4 5 4.3"></path>
+      </svg>
+    `,
+    x: `
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M5 4 19 20"></path>
+        <path d="M19 4 5 20"></path>
+      </svg>
+    `,
+    website: `
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <circle cx="12" cy="12" r="9"></circle>
+        <path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"></path>
+      </svg>
+    `,
+    email: `
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <rect x="3" y="5" width="18" height="14" rx="2.5"></rect>
+        <path d="m4.5 7 7.5 6 7.5-6"></path>
+      </svg>
+    `,
+    phone: `
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M8.2 3.5 10 7.7 7.6 9.2a15.8 15.8 0 0 0 7.2 7.2l1.5-2.4 4.2 1.8-.6 3a2.5 2.5 0 0 1-2.5 2C9.6 20.2 3.8 14.4 3.2 6.6a2.5 2.5 0 0 1 2-2.5l3-.6Z"></path>
+      </svg>
+    `,
+    other: `
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="m9.5 14.5 5-5"></path>
+        <path d="M7.3 16.7 5.6 18.4a3 3 0 0 1-4.2-4.2l3.5-3.5a3 3 0 0 1 4.2 0"></path>
+        <path d="m16.7 7.3 1.7-1.7a3 3 0 0 1 4.2 4.2l-3.5 3.5a3 3 0 0 1-4.2 0"></path>
+      </svg>
+    `
+  };
+
+  return icons[type] || icons.other;
+}
 
 
 /*
@@ -344,9 +398,8 @@ function createCard(item) {
   icon.className =
     "connect-card-icon";
 
-  icon.textContent =
-    TYPE_ICONS[type] ||
-    TYPE_ICONS.other;
+  icon.innerHTML =
+    getTypeIcon(type);
 
   const heading =
     document.createElement("h3");

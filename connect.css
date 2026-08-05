@@ -197,6 +197,7 @@
   border-top: 5px solid var(--navy);
   border-radius: 20px;
   box-shadow: 0 8px 20px rgba(23, 32, 51, 0.05);
+  transition: box-shadow 180ms ease;
 }
 
 .connect-card[data-type="location"] {
@@ -221,14 +222,77 @@
 
 .connect-card-icon {
   display: grid;
-  width: 52px;
-  height: 52px;
+  width: 58px;
+  height: 58px;
+  flex: 0 0 58px;
   place-items: center;
-  color: var(--navy);
-  background: var(--surface-soft);
-  border-radius: 15px;
-  font-size: 1.15rem;
-  font-weight: 900;
+  color: #fff;
+  background: #2b3f5c;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 16px;
+  box-shadow: 0 5px 12px rgba(23, 32, 51, 0.12);
+  transition: transform 180ms ease;
+}
+
+.connect-card-icon svg {
+  display: block;
+  width: 27px;
+  height: 27px;
+  overflow: visible;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.connect-card-icon .connect-icon-fill {
+  fill: currentColor;
+  stroke: none;
+}
+
+.connect-card[data-type="location"] .connect-card-icon,
+.connect-card[data-type="website"] .connect-card-icon,
+.connect-card[data-type="email"] .connect-card-icon {
+  background: linear-gradient(135deg, #4169e1, #27408b);
+}
+
+.connect-card[data-type="facebook"] .connect-card-icon {
+  background: #1877f2;
+}
+
+.connect-card[data-type="instagram"] .connect-card-icon {
+  background: linear-gradient(135deg, #7545a7, #b93682 55%, #d94c67);
+}
+
+.connect-card[data-type="youtube"] .connect-card-icon {
+  background: #d92929;
+}
+
+.connect-card[data-type="tiktok"] .connect-card-icon {
+  background: #20242a;
+}
+
+.connect-card[data-type="x"] .connect-card-icon {
+  background: #111;
+}
+
+.connect-card[data-type="phone"] .connect-card-icon {
+  background: #267451;
+}
+
+.connect-card[data-type="other"] .connect-card-icon {
+  background: #2b3f5c;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .connect-card:hover {
+    box-shadow: 0 12px 28px rgba(23, 32, 51, 0.1);
+  }
+
+  .connect-card:hover .connect-card-icon {
+    transform: translateY(-2px);
+  }
 }
 
 .connect-card h3 {
@@ -405,6 +469,17 @@
 
   .connect-card-actions {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .connect-card,
+  .connect-card-icon {
+    transition: none;
+  }
+
+  .connect-card:hover .connect-card-icon {
+    transform: none;
   }
 }
 
