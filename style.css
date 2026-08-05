@@ -73,10 +73,14 @@ button, input, textarea { font: inherit; }
 .quick-card:hover { transform: translateY(-3px); box-shadow: 0 12px 28px rgba(23,32,51,.1); }
 .quick-icon { width: 58px; height: 58px; margin-bottom: 17px; display: grid; place-items: center; color: #fff; background: #2b3f5c; border: 1px solid rgba(255,255,255,.35); border-radius: 16px; box-shadow: 0 5px 12px rgba(23,32,51,.12); transition: transform .2s ease; }
 .quick-icon svg { display: block; width: 27px; height: 27px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-.quick-card[data-quick-type="announcements"] .quick-icon { background: linear-gradient(135deg, #4169e1, #27408b); }
-.quick-card[data-quick-type="services"] .quick-icon { background: #315d7d; }
-.quick-card[data-quick-type="giving"] .quick-icon { background: #a53e58; }
-.quick-card[data-quick-type="connect"] .quick-icon { background: #267451; }
+.quick-card[data-quick-type="announcements"] { background: linear-gradient(145deg, #eef3ff, #fff 68%); border-color: #c8d4f5; border-top: 4px solid #4169e1; }
+.quick-card[data-quick-type="services"] { background: linear-gradient(145deg, #edf7ff, #fff 68%); border-color: #c4dceb; border-top: 4px solid #3974a3; }
+.quick-card[data-quick-type="giving"] { background: linear-gradient(145deg, #fff0f4, #fff 68%); border-color: #ecc5cf; border-top: 4px solid #b54163; }
+.quick-card[data-quick-type="connect"] { background: linear-gradient(145deg, #edf9f3, #fff 68%); border-color: #bfe0d0; border-top: 4px solid #267451; }
+.quick-card[data-quick-type="announcements"] .quick-icon { background: linear-gradient(135deg, #5279e8, #27408b); }
+.quick-card[data-quick-type="services"] .quick-icon { background: linear-gradient(135deg, #4d86b2, #315d7d); }
+.quick-card[data-quick-type="giving"] .quick-icon { background: linear-gradient(135deg, #c65373, #8d304e); }
+.quick-card[data-quick-type="connect"] .quick-icon { background: linear-gradient(135deg, #339369, #1f6849); }
 .quick-card:hover .quick-icon { transform: translateY(-2px); }
 .quick-card h3, .content-card h3, .info-card h3 { margin-bottom: 6px; color: var(--navy); }
 .quick-card p, .content-card p, .info-card p { color: var(--muted); font-size: .94rem; }
