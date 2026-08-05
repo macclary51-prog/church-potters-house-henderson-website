@@ -69,9 +69,15 @@ button, input, textarea { font: inherit; }
 .quick-links { padding: 28px 0 44px; }
 .quick-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
 .quick-card, .content-card, .info-card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; box-shadow: 0 8px 20px rgba(23,32,51,.05); }
-.quick-card { min-height: 165px; padding: 24px; transition: transform .2s ease; }
-.quick-card:hover { transform: translateY(-3px); }
-.quick-icon { width: 46px; height: 46px; margin-bottom: 17px; display: grid; place-items: center; border-radius: 14px; background: var(--surface-soft); font-size: 1.2rem; }
+.quick-card { min-height: 165px; padding: 24px; transition: transform .2s ease, box-shadow .2s ease; }
+.quick-card:hover { transform: translateY(-3px); box-shadow: 0 12px 28px rgba(23,32,51,.1); }
+.quick-icon { width: 58px; height: 58px; margin-bottom: 17px; display: grid; place-items: center; color: #fff; background: #2b3f5c; border: 1px solid rgba(255,255,255,.35); border-radius: 16px; box-shadow: 0 5px 12px rgba(23,32,51,.12); transition: transform .2s ease; }
+.quick-icon svg { display: block; width: 27px; height: 27px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.quick-card[data-quick-type="announcements"] .quick-icon { background: linear-gradient(135deg, #4169e1, #27408b); }
+.quick-card[data-quick-type="services"] .quick-icon { background: #315d7d; }
+.quick-card[data-quick-type="giving"] .quick-icon { background: #a53e58; }
+.quick-card[data-quick-type="connect"] .quick-icon { background: #267451; }
+.quick-card:hover .quick-icon { transform: translateY(-2px); }
 .quick-card h3, .content-card h3, .info-card h3 { margin-bottom: 6px; color: var(--navy); }
 .quick-card p, .content-card p, .info-card p { color: var(--muted); font-size: .94rem; }
 
@@ -239,6 +245,18 @@ footer p { color: #cbd6e2; font-size: .88rem; }
   .hero-logo { min-height: 290px; }
   .quick-grid, .content-grid { grid-template-columns: 1fr; }
   .footer-wrap { flex-direction: column; align-items: flex-start; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .quick-card,
+  .quick-icon {
+    transition: none;
+  }
+
+  .quick-card:hover,
+  .quick-card:hover .quick-icon {
+    transform: none;
+  }
 }
 
 
