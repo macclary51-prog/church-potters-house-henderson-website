@@ -165,6 +165,14 @@ const STARTER_LINKS = [
     isStarter: true
   },
   {
+    id: "church-facebook",
+    type: "facebook",
+    title: "Facebook",
+    url: "https://www.facebook.com/p/Henderson-Potters-House-61552769870767/",
+    description: "Follow Henderson Potter's House on Facebook.",
+    isStarter: true
+  },
+  {
     id: "church-instagram",
     type: "instagram",
     title: "Instagram",
