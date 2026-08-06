@@ -293,18 +293,6 @@ async function loadStaffProfile(user) {
 
 
 function enableStaffEditing(user, profile) {
-  /*
-    Only the pastor can add, edit, or remove church services.
-    Ministry accounts may view the Services page but cannot edit it.
-  */
-  if (
-    collectionName === "services" &&
-    profile.role !== "pastor"
-  ) {
-    disableStaffEditing();
-    return;
-  }
-
   currentUser = user;
   currentStaff = profile;
 
