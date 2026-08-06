@@ -50,7 +50,6 @@ const saveButton = document.getElementById("staffInlineSaveButton");
 const cancelButton = document.getElementById("staffInlineCancelButton");
 const closeButton = document.getElementById("staffInlineCloseButton");
 const formStatus = document.getElementById("staffInlineStatus");
-const staffHint = document.getElementById("staffInlineHint");
 const toast = document.getElementById("staffInlineToast");
 
 const accountsModal = document.getElementById("staffInlineAccountsModal");
@@ -325,9 +324,6 @@ function enableStaffEditing(user, profile) {
   staffInitials.textContent =
     getInitials(displayName);
 
-  staffHint.textContent =
-    "Staff mode is active. Use Edit or Remove directly on the items below.";
-
   if (profile.role === "pastor") {
     accountsButton.hidden = false;
     subscribeToAccounts();
@@ -351,11 +347,6 @@ function disableStaffEditing() {
 
   if (accountsButton) {
     accountsButton.hidden = true;
-  }
-
-  if (staffHint) {
-    staffHint.textContent =
-      "Everything listed below is currently visible on the public website.";
   }
 
   closeEditor();
